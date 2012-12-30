@@ -1,0 +1,110 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+
+	<g:HTMLPanel ui:field="rootPanel">
+	    
+	    <!-- header -->
+	    <div id="header" style="border:solid 1px">
+	        <span style="padding:5px;">
+	        	<h2><a href="#financeworkbench">Global Header</a></h2>
+	        </span>
+	        
+	    </div>
+	    
+	    <g:HTMLPanel ui:field="left" styleName="left">
+	        <g:HTMLPanel ui:field="menuContainer"></g:HTMLPanel>	    		        
+	        <p>
+	            <span style="padding-left:10px">System Functionality</span>
+	        </p>
+	        
+	        <p>
+	            <span style="padding-left:10px">1. Multi-language Support</span>
+	        </p>
+	        
+	        <p>
+	            <span style="padding-left:10px">2. Theming</span>
+	        </p>
+	        <p>
+	            <span style="padding-left:10px">3. Multicurrency</span>
+	        </p>
+	        <p>
+	            <span style="padding-left:10px">4. Data Safety and security</span>
+	        </p>
+	        <p>
+	            <span style="padding-left:10px">5. Expense Tracking?</span>
+	        </p>
+	        <p>
+	            <span style="padding-left:10px">6. Payment Gateways</span>
+	        </p>
+	        
+	        <!-- p>
+	            <span style="padding-left:10px">6. Integration with external Systems (Ordering, Catalogue, CRM etc)</span>
+	        </p -->
+	    </g:HTMLPanel>
+	    
+	    <div class="center">
+	    	<!-- div class="info">Info message</div>
+			<div class="success">Successful operation message</div>
+			<div class="warning">Warning message</div>
+			<div class="error">
+			    Error message 1<br/>
+			    Error message 2<br/>
+			    Error message 3<br/>
+			    Error message 4<br/>
+			    Error message 5<br/>
+			    Error message 6<br/>
+			    Error message 7<br/>
+			 </div -->
+
+	    	<g:HTMLPanel styleName="headerDoc" ui:field="container">	        
+	    	</g:HTMLPanel>
+
+	    </div>
+	    
+	    <g:HTMLPanel ui:field="right" styleName="right">Business Functionality
+	    <p>
+	        <g:Anchor ui:field="createNew" text="1. Create New Invoice"></g:Anchor>
+	    </p>    
+	    <p>
+	        2. Print Invoice
+	    </p>
+	    <p>
+	        3. Unpaid Invoices(Full lists)
+	    </p>
+	    <p>
+	        4. Paid Invoices (Full lists)
+	    </p>
+	    <p>
+	       	5.  Invoices due in 30 days
+	    </p>
+	    <p>
+	        6. Invoices due in 60 days
+	    </p>
+	    <p>
+	        7. Invoice Aging
+	    </p>
+	    <p>
+	        8. Recurring Invoice
+	    </p>
+	    <p>
+	        9. Clients
+	    </p>
+	    <p>
+	        10. Receivables Summary
+	    </p>
+	    <p>
+	        11. Payables Summary
+	    </p>
+	    </g:HTMLPanel>
+	    
+	    <!-- div id="footer">
+	        copyright duggankimani inc 2012
+	    </div -->
+	</g:HTMLPanel>
+
+</ui:UiBinder>

@@ -1,0 +1,63 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	 xmlns:menu="urn:import:com.sencha.gxt.widget.core.client.menu"
+	 xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+
+    <ui:style>
+    .menuBorder {
+        border-top: none;
+    }
+    .margin {
+       margin: 10px;
+     }
+  </ui:style>
+  
+	<g:HTMLPanel>
+		<menu:MenuBar borders="true" addStyleNames="{style.menuBorder}">
+          <menu:MenuBarItem text="File">
+            <menu:menu>
+              <menu:Menu>
+                <menu:MenuItem text="New" ui:field="menuNew"/>
+                <menu:MenuItem text="Open File">
+                  <menu:submenu>
+                    <menu:Menu ui:field="menuOpen">
+                      <menu:MenuItem text="readme.txt" />
+                      <menu:MenuItem text="helloworld.txt" />
+                    </menu:Menu>
+                  </menu:submenu>
+                </menu:MenuItem>
+              </menu:Menu>
+            </menu:menu>
+          </menu:MenuBarItem>
+          <menu:MenuBarItem text="Edit">
+            <menu:menu>
+              <menu:Menu ui:field="menuEdit">
+                <menu:MenuItem text="Cut" />
+                <menu:MenuItem text="Copy" />
+              </menu:Menu>
+            </menu:menu>
+          </menu:MenuBarItem>
+          <menu:MenuBarItem text="Search">
+            <menu:menu>
+              <menu:Menu ui:field="menuSearch">
+                <menu:MenuItem text="Search" />
+                <menu:MenuItem text="File" />
+                <menu:MenuItem text="Java" />
+              </menu:Menu>
+            </menu:menu>
+          </menu:MenuBarItem>
+          <menu:MenuBarItem text="Actions">
+            <menu:menu>
+              <menu:Menu ui:field="actionMenu">
+                
+              </menu:Menu>
+            </menu:menu>
+          </menu:MenuBarItem>
+        </menu:MenuBar>   
+	</g:HTMLPanel>
+</ui:UiBinder>

@@ -1,0 +1,20 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+
+    <ui:style>
+        .dimensions{
+			padding:3px;
+			width:100%;
+		}
+    </ui:style>
+	<g:HTMLPanel styleName="{style.dimensions}">
+	    <g:HorizontalPanel ui:field="menuContainer"></g:HorizontalPanel>
+	    <g:FlexTable ui:field="flexTable">	        
+	    </g:FlexTable>
+	</g:HTMLPanel>
+</ui:UiBinder>
