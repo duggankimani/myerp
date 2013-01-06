@@ -15,7 +15,7 @@
 			text-align:right;
 		}  	   
   	</ui:style>
-	<g:HorizontalPanel>
+	<g:HorizontalPanel ui:field="container">
 	    <gxt:FieldLabel ui:field="label"></gxt:FieldLabel>
 		<gxt:NumberField ui:field="component" editor="{propertyEditor}" name="last" 
 		    format="{numberFormat}" addStyleNames="{style.textFormat}"></gxt:NumberField>

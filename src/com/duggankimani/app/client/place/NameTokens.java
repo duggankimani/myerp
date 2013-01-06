@@ -5,6 +5,7 @@ public class NameTokens {
 	public static final String inputfrm = "inputfrm";
 	public static final String financeworkbench = "financeworkbench";
 	public static final String notfound = "notfound";
+	public static final String lines = "lines";
 
 	public static String getInputForm() {
 		return inputfrm;
@@ -16,5 +17,9 @@ public class NameTokens {
 
 	public static String getNotfound() {
 		return notfound;
+	}
+
+	public static String getLines() {
+		return lines;
 	}
 }

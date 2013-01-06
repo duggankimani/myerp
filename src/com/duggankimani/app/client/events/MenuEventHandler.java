@@ -1,13 +1,11 @@
-package com.duggankimani.app.client.eventhandlers;
+package com.duggankimani.app.client.events;
 
 import com.duggankimani.app.client.place.NameTokens;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
-import com.sencha.gxt.widget.core.client.info.Info;
 import com.sencha.gxt.widget.core.client.menu.Item;
-import com.sencha.gxt.widget.core.client.menu.MenuItem;
 
 public class MenuEventHandler implements SelectionHandler<Item> {
 

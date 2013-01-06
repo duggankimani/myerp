@@ -5,6 +5,7 @@ import com.duggankimani.app.shared.model.FieldModel;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.sencha.gxt.widget.core.client.menu.Menu;
@@ -61,4 +62,15 @@ public class InputFormMenuView extends ViewImpl implements
 		actionMenu.clear();
 		
 	}
+
+	@Override
+	public HorizontalPanel getContainer() {
+		return null;
+	}
+
+	@Override
+	public void setDescription(String description) {
+		
+	}
+
 }

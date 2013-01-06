@@ -1,39 +1,25 @@
 package com.duggankimani.app.shared.action;
 
-import com.gwtplatform.dispatch.shared.Result;
-import com.duggankimani.app.shared.model.FieldModel;
+import com.duggankimani.app.shared.model.WindowModel;
 
-import java.util.ArrayList;
+public class GetWindowActionResult extends BaseERPActionResult {
 
-public class GetWindowActionResult implements Result {
-
-	private ArrayList<FieldModel> fieldModels;
-	private Integer windowId;
-	private Integer tableId;
-	private Integer tabNo;
-
+	private WindowModel windowModel;
+	
 	@SuppressWarnings("unused")
 	private GetWindowActionResult() {
 		
 	}
-
-	public GetWindowActionResult(ArrayList<FieldModel> fieldModels) {
-		this.fieldModels = fieldModels;
+	
+	public GetWindowActionResult(WindowModel window){
+		this.windowModel = window;
 	}
 
-	public ArrayList<FieldModel> getFieldModels() {
-		return fieldModels;
+	public WindowModel getWindowModel() {
+		return windowModel;
 	}
 
-	public Integer getWindowId() {
-		return windowId;
-	}
-
-	public Integer getTableId() {
-		return tableId;
-	}
-
-	public Integer getTabNo() {
-		return tabNo;
+	public void setWindowModel(WindowModel windowModel) {
+		this.windowModel = windowModel;
 	}
 }

@@ -4,6 +4,7 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -17,11 +18,10 @@ public class IDView extends ViewImpl implements BaseView, IDPresenter.MyView {
 	@UiField
 	Anchor anchor;
 	
-	final Binder binder;
+	@UiField HorizontalPanel container;
 	
 	@Inject
 	public IDView(final Binder binder) {
-		this.binder = binder;
 		widget = binder.createAndBindUi(this);
 	}
 
@@ -46,5 +46,15 @@ public class IDView extends ViewImpl implements BaseView, IDPresenter.MyView {
 	public void setColSpan(int colSpan) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public HorizontalPanel getContainer() {
+		return container;
+	}
+
+
+	@Override
+	public void setDescription(String description) {
+		anchor.setTitle(description);
 	}
 }

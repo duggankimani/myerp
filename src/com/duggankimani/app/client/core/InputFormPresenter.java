@@ -1,5 +1,7 @@
 package com.duggankimani.app.client.core;
 
+import java.util.ArrayList;
+
 import com.gwtplatform.common.client.IndirectProvider;
 import com.gwtplatform.common.client.StandardProvider;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -26,9 +28,17 @@ import com.duggankimani.app.client.components.TextFieldPresenter;
 import com.duggankimani.app.client.components.CheckboxPresenter;
 import com.duggankimani.app.client.components.menu.InputFormMenuPresenter;
 import com.duggankimani.app.client.core.MainPagePresenter;
+import com.duggankimani.app.client.events.ERPRequestProcessingCompletedEvent;
+import com.duggankimani.app.client.events.ERPRequestProcessingEvent;
+import com.duggankimani.app.client.events.SetValueEvent;
+import com.duggankimani.app.shared.action.GetDataAction;
+import com.duggankimani.app.shared.action.GetDataActionResult;
 import com.duggankimani.app.shared.action.GetWindowAction;
 import com.duggankimani.app.shared.action.GetWindowActionResult;
+import com.duggankimani.app.shared.model.DataModel;
 import com.duggankimani.app.shared.model.FieldModel;
+import com.duggankimani.app.shared.model.TabModel;
+import com.duggankimani.app.shared.model.WindowModel;
 
 public class InputFormPresenter extends
 		Presenter<InputFormPresenter.MyView, InputFormPresenter.MyProxy> {
@@ -43,11 +53,13 @@ public class InputFormPresenter extends
 	public interface MyProxy extends ProxyPlace<InputFormPresenter> {
 	}
 
-
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> MENU_SLOT = new Type<RevealContentHandler<?>>();
-	
+
 	public static final Object COMPONENT_SLOT = new Object();
+
+	@ContentSlot
+	public static final Type<RevealContentHandler<?>> LINES_SLOT = new Type<RevealContentHandler<?>>();
 
 	@Inject
 	DispatchAsync dispatchAsync;
@@ -55,23 +67,31 @@ public class InputFormPresenter extends
 	private IndirectProvider<TextFieldPresenter> textBoxFactory;
 
 	private IndirectProvider<DateFieldPresenter> dateFieldFactory;
-	
+
 	private IndirectProvider<NumberFieldPresenter> numberFieldFactory;
-	
+
 	private IndirectProvider<CheckboxPresenter> checkboxFactory;
-	
+
 	private IndirectProvider<ComboPresenter> comboFactory;
-	
+
 	private IndirectProvider<ButtonPresenter> buttonFactory;
-	
-	@Inject InputFormMenuPresenter menu;
-	
+
+	private IndirectProvider<InputLinesPresenter> linesFactory;
+
+	@Inject
+	InputFormMenuPresenter menu;
+
+	private WindowModel windowModel;
+
 	@Inject
 	public InputFormPresenter(final EventBus eventBus, final MyView view,
 			final MyProxy proxy, Provider<TextFieldPresenter> textPageProvider,
-			Provider<DateFieldPresenter> datePageProvider, Provider<NumberFieldPresenter> numberFieldProvider,
-			Provider<CheckboxPresenter> checkboxProvider, Provider<ComboPresenter> comboProvider,
-			Provider<ButtonPresenter> buttonProvider) {
+			Provider<DateFieldPresenter> datePageProvider,
+			Provider<NumberFieldPresenter> numberFieldProvider,
+			Provider<CheckboxPresenter> checkboxProvider,
+			Provider<ComboPresenter> comboProvider,
+			Provider<ButtonPresenter> buttonProvider,
+			Provider<InputLinesPresenter> linesProvider) {
 
 		super(eventBus, view, proxy);
 
@@ -81,13 +101,19 @@ public class InputFormPresenter extends
 		this.dateFieldFactory = new StandardProvider<DateFieldPresenter>(
 				datePageProvider);
 
-		this.numberFieldFactory = new StandardProvider<NumberFieldPresenter>(numberFieldProvider);
-		
-		this.checkboxFactory = new StandardProvider<CheckboxPresenter>(checkboxProvider);
-		
+		this.numberFieldFactory = new StandardProvider<NumberFieldPresenter>(
+				numberFieldProvider);
+
+		this.checkboxFactory = new StandardProvider<CheckboxPresenter>(
+				checkboxProvider);
+
 		this.comboFactory = new StandardProvider<ComboPresenter>(comboProvider);
+
+		this.buttonFactory = new StandardProvider<ButtonPresenter>(
+				buttonProvider);
+
+		linesFactory = new StandardProvider<InputLinesPresenter>(linesProvider);
 		
-		this.buttonFactory = new StandardProvider<ButtonPresenter>(buttonProvider);
 	}
 
 	@Override
@@ -98,22 +124,41 @@ public class InputFormPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
+	}
 
+	@Override
+	public boolean useManualReveal() {
+		return true;
 	}
 
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		this.setInSlot(COMPONENT_SLOT, null);
+		this.setInSlot(LINES_SLOT, null);
 
 		String AD_Menu_ID = request.getParameter("AD_Menu_ID", "0");
 
 		GetWindowAction action = new GetWindowAction(new Integer(AD_Menu_ID));
 
+		fireEvent(new ERPRequestProcessingEvent(AD_Menu_ID));
+
 		dispatchAsync.execute(action,
 				new ERPAsyncCallback<GetWindowActionResult>() {
 					@Override
+					public void onFailure(Throwable caught) {
+						super.onFailure(caught);
+						// must do this when using manual reveal
+						fireEvent(new ERPRequestProcessingCompletedEvent());
+						getProxy().manualRevealFailed();						
+					}
+
+					@Override
 					public void processResult(GetWindowActionResult result) {
 						addFields(result);
+						getProxy().manualReveal(InputFormPresenter.this);
+						fireEvent(new ERPRequestProcessingCompletedEvent());	
+						loadData();						
+											
 					}
 				});
 
@@ -121,14 +166,35 @@ public class InputFormPresenter extends
 
 	public void addFields(GetWindowActionResult result) {
 
-		((InputFormMenuPresenter.MyView)menu.getView()).clearActions();
-		
-		for (final FieldModel field : result.getFieldModels()) {
+		this.windowModel = result.getWindowModel();
+
+		((InputFormMenuPresenter.MyView) menu.getView()).clearActions();
+
+		ArrayList<FieldModel> fields = result.getWindowModel().getTab(0)
+				.getFields();
+
+		for (final FieldModel field : fields) {
 			if (!field.isSameLine())
 				this.getView().navigateNextRow();
 
 			createField(field);
 		}
+
+		if (windowModel != null && windowModel.getTabs().size() > 1)
+			addLinesView(windowModel.getTab(1));
+
+	}
+
+	private void addLinesView(final TabModel tab) {
+
+		linesFactory.get(new ERPAsyncCallback<InputLinesPresenter>() {
+
+			@Override
+			public void processResult(InputLinesPresenter result) {
+				result.getView().bind(tab);
+				setInSlot(LINES_SLOT, result);
+			}
+		});
 
 	}
 
@@ -168,35 +234,29 @@ public class InputFormPresenter extends
 	}
 
 	private void createButtonField(final FieldModel field) {
-		
-		((InputFormMenuPresenter.MyView)menu.getView()).addField(field);
-	
+
+		((InputFormMenuPresenter.MyView) menu.getView()).addField(field);
+
 		buttonFactory.get(new ERPAsyncCallback<ButtonPresenter>() {
 			@Override
 			public void processResult(ButtonPresenter result) {
-				
-				((ButtonPresenter.MyView)result.getView()).init(field);
-				result.getView().setName(field.getName());
-				
+				result.setFieldModel(field);
 				InputFormPresenter.this.addToSlot(COMPONENT_SLOT, result);
 			}
 		});
-		
+
 	}
 
 	private void createComboField(final FieldModel field) {
-		
+
 		comboFactory.get(new ERPAsyncCallback<ComboPresenter>() {
 			@Override
 			public void processResult(ComboPresenter result) {
-				
-				((ComboPresenter.MyView)result.getView()).init(field);
-				result.getView().setName(field.getName());
-				
+				result.setFieldModel(field);
 				InputFormPresenter.this.addToSlot(COMPONENT_SLOT, result);
 			}
 		});
-		
+
 	}
 
 	private void createCheckboxField(final FieldModel field) {
@@ -204,23 +264,21 @@ public class InputFormPresenter extends
 			@Override
 			public void processResult(CheckboxPresenter result) {
 				result.setFieldModel(field);
-				result.getView().setName(field.getName());
 				InputFormPresenter.this.addToSlot(COMPONENT_SLOT, result);
 			}
 		});
 	}
 
 	private void createNumberField(final FieldModel field) {
-	
+
 		numberFieldFactory.get(new ERPAsyncCallback<NumberFieldPresenter>() {
 			@Override
 			public void processResult(NumberFieldPresenter result) {
-				((NumberFieldPresenter.MyView)result.getView()).init(field);
 				result.setFieldModel(field);
 				InputFormPresenter.this.addToSlot(COMPONENT_SLOT, result);
 			}
 		});
-		
+
 	}
 
 	public void createTextField(final FieldModel field) {
@@ -244,11 +302,35 @@ public class InputFormPresenter extends
 		});
 
 	}
-	
+
+	/**
+	 * Loads this components data
+	 */
+	protected void loadData() {
+
+		fireEvent(new ERPRequestProcessingEvent("Data"));
+		dispatchAsync.execute(new GetDataAction(0, 0, 0, 0),
+				new ERPAsyncCallback<GetDataActionResult>() {
+					@Override
+					public void processResult(GetDataActionResult result) {
+
+						if (result != null) {
+							DataModel dataModel = result.getDataModel();
+							if (dataModel != null){
+								fireEvent(new SetValueEvent(dataModel));
+							}
+						}
+						fireEvent(new ERPRequestProcessingCompletedEvent());
+					}
+				});
+
+	}
+
 	@Override
 	protected void onReset() {
 		super.onReset();
 		setInSlot(MENU_SLOT, menu);
+
 	}
 
 }

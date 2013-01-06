@@ -31,6 +31,8 @@ import com.duggankimani.app.client.components.ButtonPresenter;
 import com.duggankimani.app.client.components.ButtonView;
 import com.duggankimani.app.client.core.ErrorPagePresenter;
 import com.duggankimani.app.client.core.ErrorPageView;
+import com.duggankimani.app.client.core.InputLinesPresenter;
+import com.duggankimani.app.client.core.InputLinesView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -82,5 +84,8 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenter(ErrorPagePresenter.class,
 				ErrorPagePresenter.MyView.class, ErrorPageView.class,
 				ErrorPagePresenter.MyProxy.class);
+
+		bindPresenterWidget(InputLinesPresenter.class,
+				InputLinesPresenter.MyView.class, InputLinesView.class);
 	}
 }

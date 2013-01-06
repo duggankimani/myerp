@@ -2,13 +2,14 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
-	xmlns:gxt='urn:import:com.sencha.gxt.widget.core.client.form'
+	xmlns:grid='urn:import:com.sencha.gxt.widget.core.client.grid'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<g:HorizontalPanel ui:field="container">	    
-	    <gxt:FieldLabel ui:field="label"></gxt:FieldLabel>
-		<gxt:CheckBox ui:field="component"></gxt:CheckBox>
-	</g:HorizontalPanel>
+	<g:HTMLPanel>
+	    <div class="scroller">
+	    <grid:Grid ui:field="grid" width="500px" height="200px"></grid:Grid>
+	    </div>
+	</g:HTMLPanel>
 </ui:UiBinder>

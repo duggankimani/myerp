@@ -1,5 +1,6 @@
 package com.duggankimani.app.client.components;
 
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.gwtplatform.mvp.client.View;
 
 /**
@@ -14,4 +15,8 @@ public interface BaseView extends View {
 	public int getColSpan();
 	
 	public void setColSpan(int colSpan);
+	
+	public HorizontalPanel getContainer();
+
+	public void setDescription(String description);
 }

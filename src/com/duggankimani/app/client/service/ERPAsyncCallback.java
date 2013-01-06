@@ -1,5 +1,8 @@
 package com.duggankimani.app.client.service;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 
@@ -26,5 +29,12 @@ public abstract class ERPAsyncCallback<T> implements AsyncCallback<T>{
 	}
 	
 	public abstract void processResult(T result);
+	
+	private Date getDate(){
+		return new Date();//transactionDate;
+	}
+	
+	BigDecimal number;
+	
 
 }

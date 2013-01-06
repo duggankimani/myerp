@@ -16,6 +16,7 @@ import org.compiere.util.ValueNamePair;
 
 import com.gwtplatform.dispatch.server.actionhandler.ActionHandler;
 import com.duggankimani.app.server.ERPSessionManager;
+import com.duggankimani.app.server.WindowStatus;
 import com.duggankimani.app.shared.action.GetWindowAction;
 import com.duggankimani.app.shared.action.GetWindowActionResult;
 import com.duggankimani.app.shared.model.DisplayType;
@@ -32,27 +33,20 @@ import com.gwtplatform.dispatch.shared.ActionException;
  * @author duggan
  *
  */
-public class GetWindowActionActionHandler implements
+public class GetWindowActionHandler implements
 		ActionHandler<GetWindowAction, GetWindowActionResult> {
 
 	@Inject
-	public GetWindowActionActionHandler() {
+	public GetWindowActionHandler() {
 	}
 
 	@Override
 	public GetWindowActionResult execute(GetWindowAction action,
 			ExecutionContext context) throws ActionException {
-		WindowModel model = null;
+		WindowModel model = getWindowModel(action.getAD_Menu_ID());
 		
-		try {
-			model = getWindowModel(action.getAD_Menu_ID());
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
 
-		GetWindowActionResult actionresult = new GetWindowActionResult(model
-				.getTab(0).getFields());
+		GetWindowActionResult actionresult = new GetWindowActionResult(model);
 
 		return actionresult;
 	}
@@ -81,12 +75,12 @@ public class GetWindowActionActionHandler implements
 		if (gridWindowVO == null)
 			throw new RuntimeException("Could not create GridWindowVO is null");
 
-		GridWindow window = new GridWindow(gridWindowVO);
-
-		model.setName(window.getName());
+		WindowStatus.getWindowStatus(gridWindowVO, false);
+		
+		model.setName(gridWindowVO.Name);
 		model.setMenuID(AD_Menu_ID);
-		model.setDescription(window.getDescription());
-		model.setWindowID(window.getAD_Window_ID());
+		model.setDescription(gridWindowVO.Description);
+		model.setWindowID(gridWindowVO.AD_Window_ID);
 
 		addTabs(model, gridWindowVO);
 
@@ -106,6 +100,9 @@ public class GetWindowActionActionHandler implements
 
 			addFields(tab, gridTabVO);
 			model.add(tab);
+			if(i==2)//load tab 0 and 1 only : tab loading optimization required
+				break;
+				
 		}
 
 	}
@@ -118,9 +115,15 @@ public class GetWindowActionActionHandler implements
 					field.IsSameLine);
 			model.setDisplayType(DisplayType.getDisplayType(field.displayType));
 			model.setDescription(field.Description);
+			model.setColumnName(field.ColumnName);
+			model.setDisplayed(field.IsDisplayed);
 			
 			if (model.getDisplayType().isLookup()) {
 				loadLookup(field, model);
+			}
+			
+			if(field.IsKey){
+				model.setKeyColumn(true);
 			}
 			tab.addField(model);
 		}

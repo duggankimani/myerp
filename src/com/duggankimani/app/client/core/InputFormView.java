@@ -4,6 +4,7 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -18,6 +19,8 @@ public class InputFormView extends ViewImpl implements InputFormPresenter.MyView
 	@UiField FlexTable flexTable;
 	
 	@UiField HorizontalPanel menuContainer;
+	
+	@UiField HTMLPanel linesContainer;
 	
 	@Inject
 	public InputFormView(final Binder binder) {
@@ -45,7 +48,12 @@ public class InputFormView extends ViewImpl implements InputFormPresenter.MyView
 			menuContainer.clear();
 			if(content!=null)
 				menuContainer.add(content);
-		}		
+		}else if(slot == InputFormPresenter.LINES_SLOT){
+			linesContainer.clear();
+			if(content!=null){
+				linesContainer.add(content);
+			}
+		}
 		else {
 			super.setInSlot(slot, content);
 		}
@@ -66,6 +74,10 @@ public class InputFormView extends ViewImpl implements InputFormPresenter.MyView
 	public void navigateNextRow() {
 		x=0;
 		++y;
+	}
+
+	public HTMLPanel getLinesContainer() {
+		return linesContainer;
 	}
 
 }

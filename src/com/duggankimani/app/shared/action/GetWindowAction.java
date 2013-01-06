@@ -1,11 +1,6 @@
 package com.duggankimani.app.shared.action;
 
-import com.gwtplatform.dispatch.shared.ActionImpl;
-import com.duggankimani.app.shared.action.GetWindowActionResult;
-import java.lang.Integer;
-
-public class GetWindowAction extends ActionImpl<GetWindowActionResult> {
-
+public class GetWindowAction extends BaseERPAction<GetWindowActionResult> {
 	Integer AD_Menu_ID;
 
 	@SuppressWarnings("unused")

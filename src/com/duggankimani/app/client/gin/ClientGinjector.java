@@ -12,6 +12,7 @@ import com.duggankimani.app.client.core.InputFormPresenter;
 import com.duggankimani.app.client.workbench.FinanceWorkbenchPresenter;
 import com.duggankimani.app.client.components.menu.MenuPresenter;
 import com.duggankimani.app.client.core.ErrorPagePresenter;
+import com.duggankimani.app.client.core.InputLinesPresenter;
 
 @GinModules({ DispatchAsyncModule.class, ClientModule.class })
 public interface ClientGinjector extends Ginjector {
@@ -29,4 +30,6 @@ public interface ClientGinjector extends Ginjector {
 	AsyncProvider<MenuPresenter> getMenuPresenter();
 
 	AsyncProvider<ErrorPagePresenter> getErrorPagePresenter();
+
+	AsyncProvider<InputLinesPresenter> getInputLinesPresenter();
 }

@@ -1,9 +1,7 @@
 package com.duggankimani.app.server;
 
 import java.util.Properties;
-import java.util.logging.Level;
 
-import org.compiere.util.CLogger;
 import org.compiere.util.ContextProvider;
 
 public class ERPSessionManager implements ContextProvider{

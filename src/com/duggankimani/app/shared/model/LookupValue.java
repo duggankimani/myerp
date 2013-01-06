@@ -16,15 +16,15 @@ public class LookupValue implements Serializable{
 		
 	}
 	
-	public LookupValue(String key, String value){
+	public LookupValue(String key1, String value){
 
-		this.key2=key;
+		this.key2=key1;
 		this.value = value;
 	}
 
-	public LookupValue(Integer key, String value){
-		this(""+key, value);
-		this.key=key;		
+	public LookupValue(Integer key1, String value){
+		this(""+key1, value);
+		this.key=key1;		
 	}
 	
 	public Integer getKey() {

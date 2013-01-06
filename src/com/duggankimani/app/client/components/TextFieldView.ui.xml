@@ -7,7 +7,7 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<g:HorizontalPanel>
+	<g:HorizontalPanel ui:field="container">
 	    <gxt:FieldLabel ui:field="label"></gxt:FieldLabel>
 		<gxt:TextField ui:field="component"></gxt:TextField>
 	</g:HorizontalPanel>

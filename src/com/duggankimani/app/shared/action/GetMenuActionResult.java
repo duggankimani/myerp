@@ -1,9 +1,11 @@
 package com.duggankimani.app.shared.action;
 
-import com.duggankimani.app.shared.model.MenuFolder;
-import com.gwtplatform.dispatch.shared.Result;
+import java.math.BigDecimal;
+import java.util.Date;
 
-public class GetMenuActionResult implements Result {
+import com.duggankimani.app.shared.model.MenuFolder;
+
+public class GetMenuActionResult extends BaseERPActionResult {
 
 	MenuFolder menus;
 	
@@ -17,5 +19,29 @@ public class GetMenuActionResult implements Result {
 
 	public void setMenus(MenuFolder menus) {
 		this.menus = menus;
+	}
+
+
+	/**
+	 * Dummy data to enable Serialization
+	 */
+	Date today;
+	
+	BigDecimal num;
+	
+	public Date getToday() {
+		return today;
+	}
+
+	public void setToday(Date today) {
+		this.today = today;
+	}
+
+	public BigDecimal getNum() {
+		return num;
+	}
+
+	public void setNum(BigDecimal num) {
+		this.num = num;
 	}
 }

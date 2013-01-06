@@ -5,6 +5,7 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
@@ -21,6 +22,8 @@ public class NumberFieldView extends ViewImpl implements BaseView,
 
 	@UiField
 	NumberField<Number> component;
+	
+	@UiField HorizontalPanel container;
 
 	@UiField
 	FieldLabel label;
@@ -42,6 +45,8 @@ public class NumberFieldView extends ViewImpl implements BaseView,
 		switch (field.getDisplayType()) {
 		case INTEGER:
 		case QUANTITY:	
+		case ID:
+		case ROWID:
 			propertyEditor = new NumberPropertyEditor.IntegerPropertyEditor();
 			numberFormat = NumberFormat.getFormat("0");
 			break;
@@ -79,6 +84,20 @@ public class NumberFieldView extends ViewImpl implements BaseView,
 	@Override
 	public void setColSpan(int colSpan) {
 
+	}
+	
+	public HorizontalPanel getContainer() {
+		return container;
+	}
+
+	@Override
+	public void setValue(Number value) {
+		component.setValue(value);		
+	}
+
+	@Override
+	public void setDescription(String description) {
+		component.setTitle(description);
 	}
 
 }

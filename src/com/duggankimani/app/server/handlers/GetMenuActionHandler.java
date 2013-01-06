@@ -1,7 +1,6 @@
 package com.duggankimani.app.server.handlers;
 
 import java.util.Enumeration;
-import java.util.Random;
 
 import org.compiere.model.MTree;
 import org.compiere.model.MTreeNode;
@@ -17,11 +16,11 @@ import com.google.inject.Inject;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.shared.ActionException;
 
-public class GetMenuActionActionHandler implements
+public class GetMenuActionHandler implements
 		ActionHandler<GetMenuAction, GetMenuActionResult> {
 
 	@Inject
-	public GetMenuActionActionHandler() {
+	public GetMenuActionHandler() {
 	}
 
 	@Override
@@ -63,6 +62,7 @@ public class GetMenuActionActionHandler implements
 	 * @param mNode
 	 */
 	public void generateMenu(MenuFolder root, MTreeNode mNode) {
+		@SuppressWarnings("unchecked")
 		Enumeration<MTreeNode> nodeEnum = mNode.children();
 
 		while (nodeEnum.hasMoreElements()) {

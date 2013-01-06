@@ -7,6 +7,8 @@ public class TextFieldPresenter extends
 		BasePresenterWidget<TextFieldPresenter.MyView> {
 
 	public interface MyView extends BaseView {
+
+		void setValue(String value);
 	}
 
 	@Inject
@@ -18,4 +20,10 @@ public class TextFieldPresenter extends
 	protected void onBind() {
 		super.onBind();
 	}
+
+	@Override
+	public void setValue(Object value) {
+		((MyView)getView()).setValue((String)value);
+	}
+
 }

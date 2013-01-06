@@ -10,7 +10,7 @@
     <ui:with type="com.sencha.gxt.data.shared.ListStore" field="store"></ui:with>
     <ui:with type="com.sencha.gxt.data.shared.LabelProvider" field="labelProvider"/>
     
-	<g:HorizontalPanel>	    
+	<g:HorizontalPanel ui:field="container">	    
 	    <gxt:FieldLabel ui:field="label"></gxt:FieldLabel>
 		<gxt:ComboBox ui:field="component" store="{store}" allowBlank="true" triggerAction="ALL"></gxt:ComboBox>
 	</g:HorizontalPanel>

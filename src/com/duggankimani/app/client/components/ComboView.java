@@ -7,6 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor.Ignore;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.sencha.gxt.data.shared.LabelProvider;
@@ -42,6 +43,9 @@ public class ComboView extends ViewImpl implements BaseView, ComboPresenter.MyVi
 	@UiField(provided=true)
 	@Ignore
 	ComboBox<LookupValue> component;
+	
+	@UiField HorizontalPanel container;
+
 	
 	@Inject
 	public ComboView(final Binder binder) {
@@ -80,5 +84,27 @@ public class ComboView extends ViewImpl implements BaseView, ComboPresenter.MyVi
 	public void setColSpan(int colSpan) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public HorizontalPanel getContainer() {
+		return container;
+	}
+
+	@Override
+	public void setValue(Integer key) {
+
+		setValue(key+"");		
+	}
+
+	@Override
+	public void setValue(String key) {
+		LookupValue val = store.findModelWithKey(key);
+		//System.out.println("Val - "+key);
+		component.setValue(val);
+	}
+
+	@Override
+	public void setDescription(String description) {
+		component.setTitle(description);
 	}
 }

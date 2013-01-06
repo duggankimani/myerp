@@ -1,18 +1,15 @@
 package com.duggankimani.app.client.components.menu;
 
-import com.duggankimani.app.client.eventhandlers.MenuEventHandler;
+import com.duggankimani.app.client.events.MenuEventHandler;
 import com.duggankimani.app.client.resources.ERPIMAGES;
 import com.duggankimani.app.shared.model.MenuFolder;
 import com.duggankimani.app.shared.model.MenuType;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.sencha.gxt.widget.core.client.menu.Item;
 import com.sencha.gxt.widget.core.client.menu.Menu;
 import com.sencha.gxt.widget.core.client.menu.MenuItem;
 

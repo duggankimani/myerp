@@ -5,6 +5,7 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -16,6 +17,8 @@ public class ButtonView extends ViewImpl implements BaseView,ButtonPresenter.MyV
 	}
 
 	@UiField Anchor component;
+	
+	@UiField HorizontalPanel container;
 	
 	@Inject
 	public ButtonView(final Binder binder) {
@@ -39,13 +42,20 @@ public class ButtonView extends ViewImpl implements BaseView,ButtonPresenter.MyV
 
 	@Override
 	public int getColSpan() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void setColSpan(int colSpan) {
-		// TODO Auto-generated method stub
 		
+	}
+
+	public HorizontalPanel getContainer() {
+		return container;
+	}
+
+	@Override
+	public void setDescription(String description) {
+		component.setTitle(description);
 	}
 }

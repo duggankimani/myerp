@@ -8,7 +8,7 @@
 	ui:generateLocales='default'>
 
 	
-	<g:HorizontalPanel>
+	<g:HorizontalPanel ui:field="container">
 	    <gxt:FieldLabel ui:field="label"></gxt:FieldLabel>
 		<g:Anchor ui:field="component"></g:Anchor>
 	</g:HorizontalPanel>

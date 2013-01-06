@@ -1,6 +1,10 @@
 package com.duggankimani.app.client.core;
 
 import com.duggankimani.app.client.components.menu.MenuPresenter;
+import com.duggankimani.app.client.events.ERPRequestProcessingCompletedEvent;
+import com.duggankimani.app.client.events.ERPRequestProcessingEvent;
+import com.duggankimani.app.client.events.ERPRequestProcessingCompletedEvent.ERPRequestProcessingCompletedHandler;
+import com.duggankimani.app.client.events.ERPRequestProcessingEvent.ERPRequestProcessingHandler;
 import com.duggankimani.app.client.place.NameTokens;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
@@ -19,11 +23,14 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 public class MainPagePresenter extends
-		Presenter<MainPagePresenter.MyView, MainPagePresenter.MyProxy> {
+		Presenter<MainPagePresenter.MyView, MainPagePresenter.MyProxy> 
+			implements ERPRequestProcessingHandler, ERPRequestProcessingCompletedHandler{
 
 	public interface MyView extends View {
 		public Anchor getAnchorHome();
 		public Anchor getCreateNew();
+		public void showLoadingMessage(String message);
+		public void hideLoadingMessage();
 	}
 
 	@ProxyCodeSplit
@@ -47,6 +54,8 @@ public class MainPagePresenter extends
 	public MainPagePresenter(final EventBus eventBus, final MyView view,
 			final MyProxy proxy) {
 		super(eventBus, view, proxy);
+		eventBus.addHandler(ERPRequestProcessingCompletedEvent.TYPE, this);
+		eventBus.addHandler(ERPRequestProcessingEvent.TYPE, this);
 	}
 
 	@Override
@@ -84,6 +93,17 @@ public class MainPagePresenter extends
 	protected void onReset() {
 		super.onReset();
 		this.setInSlot(MENU_SLOT, menu);
+	}
+
+	@Override
+	public void onERPRequestProcessing(ERPRequestProcessingEvent event) {
+		getView().showLoadingMessage(event.getDescription());		
+	}
+
+	@Override
+	public void onERPRequestProcessingCompleted(
+			ERPRequestProcessingCompletedEvent event) {
+		getView().hideLoadingMessage();
 	}
 	
 }

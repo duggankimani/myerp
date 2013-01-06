@@ -1,11 +1,8 @@
 package com.duggankimani.app.server.guice;
 
-import java.util.logging.Level;
-
 import javax.servlet.ServletContextEvent;
 
 import org.compiere.Adempiere;
-import org.compiere.util.CLogger;
 import org.compiere.util.Env;
 
 import com.google.inject.servlet.GuiceServletContextListener;

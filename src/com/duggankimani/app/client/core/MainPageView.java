@@ -1,6 +1,7 @@
 package com.duggankimani.app.client.core;
 
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
@@ -27,6 +28,9 @@ public class MainPageView extends ViewImpl implements MainPagePresenter.MyView {
 	
 	@UiField
 	HTMLPanel menuContainer;
+	
+	@UiField
+	SpanElement loadingComponent;
 	
 	@Inject
 	public MainPageView(final Binder binder) {
@@ -63,6 +67,17 @@ public class MainPageView extends ViewImpl implements MainPagePresenter.MyView {
 
 	public Anchor getCreateNew() {
 		return createNew;
+	}
+	
+	public void showLoadingMessage(String message){
+		if(message==null)
+			message = "";
+		
+		loadingComponent.setInnerText("loading "+message+"....");
+	}
+	
+	public void hideLoadingMessage(){
+		loadingComponent.setInnerText("");
 	}
 
 }

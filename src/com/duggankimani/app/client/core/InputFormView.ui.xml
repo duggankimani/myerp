@@ -16,5 +16,7 @@
 	    <g:HorizontalPanel ui:field="menuContainer"></g:HorizontalPanel>
 	    <g:FlexTable ui:field="flexTable">	        
 	    </g:FlexTable>
+	    <g:HTMLPanel ui:field="linesContainer">
+	    </g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder>

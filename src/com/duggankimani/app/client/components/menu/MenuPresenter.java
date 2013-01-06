@@ -52,6 +52,7 @@ public class MenuPresenter extends
 		super.prepareFromRequest(request);
 		
 	}
+	
 	@Override
 	protected void onReset() {
 		// TODO Auto-generated method stub
