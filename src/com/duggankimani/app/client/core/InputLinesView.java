@@ -59,6 +59,7 @@ public class InputLinesView extends ViewImpl implements
 
 	public void bind(TabModel tabModel) {
 		this.tab = tabModel;
+		list.clear();
 		
 		ArrayList<FieldModel> fields = tab.getFields();
 		
@@ -94,5 +95,11 @@ public class InputLinesView extends ViewImpl implements
 	@UiFactory
 	Grid<DataModel> createGrid() {
 		return new Grid<DataModel>(store, cm, gridView);
+	}
+
+	@Override
+	public void bindData(ArrayList<DataModel> dataModel) {
+		store.clear();
+		store.addAll(dataModel);
 	}
 }

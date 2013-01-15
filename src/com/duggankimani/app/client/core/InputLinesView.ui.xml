@@ -9,7 +9,7 @@
 
 	<g:HTMLPanel>
 	    <div class="scroller">
-	    <grid:Grid ui:field="grid" width="500px" height="200px"></grid:Grid>
+	    <grid:Grid ui:field="grid" width="800px" height="150px"></grid:Grid>
 	    </div>
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -6,25 +6,31 @@ import java.lang.String;
 public class MinTabModel implements Serializable {
 
 	private static final long serialVersionUID = -3287494018092921779L;
-	private String tabNo;
+	private Integer tabNo;
 	private String name;
 
 	public MinTabModel() {
 	}
-
-	public void setTabNo(String tabNo) {
+	
+	public MinTabModel(Integer tabNo, String name){
 		this.tabNo = tabNo;
+		this.name = name;
 	}
 
+	
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public String getTabNo() {
+	public String getName() {
+		return name;
+	}
+
+	public Integer getTabNo() {
 		return tabNo;
 	}
 
-	public String getName() {
-		return name;
+	public void setTabNo(Integer tabNo) {
+		this.tabNo = tabNo;
 	}
 }

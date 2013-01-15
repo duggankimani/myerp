@@ -25,6 +25,7 @@ public class WindowStatus {
 	public static WindowStatus getWindowStatus(GridWindowVO vo, boolean init) {
 
 		if (windowStatus != null) {
+			
 			if (windowStatus.gridWindowV0 != null
 					&& vo.AD_Window_ID != windowStatus.gridWindowV0.AD_Window_ID)
 				windowStatus = new WindowStatus(vo);
@@ -41,6 +42,6 @@ public class WindowStatus {
 	}
 	
 	public static WindowStatus getWindowStatus(int AD_Window_ID){
-		return getWindowStatus(windowStatus.gridWindowV0, true);
+		return getWindowStatus(windowStatus.gridWindowV0, windowStatus.gridWindow==null);
 	}
 }

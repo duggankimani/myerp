@@ -30,6 +30,8 @@ import com.duggankimani.app.client.components.menu.InputFormMenuPresenter;
 import com.duggankimani.app.client.core.MainPagePresenter;
 import com.duggankimani.app.client.events.ERPRequestProcessingCompletedEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingEvent;
+import com.duggankimani.app.client.events.NavigateEvent;
+import com.duggankimani.app.client.events.NavigateEvent.NavigateHandler;
 import com.duggankimani.app.client.events.SetValueEvent;
 import com.duggankimani.app.shared.action.GetDataAction;
 import com.duggankimani.app.shared.action.GetDataActionResult;
@@ -37,14 +39,17 @@ import com.duggankimani.app.shared.action.GetWindowAction;
 import com.duggankimani.app.shared.action.GetWindowActionResult;
 import com.duggankimani.app.shared.model.DataModel;
 import com.duggankimani.app.shared.model.FieldModel;
-import com.duggankimani.app.shared.model.TabModel;
 import com.duggankimani.app.shared.model.WindowModel;
 
 public class InputFormPresenter extends
-		Presenter<InputFormPresenter.MyView, InputFormPresenter.MyProxy> {
+		Presenter<InputFormPresenter.MyView, InputFormPresenter.MyProxy> implements NavigateHandler {
 
 	public interface MyView extends View {
 		void navigateNextRow();
+
+		void setColSpan(int colSpan);
+		
+		void setTitle(String title);
 
 	}
 
@@ -76,13 +81,13 @@ public class InputFormPresenter extends
 
 	private IndirectProvider<ButtonPresenter> buttonFactory;
 
-	private IndirectProvider<InputLinesPresenter> linesFactory;
-
 	@Inject
 	InputFormMenuPresenter menu;
 
 	private WindowModel windowModel;
 
+	@Inject InputLinesTabsPresenter tabsPresenter;
+	
 	@Inject
 	public InputFormPresenter(final EventBus eventBus, final MyView view,
 			final MyProxy proxy, Provider<TextFieldPresenter> textPageProvider,
@@ -90,8 +95,7 @@ public class InputFormPresenter extends
 			Provider<NumberFieldPresenter> numberFieldProvider,
 			Provider<CheckboxPresenter> checkboxProvider,
 			Provider<ComboPresenter> comboProvider,
-			Provider<ButtonPresenter> buttonProvider,
-			Provider<InputLinesPresenter> linesProvider) {
+			Provider<ButtonPresenter> buttonProvider) {
 
 		super(eventBus, view, proxy);
 
@@ -111,8 +115,8 @@ public class InputFormPresenter extends
 
 		this.buttonFactory = new StandardProvider<ButtonPresenter>(
 				buttonProvider);
-
-		linesFactory = new StandardProvider<InputLinesPresenter>(linesProvider);
+		
+		addHandler(NavigateEvent.TYPE, this);
 		
 	}
 
@@ -127,6 +131,13 @@ public class InputFormPresenter extends
 	}
 
 	@Override
+	protected void onUnbind() {
+		// TODO Auto-generated method stub
+		super.onUnbind();
+		System.out.println("Parent Unbind called!!!!");
+	}
+	
+	@Override
 	public boolean useManualReveal() {
 		return true;
 	}
@@ -136,9 +147,13 @@ public class InputFormPresenter extends
 		this.setInSlot(COMPONENT_SLOT, null);
 		this.setInSlot(LINES_SLOT, null);
 
-		String AD_Menu_ID = request.getParameter("AD_Menu_ID", "0");
+		String AD_Menu_ID = request.getParameter("m", "0");
+		String AD_Window_ID=request.getParameter("w", "0");
+		String tabNo = request.getParameter("t", "0");
+		String recordid=request.getParameter("r", "0");
+		
 
-		GetWindowAction action = new GetWindowAction(new Integer(AD_Menu_ID));
+		GetWindowAction action = new GetWindowAction(new Integer(AD_Menu_ID), new Integer(AD_Window_ID), new Integer(tabNo), new Integer(recordid));
 
 		fireEvent(new ERPRequestProcessingEvent(AD_Menu_ID));
 
@@ -165,11 +180,14 @@ public class InputFormPresenter extends
 	}
 
 	public void addFields(GetWindowActionResult result) {
-
+		//clear whatever was there before
+		setInSlot(LINES_SLOT, null);	
+				
 		this.windowModel = result.getWindowModel();
 
 		((InputFormMenuPresenter.MyView) menu.getView()).clearActions();
-
+		((MyView)getView()).setTitle(result.getWindowModel().getTab(0).getName());
+		
 		ArrayList<FieldModel> fields = result.getWindowModel().getTab(0)
 				.getFields();
 
@@ -180,23 +198,20 @@ public class InputFormPresenter extends
 			createField(field);
 		}
 
-		if (windowModel != null && windowModel.getTabs().size() > 1)
-			addLinesView(windowModel.getTab(1));
+		if (windowModel != null && windowModel.getTabs().size() > 1){
+			//addLinesView(windowModel.getTab(1));
+			createTabView(windowModel);
+		}
+			
 
 	}
 
-	private void addLinesView(final TabModel tab) {
-
-		linesFactory.get(new ERPAsyncCallback<InputLinesPresenter>() {
-
-			@Override
-			public void processResult(InputLinesPresenter result) {
-				result.getView().bind(tab);
-				setInSlot(LINES_SLOT, result);
-			}
-		});
-
+	private void createTabView(WindowModel tab) {
+		
+		tabsPresenter.bindTabs(tab.getMinTabDetails());
+		setInSlot(LINES_SLOT, tabsPresenter);
 	}
+
 
 	public void createField(final FieldModel field) {
 
@@ -210,7 +225,9 @@ public class InputFormPresenter extends
 		case INTEGER:
 		case ID:
 		case QUANTITY:
+		case COSTPRICE:
 		case ROWID:
+		case PATTRIBUTESET:
 			createNumberField(field);
 			break;
 		case YESNO:
@@ -287,6 +304,7 @@ public class InputFormPresenter extends
 			public void processResult(TextFieldPresenter result) {
 				result.setFieldModel(field);
 				InputFormPresenter.this.addToSlot(COMPONENT_SLOT, result);
+				//setColSpan(result.getView().getColSpan());
 			}
 		});
 
@@ -309,13 +327,24 @@ public class InputFormPresenter extends
 	protected void loadData() {
 
 		fireEvent(new ERPRequestProcessingEvent("Data"));
-		dispatchAsync.execute(new GetDataAction(0, 0, 0, 0),
+		loadData(new GetDataAction(0, 0, 0, 0));
+
+	}
+	
+
+	/**
+	 * Loads this components data
+	 */
+	protected void loadData(GetDataAction action) {
+
+		fireEvent(new ERPRequestProcessingEvent("Data"));
+		dispatchAsync.execute(action,
 				new ERPAsyncCallback<GetDataActionResult>() {
 					@Override
 					public void processResult(GetDataActionResult result) {
 
-						if (result != null) {
-							DataModel dataModel = result.getDataModel();
+						if (result != null && !result.getDataModel().isEmpty()) {
+							DataModel dataModel = result.getDataModel().get(0);
 							if (dataModel != null){
 								fireEvent(new SetValueEvent(dataModel));
 							}
@@ -326,11 +355,26 @@ public class InputFormPresenter extends
 
 	}
 
+	
+	/**
+	 * Sets colspan to the last added
+	 */
+	void setColSpan(int colSpan){
+		if(colSpan>1)
+		getView().setColSpan(2);
+	}
+	
 	@Override
 	protected void onReset() {
 		super.onReset();
 		setInSlot(MENU_SLOT, menu);
 
+	}
+
+	@Override
+	public void onNavigate(NavigateEvent event) {
+		int records = event.getRows();
+		loadData(new GetDataAction(0, 0, 0, 0, records));
 	}
 
 }

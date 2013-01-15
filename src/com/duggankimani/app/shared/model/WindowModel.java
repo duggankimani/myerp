@@ -17,10 +17,11 @@ public class WindowModel implements Serializable {
 	private Integer WindowID;
 	private String description;
 	private Integer MenuID;
+	
 	//only tab 0 and tab 1 are saved
 	private ArrayList<TabModel> tabs = new ArrayList<TabModel>();
 	
-	private ArrayList<MinTabModel> tabHeaders = new ArrayList<MinTabModel>();
+	private ArrayList<MinTabModel> minTabDetails = new ArrayList<MinTabModel>();
 	
 	public WindowModel() {
 	}
@@ -67,5 +68,17 @@ public class WindowModel implements Serializable {
 	
 	public TabModel getTab(int tabNo){
 		return tabs.get(tabNo);
+	}
+
+	public ArrayList<MinTabModel> getMinTabDetails() {
+		return minTabDetails;
+	}
+
+	public void setMinTabDetails(ArrayList<MinTabModel> minTabDetails) {
+		this.minTabDetails = minTabDetails;
+	}
+
+	public void setTabs(ArrayList<TabModel> tabs) {
+		this.tabs = tabs;
 	}
 }

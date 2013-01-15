@@ -23,7 +23,9 @@ public class TextFieldPresenter extends
 
 	@Override
 	public void setValue(Object value) {
+		//java.math.BigDecimal --
 		((MyView)getView()).setValue((String)value);
+		
 	}
 
 }

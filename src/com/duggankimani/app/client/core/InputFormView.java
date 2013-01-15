@@ -1,6 +1,7 @@
 package com.duggankimani.app.client.core;
 
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -22,6 +23,8 @@ public class InputFormView extends ViewImpl implements InputFormPresenter.MyView
 	
 	@UiField HTMLPanel linesContainer;
 	
+	@UiField SpanElement spnTitle;
+	
 	@Inject
 	public InputFormView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
@@ -35,13 +38,19 @@ public class InputFormView extends ViewImpl implements InputFormPresenter.MyView
 	int x=0;
 	int y=-1;
 	
+	int row=0;
+	int col=0;
+	
 	@Override
 	public void setInSlot(Object slot, Widget content) {
 		x=0; y=0;
+		
 		if (slot == InputFormPresenter.COMPONENT_SLOT) {
 
 			flexTable.clear();
 			if (content != null) {
+				row=y;
+				col=x;
 				flexTable.setWidget(y, x++, content);
 			}
 		}else if(slot == InputFormPresenter.MENU_SLOT){
@@ -63,7 +72,11 @@ public class InputFormView extends ViewImpl implements InputFormPresenter.MyView
 	public void addToSlot(Object slot, Widget content) {
 		if (slot == InputFormPresenter.COMPONENT_SLOT) {
 			if (content != null) {
-				flexTable.setWidget(y, x++ , content);
+				
+				row=y;
+				col=x++;
+				flexTable.setWidget(row, col , content);
+				
 			}
 		} else {
 			super.addToSlot(slot, content);
@@ -78,6 +91,16 @@ public class InputFormView extends ViewImpl implements InputFormPresenter.MyView
 
 	public HTMLPanel getLinesContainer() {
 		return linesContainer;
+	}
+
+	@Override
+	public void setColSpan(int colSpan) {
+		x=colSpan+x;
+		flexTable.getFlexCellFormatter().setColSpan(row, col, colSpan);
+	}
+	
+	public void setTitle(String title){
+		spnTitle.setInnerText(title);
 	}
 
 }

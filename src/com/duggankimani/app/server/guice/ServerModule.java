@@ -7,6 +7,8 @@ import com.duggankimani.app.shared.action.GetMenuAction;
 import com.duggankimani.app.server.handlers.GetMenuActionHandler;
 import com.duggankimani.app.shared.action.GetDataAction;
 import com.duggankimani.app.server.handlers.GetDataActionHandler;
+import com.duggankimani.app.shared.action.GetTabAction;
+import com.duggankimani.app.server.handlers.GetTabActionActionHandler;
 
 public class ServerModule extends HandlerModule {
 
@@ -19,5 +21,7 @@ public class ServerModule extends HandlerModule {
 
 		bindHandler(GetDataAction.class, GetDataActionHandler.class);
 
+
+		bindHandler(GetTabAction.class, GetTabActionActionHandler.class);
 	}
 }

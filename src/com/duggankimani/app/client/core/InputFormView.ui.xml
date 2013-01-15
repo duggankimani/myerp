@@ -12,8 +12,9 @@
 			width:100%;
 		}
     </ui:style>
-	<g:HTMLPanel styleName="{style.dimensions}">
+	<g:HTMLPanel>
 	    <g:HorizontalPanel ui:field="menuContainer"></g:HorizontalPanel>
+	    <span ui:field="spnTitle"></span>
 	    <g:FlexTable ui:field="flexTable">	        
 	    </g:FlexTable>
 	    <g:HTMLPanel ui:field="linesContainer">

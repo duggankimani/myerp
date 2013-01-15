@@ -23,7 +23,9 @@ public enum DisplayType {
 	BUTTON(28,"Display Type 28	Button"),
 	QUANTITY(29,"Display Type 29 Quantity"),
 	SEARCH(30,"Display Type 30	Search"),
-	LOCATOR(31,"Display Type 31 Locator");
+	LOCATOR(31,"Display Type 31 Locator"),
+	COSTPRICE(37, "Display Type 37 CostPrice"),
+	PATTRIBUTESET(35, "DisplayType 35 PAttribute");
 	
 	
 	String description;

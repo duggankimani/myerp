@@ -17,7 +17,7 @@
      }
   </ui:style>
   
-	<g:HTMLPanel>
+	<g:HorizontalPanel>
 		<menu:MenuBar borders="true" addStyleNames="{style.menuBorder}">
           <menu:MenuBarItem text="File">
             <menu:menu>
@@ -59,5 +59,7 @@
             </menu:menu>
           </menu:MenuBarItem>
         </menu:MenuBar>   
-	</g:HTMLPanel>
+        <g:Button ui:field="prev" text="prev"/>
+        <g:Button ui:field="next" text="next"/>
+	</g:HorizontalPanel>
 </ui:UiBinder>

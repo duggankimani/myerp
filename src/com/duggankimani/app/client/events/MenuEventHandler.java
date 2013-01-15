@@ -21,7 +21,12 @@ public class MenuEventHandler implements SelectionHandler<Item> {
 		Item item = event.getSelectedItem();
 		
 		PlaceRequest request = new PlaceRequest(NameTokens.inputfrm);
-		request = request.with("AD_Menu_ID", item.getId());
+		
+		//AD_Menu_ID=m
+		//AD_Window_ID=w
+		//TabNo=t
+		//
+		request = request.with("m", item.getId());
 		placeManager.revealPlace(request);
 	}	
 }

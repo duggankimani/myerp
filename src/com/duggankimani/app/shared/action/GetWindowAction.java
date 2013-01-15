@@ -2,6 +2,9 @@ package com.duggankimani.app.shared.action;
 
 public class GetWindowAction extends BaseERPAction<GetWindowActionResult> {
 	Integer AD_Menu_ID;
+	Integer WindowID;
+	Integer tabNo;
+	Integer RecordID;
 
 	@SuppressWarnings("unused")
 	private GetWindowAction() {
@@ -12,6 +15,10 @@ public class GetWindowAction extends BaseERPAction<GetWindowActionResult> {
 		this.AD_Menu_ID = AD_Menu_ID;
 	}
 
+	public GetWindowAction(Integer AD_Menu_ID, Integer WindowId, Integer tabNo, Integer RecordID) {
+		this.AD_Menu_ID = AD_Menu_ID;
+	}
+	
 	@Override
 	public boolean isSecured() {
 		return false;

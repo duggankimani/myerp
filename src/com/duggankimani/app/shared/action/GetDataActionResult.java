@@ -1,24 +1,26 @@
 package com.duggankimani.app.shared.action;
 
+import java.util.ArrayList;
+
 import com.duggankimani.app.shared.model.DataModel;
 
 public class GetDataActionResult extends BaseERPActionResult {
 
-	DataModel dataModel=null;
+	ArrayList<DataModel> dataModels=null;
 	
 	public GetDataActionResult() {
 	}
 
 
-	public GetDataActionResult(DataModel data) {
-		this.dataModel= data;
+	public GetDataActionResult(ArrayList<DataModel> data) {
+		this.dataModels= data;
 	}
 	
-	public DataModel getDataModel() {
-		return dataModel;
+	public ArrayList<DataModel> getDataModel() {
+		return dataModels;
 	}
 
-	public void setDataModel(DataModel dataModel) {
-		this.dataModel = dataModel;
+	public void setDataModel(ArrayList<DataModel> dataModels) {
+		this.dataModels = dataModels;
 	}
 }

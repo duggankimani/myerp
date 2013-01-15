@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.sencha.gxt.widget.core.client.form.DateField;
+import com.sencha.gxt.widget.core.client.form.DateTimePropertyEditor;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 
 public class DateFieldView extends ViewImpl implements
@@ -31,6 +32,7 @@ public class DateFieldView extends ViewImpl implements
 	@Inject
 	public DateFieldView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
+		component.setPropertyEditor(new DateTimePropertyEditor("dd-MM-yyyy"));
 	}
 
 	@Override

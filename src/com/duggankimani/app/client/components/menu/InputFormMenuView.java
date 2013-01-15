@@ -5,6 +5,7 @@ import com.duggankimani.app.shared.model.FieldModel;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -22,6 +23,8 @@ public class InputFormMenuView extends ViewImpl implements
 	@UiField
 	Menu actionMenu;
 	
+	@UiField Button prev;
+	@UiField Button next;
 	@Inject
 	public InputFormMenuView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
@@ -71,6 +74,22 @@ public class InputFormMenuView extends ViewImpl implements
 	@Override
 	public void setDescription(String description) {
 		
+	}
+
+	public Button getNext() {
+		return next;
+	}
+
+	public void setNext(Button next) {
+		this.next = next;
+	}
+
+	public Button getPrev() {
+		return prev;
+	}
+
+	public void setPrev(Button prev) {
+		this.prev = prev;
 	}
 
 }
