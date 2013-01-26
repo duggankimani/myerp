@@ -16,15 +16,14 @@ import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
-import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.user.client.ui.TabPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.sencha.gxt.core.shared.FastMap;
+import com.sencha.gxt.widget.core.client.TabPanel;
 
 public class InputLinesTabsPresenter extends
 		PresenterWidget<InputLinesTabsPresenter.MyView> {
@@ -35,7 +34,8 @@ public class InputLinesTabsPresenter extends
 	}
 
 	@ContentSlot
-	public static final Type<RevealContentHandler<?>> TAB_SLOT = new Type<RevealContentHandler<?>>();
+	public static final Object TAB_SLOT = new Object();
+	//public static final Type<RevealContentHandler<?>> TAB_SLOT = new Type<RevealContentHandler<?>>();
 	
 	@Inject InputLinesPresenter lines;
 	
@@ -55,11 +55,15 @@ public class InputLinesTabsPresenter extends
 	protected void onBind() {
 		super.onBind();
 		
-		getView().getTabPanel().addSelectionHandler(new SelectionHandler<Integer>() {
+		getView().getTabPanel().addSelectionHandler(new SelectionHandler<Widget>() {
 			
 			@Override
-			public void onSelection(SelectionEvent<Integer> event) {
-				setLines(event.getSelectedItem()+1);
+			public void onSelection(SelectionEvent<Widget> event) {
+				int selectedIndx = getView().getTabPanel().getWidgetIndex(event.getSelectedItem());
+				getView().getTabPanel().setTabIndex(selectedIndx);
+				//Info.display("Selected Tab", (selectedIndx+1)+"");
+				setLines(selectedIndx+1);
+				
 			}
 		});
 	}	
@@ -77,6 +81,7 @@ public class InputLinesTabsPresenter extends
 			@Override
 			public void processResult(GetTabActionResult result) {
 				tabs.put(selectedItem+"", result.getTabModel());
+				getEventBus().fireEvent(new ERPRequestProcessingCompletedEvent());
 				addLinesView(result.getTabModel());
 				
 			}
@@ -84,14 +89,12 @@ public class InputLinesTabsPresenter extends
 	}
 
 	private void addLinesView(final TabModel tab) {
-
 		linesFactory.get(new ERPAsyncCallback<InputLinesPresenter>() {
 
 			@Override
 			public void processResult(InputLinesPresenter result) {
 				result.bind(tab);
-				setInSlot(TAB_SLOT, result);
-				getEventBus().fireEvent(new ERPRequestProcessingCompletedEvent());
+				addToSlot(TAB_SLOT, result);
 				loadLineData(tab);
 			}
 		});
@@ -102,9 +105,10 @@ public class InputLinesTabsPresenter extends
 		getEventBus().fireEvent(new LoadLineDataEvent(tab.getTabNo(), 0, tab.getWindowID()));
 	}
 
-	public void bindTabs(List<MinTabModel> tabs) {
+	public void bindTabs(List<MinTabModel> mintabs) {
+		setInSlot(TAB_SLOT, null);		
 		this.tabs.clear();
-		getView().bind(tabs);
+		getView().bind(mintabs);
 	}
 	
 	@Override

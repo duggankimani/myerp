@@ -9,35 +9,8 @@
 	ui:generateLocales='default'>
 	
 	<g:HTMLPanel>
-	 	<!-- tabs:TabPanel ui:field="folder" width="800" height="300" addStyleNames="margin-10">
-	 	    <tabs:child config="{shortTextTabConfig}">
-	 	        <g:Label addStyleNames="pad-text" text="stxt" />
-	 	     </tabs:child>
-	 	     <tabs:child config="{tabConfig}">
-	 	         <g:Label addStyleNames="pad-text" text="xxx" />
-	 	     </tabs:child>
-	 	     <tabs:child config="{tab2Config}">
-	 	         <g:Label addStyleNames="pad-text" text="yyyyy" />
-	 	     </tabs:child>
-		</tabs:TabPanel -->
-		<g:TabPanel ui:field="tabContainer" width="800px" height="250px" stylePrimaryName="gwt-TabBarExt">
-		    <!-- g:Tab text="Requisition Lines" stylePrimaryName="gwt-TabBarExt">
-			    <g:FlowPanel>
-			        <g:Label text="Tab 1"/>
-			    </g:FlowPanel>
-		    </g:Tab>
-		    
-		    <g:Tab text="Tax">
-			    <g:FlowPanel>
-			        <g:Label text="Tab 2"/>
-			    </g:FlowPanel>
-		    </g:Tab>
-		    
-		    <g:Tab text="Products">
-			    <g:FlowPanel>
-			        <g:Label text="Tab 3"/>
-			    </g:FlowPanel>
-		    </g:Tab -->
-		</g:TabPanel>    
+	 	<tabs:PlainTabPanel ui:field="tabContainer" addStyleNames="margin-10">
+		</tabs:PlainTabPanel>
+	
 	</g:HTMLPanel>
 </ui:UiBinder>

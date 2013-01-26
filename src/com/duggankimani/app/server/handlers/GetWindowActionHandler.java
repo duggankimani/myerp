@@ -23,7 +23,8 @@ public class GetWindowActionHandler extends MetaCreator implements
 	@Override
 	public GetWindowActionResult execute(GetWindowAction action,
 			ExecutionContext context) throws ActionException {
-		WindowModel model = getWindowModel(action.getAD_Menu_ID());
+		
+		WindowModel model = getWindowModel(action.getAD_Menu_ID(),action.getWindowID(), action.getTabNo());
 
 		GetWindowActionResult actionresult = new GetWindowActionResult(model);
 

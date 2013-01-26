@@ -81,7 +81,7 @@ public class GetDataActionHandler implements
 		}
 
 		if (tab.getRowCount() == 0) {
-			log.info("DataModel - No data to present - 0 row count");
+			//log.info("DataModel - No data to present - 0 row count");
 			return new DataModel();
 		}
 
@@ -93,13 +93,16 @@ public class GetDataActionHandler implements
 
 		tab.navigate(row);
 
-		DataModel dataModel = getRowData(tab);
+		DataModel dataModel = getRowData(tab, false);
 
 		return dataModel;
 	}
 
-	private DataModel getRowData(GridTab tab) {
+	private DataModel getRowData(GridTab tab, boolean useValue) {
+
 		GridField[] fields = tab.getFields();
+
+		ArrayList<String> strs = tab.getParentColumnNames();
 
 		DataModel dataModel = new DataModel();
 
@@ -112,7 +115,13 @@ public class GetDataActionHandler implements
 				continue;
 
 			if (field.isLookup()) {
-				dataModel.set(columnName, getLookupValue(value));
+				if (useValue && !field.isKey() && field.getLookup() != null) {
+					dataModel.set(columnName,
+							field.getLookup().getDisplay(value));
+				} else {
+					dataModel.set(columnName, getLookupValue(value));
+				}
+
 			} else if (displayType == DisplayType.Date
 					|| displayType == DisplayType.DateTime) {
 				dataModel.set(columnName, getDate(value));
@@ -128,6 +137,16 @@ public class GetDataActionHandler implements
 				dataModel.set(columnName, (Serializable) value);
 			}
 
+		}
+
+		if (tab.getKeyColumnName() == null || tab.getKeyColumnName().isEmpty()) {
+			String str = strs.get(0);
+			String str2 = "";
+			if(strs.size()==2)
+				str2=strs.get(1);
+
+			dataModel.set(str + "-" + str2,
+					tab.getValue(str) + "-" +(str2.isEmpty()? "" : tab.getValue(str2)));
 		}
 
 		return dataModel;
@@ -174,20 +193,18 @@ public class GetDataActionHandler implements
 	private ArrayList<DataModel> getDataList(WindowStatus windowStatus,
 			GetDataAction action) {
 
+		ArrayList<DataModel> data = new ArrayList<>();
+
 		windowStatus.gridWindow.initTab(action.getTabNo());
 		GridTab tab = windowStatus.gridWindow.getTab(action.getTabNo());
 
-		System.out.println("Tab.... " + tab.getName() + " = " + tab.getTabNo());
-
-		//tab.initTab(false);
-		tab.query(true,0,0);
-
-		ArrayList<DataModel> data = new ArrayList<>();
+		if (!tab.isOpen())
+			tab.query(true, 0, 0);
 
 		int row = 0;
 		while (row < tab.getRowCount()) {
 			tab.navigate(row);
-			data.add(getRowData(tab));
+			data.add(getRowData(tab, true));
 			++row;
 		}
 

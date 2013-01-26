@@ -1,0 +1,98 @@
+/* css for myErp
+written by Tom Kimani */
+
+body {
+padding-top: 20px;
+padding-bottom: 40px;
+}
+
+.container{
+	width: 960px;
+	border-left:solid 1px #C6C5BF;
+	border-right:solid 1px #C6C5BF;
+	
+}
+
+.row{
+	border: 2px solid #FBB9FF;
+	overflow-y: auto;
+	overflow-x:hidden; 
+
+}
+.row1{
+	max-height: 450px;
+	margin-bottom: 5px;
+	overflow-y: auto;
+	overflow-x:hidden; 
+	padding-bottom:5px;
+	/*border-bottom:solid 1px #C6C5BF;
+	border-top:solid 1px #C6C5BF;*/
+}
+.row2{
+	height: 200px;
+	overflow-y:hidden;
+	overflow-x:hidden; 
+	margin-bottom: 5px;
+	border-bottom:solid 1px #C6C5BF
+}
+
+.GOIH2BSDPSB{
+	height:152px;
+	width:956px;
+	border:0px;
+	overflow-y:auto;
+	overflow-x:hidden;
+}
+
+.gridContainer{
+	overflow-y:hidden;
+	overflow-x:auto;
+}
+
+
+.GOIH2BSDIT{
+	z-index:0;	
+}
+.GOIH2BSDKT{
+	z-index:0;
+}
+
+.popupInputForm{
+	width: 700px;
+	height:600px;
+	/*background:green;*/
+	/*border-left:solid 1px #C6C5BF;
+	border-right:solid 1px #C6C5BF;
+	z-index:4;*/
+}
+
+.pop_container{
+	width: 690px;
+	border-left:solid 1px #C6C5BF;
+	border-right:solid 1px #C6C5BF;
+	
+}
+
+.pop_row{
+	border: 2px solid #FBB9FF;
+	overflow-y: auto;
+	overflow-x:hidden; 
+
+}
+.pop_row1{
+	max-height: 420px;
+	margin-bottom: 5px;
+	overflow-y: auto;
+	overflow-x:hidden; 
+	padding-bottom:5px;
+	/*border-bottom:solid 1px #C6C5BF;
+	border-top:solid 1px #C6C5BF;*/
+}
+.pop_row2{
+	max-height: 150px;
+	overflow-y:hidden;
+	overflow-x:hidden; 
+	margin-bottom: 5px;
+	border-bottom:solid 1px #C6C5BF
+}
+

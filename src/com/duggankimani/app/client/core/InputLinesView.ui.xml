@@ -8,8 +8,8 @@
 	ui:generateLocales='default'>
 
 	<g:HTMLPanel>
-	    <div class="scroller">
-	    <grid:Grid ui:field="grid" width="800px" height="150px"></grid:Grid>
+	    <div class="gridContainer">
+	    <grid:Grid ui:field="grid"></grid:Grid>
 	    </div>
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -1,0 +1,21 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	xmlns:c="urn:import:com.sencha.gxt.widget.core.client"
+	ui:generateLocales='default'>
+
+	<g:PopupPanel>
+	    <!-- c:FramedPanel headingText="Popuplines" styleName="popup" bodyStyle="background: none; padding: 5px;">
+	        </c:FramedPanel-->
+	    <g:HTMLPanel>
+		    <g:Anchor ui:field="aClose" text="close"></g:Anchor>
+		    <g:HTMLPanel ui:field="container" styleName="popupInputForm">
+		    	
+		    </g:HTMLPanel>
+	    </g:HTMLPanel>	    
+	</g:PopupPanel>
+	
+</ui:UiBinder>

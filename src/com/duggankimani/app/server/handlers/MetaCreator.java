@@ -1,10 +1,13 @@
 package com.duggankimani.app.server.handlers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.compiere.model.GridField;
 import org.compiere.model.GridFieldVO;
+import org.compiere.model.GridTab;
 import org.compiere.model.GridTabVO;
+import org.compiere.model.GridWindow;
 import org.compiere.model.GridWindowVO;
 import org.compiere.model.Lookup;
 import org.compiere.model.MLocator;
@@ -50,6 +53,30 @@ public class MetaCreator {
 		return model;
 
 	}
+	
+	public WindowModel getWindowModel(Integer AD_Menu_ID, Integer AD_Window_ID, Integer tabNo) {
+		try{
+		if(tabNo==null || tabNo==0)
+			return getWindowModel(AD_Menu_ID);
+		
+		TabModel tab = new TabModel();
+		WindowStatus ws = WindowStatus.getWindowStatus(AD_Window_ID);
+		GridTabVO gridTabVO = ws.gridWindowV0.Tabs.get(tabNo); 
+		getTabModel(gridTabVO, tab);
+		addFields(tab, gridTabVO);
+		
+		WindowModel windowModel = new WindowModel();
+		windowModel.setTabs(new ArrayList<>(Arrays.asList(tab)));
+		windowModel.setName(tab.getName());
+		windowModel.setWindowID(gridTabVO.AD_Window_ID);
+		windowModel.setMenuID(0);
+		return windowModel;
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		
+	}
 
 	private void addTabs(WindowModel model, GridWindowVO gridWindowVO) {
 
@@ -57,10 +84,8 @@ public class MetaCreator {
 			GridTabVO gridTabVO = (GridTabVO) gridWindowVO.Tabs.get(i);
 
 			TabModel tab = new TabModel();
-			tab.setName(gridTabVO.Name);
-			tab.setTabNo(gridTabVO.TabNo);
-			tab.setWindowID(gridTabVO.AD_Window_ID);
-
+			getTabModel(gridTabVO, tab);
+			
 			addFields(tab, gridTabVO);
 			model.add(tab);
 			if(i==2){//load tab 0 and 1 only : tab loading optimization required
@@ -69,6 +94,13 @@ public class MetaCreator {
 			}
 				
 		}
+
+	}
+
+	private void getTabModel(GridTabVO gridTabVO, TabModel tab) {
+		tab.setName(gridTabVO.Name);
+		tab.setTabNo(gridTabVO.TabNo);
+		tab.setWindowID(gridTabVO.AD_Window_ID);
 
 	}
 
@@ -112,8 +144,9 @@ public class MetaCreator {
 				loadLookup(field, model);
 			}
 			
-			if(field.IsKey){
+			if(field.IsKey || field.ColumnName.equalsIgnoreCase(gridTabVO.TableName+"_ID")){
 				model.setKeyColumn(true);
+				
 			}
 			tab.addField(model);
 		}
@@ -162,41 +195,99 @@ public class MetaCreator {
 		model.setLookupValues(lookupList);
 
 	}
-	
+
 	protected TabModel getMinTabModel(Integer AD_Window_ID, Integer tabNo) {
 
-		GridWindowVO vo = WindowStatus.getWindowStatus(AD_Window_ID).gridWindowV0;
+		WindowStatus ws = WindowStatus.getWindowStatus(AD_Window_ID);
+		GridWindow gridWindow = ws.gridWindow;
 		
-		GridTabVO tabVO = vo.Tabs.get(tabNo);
+		gridWindow.initTab(tabNo);
+		GridTab tab = gridWindow.getTab(tabNo);
 
 
 		TabModel model = new TabModel();
-		model.setName(tabVO.Name);
+		model.setName(tab.getName());
 		model.setTabNo(tabNo);
 		model.setWindowID(AD_Window_ID);
 		
-		addMinFieldsDetails(model, tabVO);
+		addMinFieldsDetails(model, tab);
 		
 		return model;
-	}
-
-	private void addMinFieldsDetails(TabModel tab, GridTabVO tabVO) {
 		
-		for (GridFieldVO field : tabVO.getFields()) {
-			FieldModel model = new FieldModel(field.Header, DisplayType.TEXT,
-					field.IsSameLine);
-			model.setDisplayType(DisplayType.getDisplayType(field.displayType));
-			model.setDescription(field.Description);
-			model.setColumnName(field.ColumnName);
+	}
+	
+	private void addMinFieldsDetails(TabModel tabModel, GridTab tab) {
+		
+		tabModel.setKeyColumnName(tab.getKeyColumnName());
+		
+		if(tab.getKeyColumnName()==null || tab.getKeyColumnName().isEmpty()){
+			ArrayList<String> parentCols = tab.getParentColumnNames();
 			
-			if(field.IsKey){
-				model.setKeyColumn(true);
-			}else if(field.ColumnName.equalsIgnoreCase(tabVO.TableName+"_ID")){
-				model.setKeyColumn(true);
+			if(!parentCols.isEmpty())
+			if(parentCols.size()==2){
+				tabModel.setKeyColumnName(parentCols.get(0)+"-"+parentCols.get(1));
+			}else{
+				tabModel.setKeyColumnName(parentCols.get(0)+"-");
 			}
-			tab.addField(model);
+		}
+		
+		for (GridField field : tab.getFields()) {
+			if(!field.isDisplayed())
+				continue;
+			
+			FieldModel model = new FieldModel(field.getHeader(), DisplayType.TEXT,
+					field.isSameLine());
+			model.setDisplayType(DisplayType.getDisplayType(field.getDisplayType()));
+			model.setDescription(field.getDescription());
+			model.setColumnName(field.getColumnName());
+			
+			if(field.isKey()){
+		
+				model.setKeyColumn(true);
+				tabModel.setKeyColumnName(field.getColumnName());
+			}
+			tabModel.addField(model);
 		}
 
 	}
+
+	
+//	protected TabModel getMinTabModel(Integer AD_Window_ID, Integer tabNo) {
+//
+//		WindowStatus ws = WindowStatus.getWindowStatus(AD_Window_ID);
+//		GridWindowVO vo = ws.gridWindowV0;
+//		
+//		GridTabVO tabVO = vo.Tabs.get(tabNo);
+//
+//
+//		TabModel model = new TabModel();
+//		model.setName(tabVO.Name);
+//		model.setTabNo(tabNo);
+//		model.setWindowID(AD_Window_ID);
+//		
+//		addMinFieldsDetails(model, tabVO);
+//		
+//		return model;
+//	}
+
+//	private void addMinFieldsDetails(TabModel tab, GridTabVO tabVO) {
+//		
+//		for (GridFieldVO field : tabVO.getFields()) {
+//			FieldModel model = new FieldModel(field.Header, DisplayType.TEXT,
+//					field.IsSameLine);
+//			model.setDisplayType(DisplayType.getDisplayType(field.displayType));
+//			model.setDescription(field.Description);
+//			model.setColumnName(field.ColumnName);
+//			
+//			if(field.IsKey ||  field.ColumnName.equalsIgnoreCase(tabVO.TableName+"_ID")){
+//		
+//				model.setKeyColumn(true);
+//				
+//			}
+//			System.out.println(tab.getName()+" - "+field.Header+" - "+field.ColumnName);
+//			tab.addField(model);
+//		}
+//
+//	}
 
 }

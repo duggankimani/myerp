@@ -14,7 +14,6 @@ public abstract class BasePresenterWidget<V> extends PresenterWidget<BaseView>
 
 	public BasePresenterWidget(EventBus eventBus, BaseView view) {
 		super(eventBus, view);
-		eventBus.addHandler(SetValueEvent.TYPE, this);
 	}
 
 	public BasePresenterWidget(boolean autoBind, EventBus eventBus,
@@ -24,6 +23,13 @@ public abstract class BasePresenterWidget<V> extends PresenterWidget<BaseView>
 
 	public void setName(String name) {
 		getView().setName(name);
+	}
+	
+	@Override
+	protected void onBind() {
+		// TODO Auto-generated method stub
+		super.onBind();
+		addRegisteredHandler(SetValueEvent.TYPE, this);
 	}
 
 	/**

@@ -9,6 +9,7 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.google.inject.Inject;
 import com.google.gwt.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
+import com.sencha.gxt.widget.core.client.info.Info;
 import com.duggankimani.app.client.core.MainPagePresenter;
 import com.duggankimani.app.client.service.ERPAsyncCallback;
 import com.duggankimani.app.shared.action.GetMenuAction;
@@ -28,13 +29,26 @@ public class MenuPresenter extends
 
 	@Inject
 	DispatchAsync dispatcher;
-	
+
 	@Inject
 	public MenuPresenter(final EventBus eventBus, final MyView view,
 			final MyProxy proxy) {
 		super(eventBus, view, proxy);
 	}
-	
+
+	private void init() {
+		dispatcher.execute(new GetMenuAction(),
+				new ERPAsyncCallback<GetMenuActionResult>() {
+					@Override
+					public void processResult(GetMenuActionResult result) {
+
+						MenuPresenter.this.getView().processFolder(
+								result.getMenus());
+					}
+				});
+
+	}
+
 	@Override
 	protected void revealInParent() {
 		RevealContentEvent.fire(this, MainPagePresenter.MENU_SLOT, this);
@@ -43,29 +57,25 @@ public class MenuPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
-		
 	}
-	
+
+	@Override
+	protected void onReveal() {
+		// TODO Auto-generated method stub
+		super.onReveal();
+		
+		init();
+	}
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		// TODO Auto-generated method stub
 		super.prepareFromRequest(request);
-		
+
 	}
-	
+
 	@Override
 	protected void onReset() {
 		// TODO Auto-generated method stub
 		super.onReset();
-		
-
-		dispatcher.execute(new GetMenuAction(), new ERPAsyncCallback<GetMenuActionResult>() {
-			@Override
-			public void processResult(GetMenuActionResult result) {
-				
-				MenuPresenter.this.getView().processFolder(result.getMenus());
-			}
-		});
-	
 	}
 }

@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import com.duggankimani.app.client.events.ERPRequestProcessingCompletedEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingEvent;
 import com.duggankimani.app.client.events.LoadLineDataEvent;
-import com.duggankimani.app.client.events.LoadLineEvent;
 import com.duggankimani.app.client.events.LoadLineDataEvent.LoadLineDataHandler;
-import com.duggankimani.app.client.events.LoadLineEvent.LoadLineHandler;
+import com.duggankimani.app.client.events.LoadWindowEvent;
 import com.duggankimani.app.client.service.ERPAsyncCallback;
 import com.duggankimani.app.shared.action.GetDataAction;
 import com.duggankimani.app.shared.action.GetDataActionResult;
@@ -18,14 +17,19 @@ import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 import com.google.inject.Inject;
 import com.google.gwt.event.shared.EventBus;
+import com.sencha.gxt.widget.core.client.event.RowDoubleClickEvent;
+import com.sencha.gxt.widget.core.client.event.RowDoubleClickEvent.RowDoubleClickHandler;
+import com.sencha.gxt.widget.core.client.grid.Grid;
 
 public class InputLinesPresenter extends
-		PresenterWidget<InputLinesPresenter.MyView> implements LoadLineHandler, LoadLineDataHandler{
+		PresenterWidget<InputLinesPresenter.MyView> implements LoadLineDataHandler{
 
 	public interface MyView extends View {
 		public void bind(TabModel tabModel);
 
 		void bindData(ArrayList<DataModel> dataModel);
+		
+		Grid<DataModel> getGrid();
 	}
 
 	@Inject DispatchAsync dispatcher;
@@ -33,14 +37,14 @@ public class InputLinesPresenter extends
 	@Inject
 	public InputLinesPresenter(final EventBus eventBus, final MyView view) {
 		super(eventBus, view);
-		eventBus.addHandler(LoadLineEvent.TYPE, this);
-		eventBus.addHandler(LoadLineDataEvent.TYPE, this);
 	}
 
 
 	@Override
 	protected void onBind() {
 		super.onBind();
+		addRegisteredHandler(LoadLineDataEvent.TYPE, this);
+	
 	}
 
 	TabModel tab = null;
@@ -51,25 +55,18 @@ public class InputLinesPresenter extends
 	}
 
 	private void loadData() {
-		getEventBus().fireEvent(new ERPRequestProcessingEvent("Tab data"));
-		System.out.println("Lines Loading..."+tab.getName());
+		getEventBus().fireEvent(new ERPRequestProcessingEvent(tab.getName()));
 		//check if data already loaded
 		dispatcher.execute(new GetDataAction(tab.getTabNo(), 0, tab.getWindowID(), 0, true), new ERPAsyncCallback<GetDataActionResult>() {
 			@Override
 			public void processResult(GetDataActionResult result) {
 				setData(result.getDataModel());
-				System.out.println("Lines Loaded..."+result.getDataModel().size());
 				getEventBus().fireEvent(new ERPRequestProcessingCompletedEvent());
 			}
 		});
 	
 	}
 	
-	@Override
-	public void onLoadLine(LoadLineEvent event) {
-		
-	}
-
 	@Override
 	public void onLoadLineData(LoadLineDataEvent event) {
 		if(tab==null)
@@ -81,18 +78,37 @@ public class InputLinesPresenter extends
 		if(tab.getTabNo()==tabNo && tab.getWindowID()==windowId){
 			loadData();
 		}
-	}
-
-	public void bind(TabModel tabModel) {
-		this.tab = tabModel;
-		getView().bind(tab);
+		
 	}
 
 	@Override
-	protected void onUnbind() {
+	protected void onReveal() {
 		// TODO Auto-generated method stub
-		super.onUnbind();
-		System.out.println("Unbind called!!!!");
+		super.onReveal();
+
+		
+		getView().getGrid().addRowDoubleClickHandler(new RowDoubleClickHandler() {
+			
+			@Override
+			public void onRowDoubleClick(RowDoubleClickEvent event) {
+			
+				DataModel model = getView().getGrid().getSelectionModel().getSelectedItem();
+				//Info.display("DClick Listener", "Selected Model-"+model);
+				getEventBus().fireEvent(new LoadWindowEvent(tab.getTabNo(),tab.getWindowID(), tab.getName()));
+			}
+		});
+		
+		
+	}
+	public void bind(TabModel tabModel) {
+		this.tab = tabModel;
+		getView().bind(tab);		
+	}
+	
+	@Override
+	protected void onHide() {
+		super.onHide();
+		this.unbind();
 	}
 
 }

@@ -12,6 +12,7 @@ public class TabModel implements Serializable {
 	private String name;
 	private Integer tabNo;
 	private Integer WindowID;
+	private String keyColumnName;
 
 	private ArrayList<FieldModel> fields = new ArrayList<FieldModel>();
 	
@@ -48,5 +49,13 @@ public class TabModel implements Serializable {
 	
 	public ArrayList<FieldModel> getFields(){
 		return fields;
+	}
+
+	public String getKeyColumnName() {
+		return keyColumnName;
+	}
+
+	public void setKeyColumnName(String keyColumnName) {
+		this.keyColumnName = keyColumnName;
 	}
 }

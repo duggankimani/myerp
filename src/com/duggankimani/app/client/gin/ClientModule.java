@@ -35,6 +35,10 @@ import com.duggankimani.app.client.core.InputLinesPresenter;
 import com.duggankimani.app.client.core.InputLinesView;
 import com.duggankimani.app.client.core.InputLinesTabsPresenter;
 import com.duggankimani.app.client.core.InputLinesTabsView;
+import com.duggankimani.app.client.core.InputFormPopupPresenter;
+import com.duggankimani.app.client.core.InputFormPopupView;
+import com.duggankimani.app.client.core.FormPresenter;
+import com.duggankimani.app.client.core.FormView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -92,5 +96,11 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenterWidget(InputLinesTabsPresenter.class,
 				InputLinesTabsPresenter.MyView.class, InputLinesTabsView.class);
+
+		bindPresenterWidget(InputFormPopupPresenter.class,
+				InputFormPopupPresenter.MyView.class, InputFormPopupView.class);
+
+		bindPresenterWidget(FormPresenter.class, FormPresenter.MyView.class,
+				FormView.class);
 	}
 }
