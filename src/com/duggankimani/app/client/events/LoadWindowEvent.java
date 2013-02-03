@@ -1,5 +1,6 @@
 package com.duggankimani.app.client.events;
 
+import com.duggankimani.app.shared.model.TabModel;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.EventHandler;
 import java.lang.Integer;
@@ -9,22 +10,14 @@ public class LoadWindowEvent extends
 		GwtEvent<LoadWindowEvent.LoadWindowHandler> {
 
 	public static Type<LoadWindowHandler> TYPE = new Type<LoadWindowHandler>();
-	private Integer tabNo;
-	private String name;
-	private Integer windowId;
-
+	private TabModel tab;
+	
 	public interface LoadWindowHandler extends EventHandler {
 		void onLoadWindow(LoadWindowEvent event);
 	}
 
-	public LoadWindowEvent(Integer tabNo, Integer windowId, String name) {
-		this.tabNo = tabNo;
-		this.name = name;
-		this.windowId = windowId;
-	}
-
-	public Integer getTabNo() {
-		return tabNo;
+	public LoadWindowEvent(TabModel tab) {
+		this.tab = tab;
 	}
 
 	@Override
@@ -41,15 +34,15 @@ public class LoadWindowEvent extends
 		return TYPE;
 	}
 
-	public static void fire(HasHandlers source, Integer tabNo, Integer windowId, String name) {
-		source.fireEvent(new LoadWindowEvent(tabNo, windowId, name));
+	public static void fire(HasHandlers source) {
+		source.fireEvent(new LoadWindowEvent(null));
 	}
 
-	public String getName() {
-		return name;
+	public TabModel getTab() {
+		return tab;
 	}
 
-	public Integer getWindowId() {
-		return windowId;
+	public void setTab(TabModel tab) {
+		this.tab = tab;
 	}
 }

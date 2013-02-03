@@ -1,6 +1,7 @@
 package com.duggankimani.app.client.core;
 
 import com.duggankimani.app.client.service.ERPAsyncCallback;
+import com.duggankimani.app.shared.model.TabModel;
 import com.gwtplatform.common.client.IndirectProvider;
 import com.gwtplatform.common.client.StandardProvider;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -53,12 +54,10 @@ public class InputFormPopupPresenter extends
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-
 		formPresenterFactory.get(new ERPAsyncCallback<FormPresenter>() {
 			@Override
 			public void processResult(FormPresenter result) {
-				//Info.display("SetInFormSlot!!", "Called!! FormPresenter");
-				result.setWindowInfo(windowId, tabNo, name);
+				result.setTabInfo(tab);
 				InputFormPopupPresenter.this.setInSlot(FORM_SLOT, result);
 			}
 		});
@@ -69,13 +68,9 @@ public class InputFormPopupPresenter extends
 		super.onReset();
 	}
 
-
-	Integer windowId;
-	Integer tabNo;
-	String name;
-	public void setWindowInfo(Integer windowId, Integer tabNo, String name) {
-		this.windowId=windowId;
-		this.tabNo = tabNo;
-		this.name=name;
+	TabModel tab;
+	public void setTab(TabModel tab) {
+		this.tab = tab;
 	}
+
 }

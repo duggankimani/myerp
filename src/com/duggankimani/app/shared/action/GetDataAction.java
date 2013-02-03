@@ -68,4 +68,15 @@ public class GetDataAction extends BaseERPAction<GetDataActionResult> {
 	public Boolean isMultipleResults(){
 		return multipleResults;
 	}
+	
+	@Override
+	public String toString() {
+		String str = "MenuID=" +menuID+
+				", WindowID=" +WindowID+
+				", WindowNo" +windowNo+
+				",  TabNo=" +tabNo+
+				", rows= "+rows+
+				", ismultipleResults= "+isMultipleResults();
+		return str;
+	}
 }

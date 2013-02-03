@@ -208,7 +208,7 @@ public class MetaCreator {
 		TabModel model = new TabModel();
 		model.setName(tab.getName());
 		model.setTabNo(tabNo);
-		model.setWindowID(AD_Window_ID);
+		model.setWindowID(tab.getAD_Window_ID());
 		
 		addMinFieldsDetails(model, tab);
 		

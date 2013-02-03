@@ -74,6 +74,8 @@ public class InputLinesPresenter extends
 		
 		int tabNo = event.getTabNo();
 		int windowId = event.getWindowID();
+		event.getWindowNo();
+		
 		
 		if(tab.getTabNo()==tabNo && tab.getWindowID()==windowId){
 			loadData();
@@ -94,7 +96,8 @@ public class InputLinesPresenter extends
 			
 				DataModel model = getView().getGrid().getSelectionModel().getSelectedItem();
 				//Info.display("DClick Listener", "Selected Model-"+model);
-				getEventBus().fireEvent(new LoadWindowEvent(tab.getTabNo(),tab.getWindowID(), tab.getName()));
+				getEventBus().fireEvent(new LoadWindowEvent(tab));
+				//getEventBus().fireEvent(new LoadPopupWindowEvent(tab.getTabNo(), tab.getName(), tab.getWindowID(), 0));
 			}
 		});
 		

@@ -9,7 +9,6 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.google.inject.Inject;
 import com.google.gwt.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
-import com.sencha.gxt.widget.core.client.info.Info;
 import com.duggankimani.app.client.core.MainPagePresenter;
 import com.duggankimani.app.client.service.ERPAsyncCallback;
 import com.duggankimani.app.shared.action.GetMenuAction;

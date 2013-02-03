@@ -1,13 +1,9 @@
 package com.duggankimani.app.server.handlers;
 
-import org.compiere.model.GridTabVO;
-import org.compiere.model.GridWindowVO;
 
 import com.gwtplatform.dispatch.server.actionhandler.ActionHandler;
-import com.duggankimani.app.server.WindowStatus;
 import com.duggankimani.app.shared.action.GetTabAction;
 import com.duggankimani.app.shared.action.GetTabActionResult;
-import com.duggankimani.app.shared.model.TabModel;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.shared.ActionException;

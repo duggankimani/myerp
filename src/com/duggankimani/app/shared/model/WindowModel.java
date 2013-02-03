@@ -17,6 +17,7 @@ public class WindowModel implements Serializable {
 	private Integer WindowID;
 	private String description;
 	private Integer MenuID;
+	private Integer windowNo=0;
 	
 	//only tab 0 and tab 1 are saved
 	private ArrayList<TabModel> tabs = new ArrayList<TabModel>();
@@ -80,5 +81,13 @@ public class WindowModel implements Serializable {
 
 	public void setTabs(ArrayList<TabModel> tabs) {
 		this.tabs = tabs;
+	}
+
+	public Integer getWindowNo() {
+		return windowNo;
+	}
+
+	public void setWindowNo(Integer windowNo) {
+		this.windowNo = windowNo;
 	}
 }

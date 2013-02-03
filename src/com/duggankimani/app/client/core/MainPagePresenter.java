@@ -10,7 +10,6 @@ import com.duggankimani.app.client.events.LoadWindowEvent.LoadWindowHandler;
 import com.duggankimani.app.client.events.PopUpCloseEvent;
 import com.duggankimani.app.client.events.PopUpCloseEvent.PopUpCloseHandler;
 import com.duggankimani.app.client.place.NameTokens;
-import com.duggankimani.app.client.service.ERPAsyncCallback;
 import com.gwtplatform.common.client.IndirectProvider;
 import com.gwtplatform.common.client.StandardProvider;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -30,11 +29,11 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.ui.Anchor;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
-import com.sencha.gxt.widget.core.client.info.Info;
 
 public class MainPagePresenter extends
 		Presenter<MainPagePresenter.MyView, MainPagePresenter.MyProxy> 
-			implements ERPRequestProcessingHandler, ERPRequestProcessingCompletedHandler, LoadWindowHandler, PopUpCloseHandler{
+			implements ERPRequestProcessingHandler, ERPRequestProcessingCompletedHandler, 
+			LoadWindowHandler, PopUpCloseHandler{
 
 	public interface MyView extends View {
 		public Anchor getAnchorHome();
@@ -82,8 +81,6 @@ public class MainPagePresenter extends
 	protected void onBind() {
 		super.onBind();
 		
-//		eventBus.addHandler(ERPRequestProcessingCompletedEvent.TYPE, this);
-//		eventBus.addHandler(ERPRequestProcessingEvent.TYPE, this);
 		addRegisteredHandler(ERPRequestProcessingCompletedEvent.TYPE, this);
 		addRegisteredHandler(ERPRequestProcessingEvent.TYPE, this);
 		addRegisteredHandler(LoadWindowEvent.TYPE, this);
@@ -126,23 +123,28 @@ public class MainPagePresenter extends
 		getView().hideLoadingMessage();
 	}
 
+	@Inject InputFormPopupPresenter popupPresenter;
 	
 	@Override
 	public void onLoadWindow(final LoadWindowEvent event) {
-		ERPAsyncCallback<InputFormPopupPresenter> asyncCall = new ERPAsyncCallback<InputFormPopupPresenter>() {
-			@Override
-			public void processResult(InputFormPopupPresenter result) {
-				result.setWindowInfo(event.getWindowId(), event.getTabNo(),event.getName());
-				addToPopupSlot(result, true);
-			}
-		};
+		popupPresenter.setTab(event.getTab());
+		addToPopupSlot(popupPresenter, true);
+			
+		//getEventBus().fireEvent(new LoadPopupWindowEvent(event.getTabNo(), event.getName(), event.getWindowId(), 0));
 		
-		popPresenterFactory.get(asyncCall);
+//		ERPAsyncCallback<InputFormPopupPresenter> asyncCall = new ERPAsyncCallback<InputFormPopupPresenter>() {
+//			@Override
+//			public void processResult(InputFormPopupPresenter result) {
+//				addToPopupSlot(result, true);
+//				getEventBus().fireEvent(new LoadPopupWindowEvent(event.getTabNo(), event.getName(), event.getWindowId(), 0));
+//			}
+//		};
+		
+	//	popPresenterFactory.get(asyncCall);
 	}
 
 	@Override
 	public void onPopUpClose(PopUpCloseEvent event) {
 		//popPresenter.getView().hide();
 	}
-	
 }

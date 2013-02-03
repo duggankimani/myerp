@@ -93,6 +93,7 @@ public class InputLinesTabsPresenter extends
 
 			@Override
 			public void processResult(InputLinesPresenter result) {
+				System.err.println("addlines - "+tab);
 				result.bind(tab);
 				addToSlot(TAB_SLOT, result);
 				loadLineData(tab);

@@ -5,10 +5,10 @@ import com.duggankimani.app.shared.model.FieldModel;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.menu.Menu;
 import com.sencha.gxt.widget.core.client.menu.MenuItem;
 
@@ -20,11 +20,11 @@ public class InputFormMenuView extends ViewImpl implements
 	public interface Binder extends UiBinder<Widget, InputFormMenuView> {
 	}
 
-	@UiField
-	Menu actionMenu;
+	@UiField Menu actionMenu;
+	@UiField TextButton btnActions;
+	@UiField TextButton prev;
+	@UiField TextButton next;
 	
-	@UiField Button prev;
-	@UiField Button next;
 	@Inject
 	public InputFormMenuView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
@@ -55,6 +55,9 @@ public class InputFormMenuView extends ViewImpl implements
 
 	@Override
 	public void addField(FieldModel field) {
+		if(!btnActions.isEnabled())
+			btnActions.enable();
+		
 		MenuItem item = new MenuItem(field.getName());
 		actionMenu.add(item);		
 	}
@@ -63,7 +66,7 @@ public class InputFormMenuView extends ViewImpl implements
 	public void clearActions() {
 		
 		actionMenu.clear();
-		
+		btnActions.disable();
 	}
 
 	@Override
@@ -76,20 +79,12 @@ public class InputFormMenuView extends ViewImpl implements
 		
 	}
 
-	public Button getNext() {
+	public TextButton getNext() {
 		return next;
 	}
 
-	public void setNext(Button next) {
-		this.next = next;
-	}
-
-	public Button getPrev() {
+	public TextButton getPrev() {
 		return prev;
-	}
-
-	public void setPrev(Button prev) {
-		this.prev = prev;
 	}
 
 }

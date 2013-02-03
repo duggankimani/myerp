@@ -11,6 +11,8 @@ import com.duggankimani.app.client.components.TextFieldPresenter;
 import com.duggankimani.app.client.components.menu.InputFormMenuPresenter;
 import com.duggankimani.app.client.events.ERPRequestProcessingCompletedEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingEvent;
+import com.duggankimani.app.client.events.NavigateEvent;
+import com.duggankimani.app.client.events.NavigateEvent.NavigateHandler;
 import com.duggankimani.app.client.events.SetValueEvent;
 import com.duggankimani.app.client.service.ERPAsyncCallback;
 import com.duggankimani.app.shared.action.GetDataAction;
@@ -19,6 +21,7 @@ import com.duggankimani.app.shared.action.GetWindowAction;
 import com.duggankimani.app.shared.action.GetWindowActionResult;
 import com.duggankimani.app.shared.model.DataModel;
 import com.duggankimani.app.shared.model.FieldModel;
+import com.duggankimani.app.shared.model.TabModel;
 import com.duggankimani.app.shared.model.WindowModel;
 import com.gwtplatform.common.client.IndirectProvider;
 import com.gwtplatform.common.client.StandardProvider;
@@ -32,7 +35,7 @@ import com.google.inject.Provider;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 
-public class FormPresenter extends PresenterWidget<FormPresenter.MyView> {
+public class FormPresenter extends PresenterWidget<FormPresenter.MyView> implements NavigateHandler{
 
 	public interface MyView extends View {
 		void navigateNextRow();
@@ -105,13 +108,15 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> {
 	@Override
 	protected void onBind() {
 		super.onBind();
+		
+		addRegisteredHandler(NavigateEvent.TYPE, this);
 	}
 	
 	void loadWindow(Integer tabNo, Integer windowId, String tabName){
 		this.setInSlot(COMPONENT_SLOT, null);
 		this.setInSlot(LINES_SLOT, null);
 		
-		GetWindowAction action = new GetWindowAction(150, windowId, 2, 0);
+		GetWindowAction action = new GetWindowAction(0, tab.getWindowID(), tab.getTabNo(), 0);
 
 		fireEvent(new ERPRequestProcessingEvent(tabName));
 
@@ -134,6 +139,7 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> {
 				});
 
 	}
+	
 	public void addFields(GetWindowActionResult result) {
 		//clear whatever was there before
 		setInSlot(LINES_SLOT, null);	
@@ -282,7 +288,7 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> {
 	protected void loadData() {
 
 		fireEvent(new ERPRequestProcessingEvent("Data"));
-		loadData(new GetDataAction(0, 0, 0, 0));
+		loadData(new GetDataAction(tab.getTabNo(), tab.getWindowID(), tab.getWindowID(), 0));
 
 	}
 	
@@ -322,26 +328,29 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> {
 	int i=0;
 	@Override
 	protected void onReset() {
-
 		super.onReset();
+		
 	}
 	
 	@Override
 	protected void onReveal() {
 		super.onReveal();	
-		
-		//setInSlot(MENU_SLOT, menu, false);
-		loadWindow(tabNo, windowId, name);
+		setInSlot(MENU_SLOT, menu);
+		loadWindow(tab.getTabNo(), tab.getWindowID(), tab.getName());	
+	}
 
+	TabModel tab;
+	public void setTabInfo(TabModel tab) {
+		this.tab = tab;
+		System.err.println("TName="+tab.getName()+" - TNo"+tab.getTabNo()+" -WID "+tab.getWindowID());
+	}
+
+	@Override
+	public void onNavigate(NavigateEvent event) {
+		if(event.getSource()!=menu)
+			return;
 		
+		loadData(new GetDataAction(tab.getTabNo(), 0, tab.getWindowID(), 0, event.getRows()));
 	}
-	
-	Integer windowId;
-	Integer tabNo;
-	String name;
-	public void setWindowInfo(Integer windowId, Integer tabNo, String name) {
-		this.windowId=windowId;
-		this.tabNo = tabNo;
-		this.name=name;
-	}
+
 }

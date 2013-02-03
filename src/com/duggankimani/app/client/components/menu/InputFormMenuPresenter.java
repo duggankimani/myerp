@@ -5,10 +5,10 @@ import com.duggankimani.app.client.components.BaseView;
 import com.duggankimani.app.client.events.NavigateEvent;
 import com.duggankimani.app.shared.model.FieldModel;
 import com.google.inject.Inject;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.ui.Button;
+import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
+import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
 public class InputFormMenuPresenter extends
 		BasePresenterWidget<InputFormMenuPresenter.MyView> {
@@ -18,9 +18,9 @@ public class InputFormMenuPresenter extends
 
 		void clearActions();
 		
-		Button getPrev();
+		TextButton getPrev();
 		
-		Button getNext();
+		TextButton getNext();
 		
 	}
 
@@ -36,20 +36,21 @@ public class InputFormMenuPresenter extends
 	protected void onBind() {
 		super.onBind();
 		
-		view.getNext().addClickHandler(new ClickHandler() {
+		view.getNext().addSelectHandler(new SelectHandler() {
 			
 			@Override
-			public void onClick(ClickEvent event) {
-				fireEvent(new NavigateEvent(1));				
+			public void onSelect(SelectEvent event) {
+				// TODO Auto-generated method stub
+				fireEvent(new NavigateEvent(1, InputFormMenuPresenter.this));
 			}
 		});
 		
-		view.getPrev().addClickHandler(new ClickHandler() {
+		view.getPrev().addSelectHandler(new SelectHandler() {
 			
 			@Override
-			public void onClick(ClickEvent event) {
-				fireEvent(new NavigateEvent(-1));
-				
+			public void onSelect(SelectEvent event) {
+				// TODO Auto-generated method stub
+				fireEvent(new NavigateEvent(-1, InputFormMenuPresenter.this));
 			}
 		});
 	}
@@ -61,12 +62,12 @@ public class InputFormMenuPresenter extends
 
 	public void navigateNext() {
 		
-		fireEvent(new NavigateEvent(1));
+		fireEvent(new NavigateEvent(1, InputFormMenuPresenter.this));
 		
 	}
 
 	public void navigatePrevious() {
-		fireEvent(new NavigateEvent(-1));
+		fireEvent(new NavigateEvent(-1, InputFormMenuPresenter.this));
 	}
 	
 }

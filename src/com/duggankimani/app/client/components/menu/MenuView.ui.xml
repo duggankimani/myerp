@@ -6,6 +6,7 @@
     xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
     xmlns:menu="urn:import:com.sencha.gxt.widget.core.client.menu"
     xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
+    xmlns:toolbar="urn:import:com.sencha.gxt.widget.core.client.toolbar"
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
@@ -28,9 +29,16 @@
     }
   </ui:style>
   
-  <!-- gxt:ContentPanel ui:field="menuContainer" collapsible="true" animCollapse="true" headingText="Menu"
-      pixelSize="200, 200" position="0,0"-->
       <g:HTMLPanel>
+          <!-- toolbar:ToolBar borders="true">
+              <button:TextButton text="Action Menu">
+                   <button:menu>
+	                <menu:Menu ui:field="rootMenu">
+              		</menu:Menu>
+	            </button:menu>
+              </button:TextButton>
+          </toolbar:ToolBar -->
+    	
     	<menu:MenuBar borders="true" addStyleNames="{style.menuBorder}">
           <menu:MenuBarItem text="Application Menu" addStyleNames="{style.menuWidth}">
             <menu:menu>
@@ -40,7 +48,6 @@
             </menu:menu>
           </menu:MenuBarItem>
         </menu:MenuBar>
+        
      </g:HTMLPanel>
-  <!-- /gxt:ContentPanel -->
-  
 </ui:UiBinder>

@@ -39,6 +39,7 @@ import com.duggankimani.app.shared.action.GetWindowAction;
 import com.duggankimani.app.shared.action.GetWindowActionResult;
 import com.duggankimani.app.shared.model.DataModel;
 import com.duggankimani.app.shared.model.FieldModel;
+import com.duggankimani.app.shared.model.TabModel;
 import com.duggankimani.app.shared.model.WindowModel;
 
 public class InputFormPresenter extends
@@ -85,6 +86,8 @@ public class InputFormPresenter extends
 	InputFormMenuPresenter menu;
 
 	private WindowModel windowModel;
+	
+	private TabModel curTab;
 
 	@Inject InputLinesTabsPresenter tabsPresenter;
 	
@@ -170,6 +173,8 @@ public class InputFormPresenter extends
 
 					@Override
 					public void processResult(GetWindowActionResult result) {
+						windowModel = result.getWindowModel();
+						curTab= windowModel.getTab(0);
 						addFields(result);
 						getProxy().manualReveal(InputFormPresenter.this);
 						fireEvent(new ERPRequestProcessingCompletedEvent());	
@@ -184,8 +189,6 @@ public class InputFormPresenter extends
 		//clear whatever was there before
 		setInSlot(LINES_SLOT, null);	
 				
-		this.windowModel = result.getWindowModel();
-
 		((InputFormMenuPresenter.MyView) menu.getView()).clearActions();
 		((MyView)getView()).setTitle(result.getWindowModel().getTab(0).getName());
 		
@@ -328,7 +331,7 @@ public class InputFormPresenter extends
 	protected void loadData() {
 
 		fireEvent(new ERPRequestProcessingEvent("Data"));
-		loadData(new GetDataAction(0, 0, 0, 0));
+		loadData(new GetDataAction(curTab.getTabNo(), windowModel.getWindowNo() , curTab.getWindowID(), 0));
 
 	}
 	
@@ -374,8 +377,11 @@ public class InputFormPresenter extends
 
 	@Override
 	public void onNavigate(NavigateEvent event) {
+		if(event.getSource()!=menu)
+			return;
+		
 		int records = event.getRows();
-		loadData(new GetDataAction(0, 0, 0, 0, records));
+		loadData(new GetDataAction(curTab.getTabNo(), 0, curTab.getWindowID(), 0 , records));
 	}
 
 }

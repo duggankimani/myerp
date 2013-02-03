@@ -1,6 +1,5 @@
 package com.duggankimani.app.client.core;
 
-import com.duggankimani.app.client.core.InputFormView.Binder;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -10,7 +9,6 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.sencha.gxt.widget.core.client.info.Info;
 
 public class FormView extends ViewImpl implements FormPresenter.MyView {
 
@@ -58,7 +56,6 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 				flexTable.setWidget(y, x++, content);
 			}
 		}else if(slot == FormPresenter.MENU_SLOT){
-			Info.display("Menu Slot", " isNull="+(content==null));
 			menuContainer.clear();
 			if(content!=null)
 				menuContainer.add(content);

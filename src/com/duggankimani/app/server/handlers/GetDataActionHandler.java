@@ -37,6 +37,7 @@ public class GetDataActionHandler implements
 	public GetDataActionResult execute(GetDataAction action,
 			ExecutionContext context) throws ActionException {
 
+		System.out.println("GetDataAction: "+action.toString());
 		WindowStatus windowStatus = WindowStatus.getWindowStatus(action
 				.getWindowID());
 
@@ -74,9 +75,14 @@ public class GetDataActionHandler implements
 
 		GridTab tab = windowStatus.gridWindow.getTab(action.getTabNo());
 
-		if (action.getRows() == null) {
-			// had been init.d
+		boolean isLoaded = tab.getRowCount()>0;
+		
+		if (!isLoaded) {
+			
 			tab.initTab(false);
+			
+			// had been init.d
+			
 			tab.query(false);
 		}
 
@@ -208,6 +214,8 @@ public class GetDataActionHandler implements
 			++row;
 		}
 
+		tab.navigate(0);
+		
 		return data;
 	}
 

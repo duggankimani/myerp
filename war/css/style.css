@@ -96,3 +96,7 @@ padding-bottom: 40px;
 	border-bottom:solid 1px #C6C5BF
 }
 
+.gwt-PopupPanel{
+	z-index:2;	
+}
+

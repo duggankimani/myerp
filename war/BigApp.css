@@ -206,3 +206,7 @@ Tabs CSS
     text-align: center;
 }
 /* End of tabs css*/
+
+.gwt-Anchor{
+	cursor:pointer;
+}

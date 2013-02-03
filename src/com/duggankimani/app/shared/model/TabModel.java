@@ -58,4 +58,10 @@ public class TabModel implements Serializable {
 	public void setKeyColumnName(String keyColumnName) {
 		this.keyColumnName = keyColumnName;
 	}
+	
+	@Override
+	public String toString() {
+		String str = "WindowID= "+WindowID+", TabNo="+tabNo+", Name="+name;
+		return str;
+	}
 }
