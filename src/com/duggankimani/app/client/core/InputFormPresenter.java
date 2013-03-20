@@ -52,6 +52,8 @@ public class InputFormPresenter extends
 		
 		void setTitle(String title);
 
+		void clearLinesComponent();
+
 	}
 
 	@ProxyCodeSplit
@@ -203,8 +205,10 @@ public class InputFormPresenter extends
 		}
 
 		if (windowModel != null && windowModel.getTabs().size() > 1){
-			//addLinesView(windowModel.getTab(1));
 			createTabView(windowModel);
+		}else{
+			//remove lines Div
+			getView().clearLinesComponent();
 		}
 			
 

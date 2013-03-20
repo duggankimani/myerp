@@ -56,21 +56,21 @@ public class MetaCreator {
 	
 	public WindowModel getWindowModel(Integer AD_Menu_ID, Integer AD_Window_ID, Integer tabNo) {
 		try{
-		if(tabNo==null || tabNo==0)
-			return getWindowModel(AD_Menu_ID);
-		
-		TabModel tab = new TabModel();
-		WindowStatus ws = WindowStatus.getWindowStatus(AD_Window_ID);
-		GridTabVO gridTabVO = ws.gridWindowV0.Tabs.get(tabNo); 
-		getTabModel(gridTabVO, tab);
-		addFields(tab, gridTabVO);
-		
-		WindowModel windowModel = new WindowModel();
-		windowModel.setTabs(new ArrayList<>(Arrays.asList(tab)));
-		windowModel.setName(tab.getName());
-		windowModel.setWindowID(gridTabVO.AD_Window_ID);
-		windowModel.setMenuID(0);
-		return windowModel;
+			if(tabNo==null || tabNo==0)
+				return getWindowModel(AD_Menu_ID);
+			
+			//TabModel tab = new TabModel();
+			WindowStatus ws = WindowStatus.getWindowStatus(AD_Window_ID);
+			GridTabVO gridTabVO = ws.gridWindowV0.Tabs.get(tabNo); 
+			//getTabModel(gridTabVO, tab);
+			//addFields(tab, gridTabVO);
+			
+			WindowModel windowModel = new WindowModel();
+			windowModel.setWindowID(gridTabVO.AD_Window_ID);
+			windowModel.setMenuID(0);
+			
+			addTabs(tabNo, windowModel, ws.gridWindowV0);
+			return windowModel;
 		}catch(Exception e){
 			e.printStackTrace();
 			throw new RuntimeException(e);
@@ -79,29 +79,91 @@ public class MetaCreator {
 	}
 
 	private void addTabs(WindowModel model, GridWindowVO gridWindowVO) {
-
-		for (int i = 0; i < gridWindowVO.Tabs.size(); i++) {
-			GridTabVO gridTabVO = (GridTabVO) gridWindowVO.Tabs.get(i);
-
-			TabModel tab = new TabModel();
-			getTabModel(gridTabVO, tab);
+	
+		addTabs(0, model, gridWindowVO);
+	}
+	
+	private void addTabs(int rootTabNo, WindowModel model, GridWindowVO gridWindowVO){
+		
+		int rootTabLevel=0;
+		
+		GridTabVO rootTabVO = (GridTabVO) gridWindowVO.Tabs.get(rootTabNo);
+		
+		System.err.println("###- "+rootTabVO.Name +" | tabNo= "+rootTabVO.TabNo+" | Level= "+rootTabVO.TabLevel);
+		
+		rootTabLevel = rootTabVO.TabLevel;
+		//load children of this tab			
+		TabModel roottab = new TabModel();
+		getTabModel(rootTabVO, roottab);
+		if(rootTabNo!=0){
+			model.setName(rootTabVO.Name);
+			model.setWindowID(gridWindowVO.AD_Window_ID);
+		}
+		addFields(roottab, rootTabVO);
+		model.add(roottab);
+	
+		
+		for (int i = rootTabNo+1; i < gridWindowVO.Tabs.size(); i++) {
 			
-			addFields(tab, gridTabVO);
-			model.add(tab);
-			if(i==2){//load tab 0 and 1 only : tab loading optimization required
-				setMinTabDetails(model, gridWindowVO);
-				break;
+			GridTabVO gridTabVO = (GridTabVO) gridWindowVO.Tabs.get(i);
+			
+			if(gridTabVO.TabLevel==rootTabLevel){
+				//other tabs at the same level as this tab.
+				//TODO:Find a way to handle this for tablevel 0 example window- Accounting Dimensions window
+				continue;
+			}
+				
+			if(gridTabVO.TabLevel != rootTabLevel+1){
+				
+				//Not direct children of the root Tab
+				continue;
+				
+			}
+			
+			System.err.println("###- "+gridTabVO.Name +" | tabNo= "+gridTabVO.TabNo+" | Level= "+gridTabVO.TabLevel);
+			
+			if(i==rootTabNo+1){ //next tabNo
+				
+				//load Full tab definition (This is the first child tab loaded as a grid when the window is first open )			
+				TabModel tab = new TabModel();
+				getTabModel(gridTabVO, tab);
+				addFields(tab, gridTabVO);
+				model.add(tab);
+				model.addMinTabDetail(new MinTabModel(gridTabVO.TabNo, gridTabVO.Name));
+
+			}else{
+				
+				//tab loading optimization required
+				//setMinTabDetails(model, gridWindowVO);
+				addMinTabDetail(model, gridTabVO);
+				//break;
 			}
 				
 		}
 
 	}
 
+	private GridTab getGridTab(int tabNo, int AD_Window_ID) {
+		WindowStatus ws = WindowStatus.getWindowStatus(AD_Window_ID);
+		if(ws==null){
+			return null;
+		}
+		
+		if(ws.gridWindow==null){
+			ws.gridWindow = new GridWindow(ws.gridWindowV0);
+		}
+		ws.gridWindow.initTab(tabNo);
+		
+		return ws.gridWindow.getTab(tabNo); 
+		
+	}
+
 	private void getTabModel(GridTabVO gridTabVO, TabModel tab) {
 		tab.setName(gridTabVO.Name);
 		tab.setTabNo(gridTabVO.TabNo);
 		tab.setWindowID(gridTabVO.AD_Window_ID);
-
+		tab.setTabLevel(gridTabVO.TabLevel);
+		
 	}
 
 	/**
@@ -109,17 +171,24 @@ public class MetaCreator {
 	 * @param model
 	 * @param gridWindowVO
 	 */
-	private void setMinTabDetails(WindowModel model, GridWindowVO gridWindowVO) {
-		ArrayList<MinTabModel> tabs = new ArrayList<MinTabModel>();
-		for(int i=1; i<gridWindowVO.Tabs.size(); i++){
-			
-			MinTabModel tabModel = new MinTabModel(gridWindowVO.Tabs.get(i).TabNo, gridWindowVO.Tabs.get(i).Name);
-			tabs.add(tabModel);
-		}
-		
-		model.setMinTabDetails(tabs);
-		
+//	private void setMinTabDetails(WindowModel model, GridWindowVO gridWindowVO) {
+//		ArrayList<MinTabModel> tabs = new ArrayList<MinTabModel>();
+//		for(int i=1; i<gridWindowVO.Tabs.size(); i++){
+//			
+//			MinTabModel tabModel = new MinTabModel(gridWindowVO.Tabs.get(i).TabNo, gridWindowVO.Tabs.get(i).Name);
+//			tabs.add(tabModel);
+//		}
+//		
+//		model.setMinTabDetails(tabs);
+//		
+//	}
+	
+	private void addMinTabDetail(WindowModel model, GridTabVO gridTabV0){
+		MinTabModel tabModel = new MinTabModel(gridTabV0.TabNo, gridTabV0.Name);
+		model.addMinTabDetail(tabModel);
 	}
+	
+	
 
 	private void addFields(TabModel tab, GridTabVO gridTabVO) {
 
@@ -203,17 +272,20 @@ public class MetaCreator {
 		
 		gridWindow.initTab(tabNo);
 		GridTab tab = gridWindow.getTab(tabNo);
-
-
 		TabModel model = new TabModel();
-		model.setName(tab.getName());
-		model.setTabNo(tabNo);
-		model.setWindowID(tab.getAD_Window_ID());
-		
-		addMinFieldsDetails(model, tab);
+	
+		getMinTabModel(model, tab);
 		
 		return model;
 		
+	}
+	
+	public void getMinTabModel(TabModel parent, GridTab tab){
+		parent.setName(tab.getName());
+		parent.setTabNo(tab.getTabNo());
+		parent.setWindowID(tab.getAD_Window_ID());
+	
+		addMinFieldsDetails(parent, tab);
 	}
 	
 	private void addMinFieldsDetails(TabModel tabModel, GridTab tab) {

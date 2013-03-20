@@ -90,4 +90,8 @@ public class WindowModel implements Serializable {
 	public void setWindowNo(Integer windowNo) {
 		this.windowNo = windowNo;
 	}
+
+	public void addMinTabDetail(MinTabModel tabModel) {
+		minTabDetails.add(tabModel);
+	}
 }

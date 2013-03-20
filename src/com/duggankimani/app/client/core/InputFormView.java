@@ -17,6 +17,8 @@ public class InputFormView extends ViewImpl implements InputFormPresenter.MyView
 	public interface Binder extends UiBinder<Widget, InputFormView> {
 	}
 
+	@UiField HTMLPanel headerContainer;
+	
 	@UiField FlexTable flexTable;
 	
 	@UiField HorizontalPanel menuContainer;
@@ -101,6 +103,12 @@ public class InputFormView extends ViewImpl implements InputFormPresenter.MyView
 	
 	public void setTitle(String title){
 		spnTitle.setInnerText(title);
+	}
+
+	@Override
+	public void clearLinesComponent() {
+		linesContainer.setStyleName("hidden");
+		headerContainer.setStyleName("fillrow");
 	}
 
 }

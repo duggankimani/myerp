@@ -37,7 +37,7 @@ public class GetDataActionHandler implements
 	public GetDataActionResult execute(GetDataAction action,
 			ExecutionContext context) throws ActionException {
 
-		System.out.println("GetDataAction: "+action.toString());
+		//System.out.println("GetDataAction: "+action.toString());
 		WindowStatus windowStatus = WindowStatus.getWindowStatus(action
 				.getWindowID());
 
