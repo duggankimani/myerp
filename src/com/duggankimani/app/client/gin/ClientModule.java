@@ -15,8 +15,8 @@ import com.duggankimani.app.client.components.DateFieldPresenter;
 import com.duggankimani.app.client.components.DateFieldView;
 import com.duggankimani.app.client.workbench.FinanceWorkbenchPresenter;
 import com.duggankimani.app.client.workbench.FinanceWorkbenchView;
-import com.duggankimani.app.client.components.menu.MenuPresenter;
-import com.duggankimani.app.client.components.menu.MenuView;
+import com.duggankimani.app.client.components.menu.ApplicationMenuPresenter;
+import com.duggankimani.app.client.components.menu.ApplicationMenuView;
 import com.duggankimani.app.client.components.NumberFieldPresenter;
 import com.duggankimani.app.client.components.NumberFieldView;
 import com.duggankimani.app.client.components.CheckboxPresenter;
@@ -66,8 +66,8 @@ public class ClientModule extends AbstractPresenterModule {
 				FinanceWorkbenchView.class,
 				FinanceWorkbenchPresenter.MyProxy.class);
 
-		bindPresenter(MenuPresenter.class, MenuPresenter.MyView.class,
-				MenuView.class, MenuPresenter.MyProxy.class);
+		bindPresenter(ApplicationMenuPresenter.class, ApplicationMenuPresenter.MyView.class,
+				ApplicationMenuView.class, ApplicationMenuPresenter.MyProxy.class);
 
 		bindPresenterWidget(NumberFieldPresenter.class,
 				NumberFieldPresenter.MyView.class, NumberFieldView.class);

@@ -87,4 +87,10 @@ public class InputFormMenuView extends ViewImpl implements
 		return prev;
 	}
 
+	@Override
+	public void setNavigationState(Boolean hasPrev, Boolean hasNext) {
+		prev.setEnabled(hasPrev);
+		next.setEnabled(hasNext);
+	}
+
 }

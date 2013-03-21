@@ -15,7 +15,7 @@ public class GetDataAction extends BaseERPAction<GetDataActionResult> {
 	private Boolean multipleResults;
 
 	private GetDataAction() {
-		// For serialization only
+		// For serialisation only
 		this.multipleResults=false;
 	}
 

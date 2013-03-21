@@ -10,7 +10,7 @@ import com.google.gwt.inject.client.AsyncProvider;
 import com.duggankimani.app.client.core.MainPagePresenter;
 import com.duggankimani.app.client.core.InputFormPresenter;
 import com.duggankimani.app.client.workbench.FinanceWorkbenchPresenter;
-import com.duggankimani.app.client.components.menu.MenuPresenter;
+import com.duggankimani.app.client.components.menu.ApplicationMenuPresenter;
 import com.duggankimani.app.client.core.ErrorPagePresenter;
 import com.duggankimani.app.client.core.InputLinesPresenter;
 
@@ -27,7 +27,7 @@ public interface ClientGinjector extends Ginjector {
 
 	AsyncProvider<FinanceWorkbenchPresenter> getFinanceWorkbenchPresenter();
 
-	AsyncProvider<MenuPresenter> getMenuPresenter();
+	AsyncProvider<ApplicationMenuPresenter> getMenuPresenter();
 
 	AsyncProvider<ErrorPagePresenter> getErrorPagePresenter();
 

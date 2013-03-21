@@ -1,0 +1,53 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
+    xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
+    xmlns:menu="urn:import:com.sencha.gxt.widget.core.client.menu"
+    xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
+    xmlns:toolbar="urn:import:com.sencha.gxt.widget.core.client.toolbar"
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+ 
+  <ui:with type="com.sencha.gxt.core.client.util.Margins" field="margins">
+    <ui:attributes top="4" right="4" bottom="4" left="4" />
+  </ui:with>
+  <ui:with type="com.sencha.gxt.widget.core.client.container.MarginData" field="layoutData">
+    <ui:attributes margins="{margins}" />
+  </ui:with>
+ <ui:style>
+    .menuBorder {
+        border-top: none;
+    }
+    .margin {
+       margin: 10px;
+     }
+	.menuWidth{
+        width:150px;
+    }
+  </ui:style>
+  
+      <g:HTMLPanel>
+          <!-- toolbar:ToolBar borders="true">
+              <button:TextButton text="Action Menu">
+                   <button:menu>
+	                <menu:Menu ui:field="rootMenu">
+              		</menu:Menu>
+	            </button:menu>
+              </button:TextButton>
+          </toolbar:ToolBar -->
+    	
+    	<menu:MenuBar borders="true" addStyleNames="{style.menuBorder}">
+          <menu:MenuBarItem text="Application Menu" addStyleNames="{style.menuWidth}">
+            <menu:menu>
+              <menu:Menu ui:field="rootMenu">
+                
+              </menu:Menu>
+            </menu:menu>
+          </menu:MenuBarItem>
+        </menu:MenuBar>
+        
+     </g:HTMLPanel>
+</ui:UiBinder>

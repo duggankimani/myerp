@@ -1,6 +1,6 @@
 package com.duggankimani.app.client.core;
 
-import com.duggankimani.app.client.components.menu.MenuPresenter;
+import com.duggankimani.app.client.components.menu.ApplicationMenuPresenter;
 import com.duggankimani.app.client.events.ERPRequestProcessingCompletedEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingCompletedEvent.ERPRequestProcessingCompletedHandler;
@@ -57,7 +57,7 @@ public class MainPagePresenter extends
 	PlaceManager placeManager;
 	
 	@Inject
-	MenuPresenter menu;
+	ApplicationMenuPresenter menu;
 	
 	@Inject DispatchAsync dispatchAsync;
 	

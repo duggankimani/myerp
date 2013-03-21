@@ -106,12 +106,16 @@ public class GetDataActionHandler implements
 
 	private DataModel getRowData(GridTab tab, boolean useValue) {
 
+		int rows = tab.getRowCount();
+		int currentRow=tab.getCurrentRow();
+		
 		GridField[] fields = tab.getFields();
 
 		ArrayList<String> strs = tab.getParentColumnNames();
 
 		DataModel dataModel = new DataModel();
-
+		dataModel.setState(currentRow!=0, currentRow!=rows-1, currentRow);
+		
 		for (GridField field : fields) {
 			Object value = tab.getValue(field);
 			String columnName = field.getColumnName();
