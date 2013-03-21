@@ -12,14 +12,6 @@
 			width:100%;
 		}
     </ui:style>
-	<g:HTMLPanel styleName="container">
-	    <g:HorizontalPanel ui:field="menuContainer"></g:HorizontalPanel>
-	    <span ui:field="spnTitle" style="font-size:14px; font-weight:bold; color:orange; text-decoration:underline"></span>
-	    <g:HTMLPanel ui:field="headerContainer" styleName="row1">
-	    	<g:FlexTable ui:field="flexTable">	        
-	    	</g:FlexTable>
-	    </g:HTMLPanel>
-	    <g:HTMLPanel ui:field="linesContainer" styleName="row2">
-	    </g:HTMLPanel>
+	<g:HTMLPanel ui:field="container" styleName="container">
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -1,5 +1,6 @@
 package com.duggankimani.app.client.events;
 
+import com.duggankimani.app.shared.action.GetWindowAction;
 import com.duggankimani.app.shared.model.TabModel;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.EventHandler;
@@ -10,14 +11,14 @@ public class LoadWindowEvent extends
 		GwtEvent<LoadWindowEvent.LoadWindowHandler> {
 
 	public static Type<LoadWindowHandler> TYPE = new Type<LoadWindowHandler>();
-	private TabModel tab;
+	private GetWindowAction action;
 	
 	public interface LoadWindowHandler extends EventHandler {
 		void onLoadWindow(LoadWindowEvent event);
 	}
 
-	public LoadWindowEvent(TabModel tab) {
-		this.tab = tab;
+	public LoadWindowEvent(GetWindowAction action) {
+		this.action = action;
 	}
 
 	@Override
@@ -38,11 +39,11 @@ public class LoadWindowEvent extends
 		source.fireEvent(new LoadWindowEvent(null));
 	}
 
-	public TabModel getTab() {
-		return tab;
+	public GetWindowAction getAction() {
+		return action;
 	}
 
-	public void setTab(TabModel tab) {
-		this.tab = tab;
+	public void setAction(GetWindowAction action) {
+		this.action = action;
 	}
 }

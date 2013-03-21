@@ -16,8 +16,11 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	public interface Binder extends UiBinder<Widget, FormView> {
 	}
-	
 
+	@UiField HTMLPanel parentContainer;
+	
+	@UiField HTMLPanel headerContainer;
+	
 	@UiField FlexTable flexTable;
 	
 	@UiField HorizontalPanel menuContainer;
@@ -26,6 +29,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 	
 	@UiField SpanElement spnTitle;
 
+	int mode=0;
+	
 	@Inject
 	public FormView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
@@ -104,5 +109,39 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 	public void setTitle(String title){
 		spnTitle.setInnerText(title);
 	}
+	
 
+	@Override
+	public void clearLinesComponent() {
+		if(mode==0){
+			linesContainer.setStyleName("hidden");
+			headerContainer.setStyleName("fillrow");
+			headerContainer.removeStyleName("row1");
+		}
+	}
+
+	public void setViewMode(int mode){
+		this.mode=mode;
+		parentContainer.removeStyleName("container");
+		parentContainer.removeStyleName("pop_container");
+		
+		headerContainer.removeStyleName("row1");
+		headerContainer.removeStyleName("pop_row1");
+		headerContainer.removeStyleName("fillrow");
+		
+		linesContainer.removeStyleName("row2");
+		linesContainer.removeStyleName("pop_row2");
+		
+		if(mode==0){
+			//Normal Input Form
+			parentContainer.setStyleName("container");
+			headerContainer.setStyleName("row1");
+			linesContainer.setStyleName("row2");
+		}else if(mode==1){
+			//popup container
+			parentContainer.setStyleName("pop_container");
+			headerContainer.setStyleName("pop_row1");
+			linesContainer.setStyleName("pop_row2");
+		}
+	}
 }

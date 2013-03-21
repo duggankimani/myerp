@@ -6,7 +6,18 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<g:HTMLPanel styleName="pop_container">
+    <g:HTMLPanel ui:field="parentContainer" styleName="container">
+	    <g:HorizontalPanel ui:field="menuContainer"></g:HorizontalPanel>
+	    <span ui:field="spnTitle" style="font-size:14px; font-weight:bold; color:orange; text-decoration:underline"></span>
+	    <g:HTMLPanel ui:field="headerContainer" styleName="row1">
+		    <g:FlexTable ui:field="flexTable">	        
+		    </g:FlexTable>
+	    </g:HTMLPanel>
+	    <g:HTMLPanel ui:field="linesContainer" styleName="row2">
+	    </g:HTMLPanel>
+	</g:HTMLPanel>
+    
+	<!-- g:HTMLPanel styleName="pop_container">
 	    <g:HorizontalPanel ui:field="menuContainer"></g:HorizontalPanel>
 	    <span ui:field="spnTitle" style="font-size:14px; font-weight:bold; color:orange; text-decoration:underline"></span>
 	    <div class="pop_row1">
@@ -15,5 +26,5 @@
 	    </div>
 	    <g:HTMLPanel ui:field="linesContainer" styleName="pop_row2">
 	    </g:HTMLPanel>
-	</g:HTMLPanel>
+	</g:HTMLPanel -->
 </ui:UiBinder>

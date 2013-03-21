@@ -9,6 +9,7 @@ import com.duggankimani.app.client.components.DateFieldPresenter;
 import com.duggankimani.app.client.components.NumberFieldPresenter;
 import com.duggankimani.app.client.components.TextFieldPresenter;
 import com.duggankimani.app.client.components.menu.InputFormMenuPresenter;
+import com.duggankimani.app.client.events.AfterFormLoadEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingCompletedEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingEvent;
 import com.duggankimani.app.client.events.NavigateEvent;
@@ -43,6 +44,10 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 		void setColSpan(int colSpan);
 		
 		void setTitle(String title);
+		
+		void clearLinesComponent();
+		
+		void setViewMode(int mode);
 	}
 
 	@ContentSlot
@@ -55,6 +60,8 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 
 	@Inject
 	DispatchAsync dispatchAsync;
+	
+	GetWindowAction requestedAction;
 
 	private IndirectProvider<TextFieldPresenter> textBoxFactory;
 
@@ -72,6 +79,8 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 	InputFormMenuPresenter menu;
 
 	private WindowModel windowModel;
+	
+	private TabModel curTab;
 
 	@Inject InputLinesTabsPresenter tabsPresenter;
 	
@@ -111,30 +120,26 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 		
 		addRegisteredHandler(NavigateEvent.TYPE, this);
 	}
-	
-	void loadWindow(Integer tabNo, Integer windowId, String tabName){
-		this.setInSlot(COMPONENT_SLOT, null);
-		this.setInSlot(LINES_SLOT, null);
 		
-		GetWindowAction action = new GetWindowAction(0, tab.getWindowID(), tab.getTabNo(), 0);
-
-		fireEvent(new ERPRequestProcessingEvent(tabName));
-
+	void loadWindow(GetWindowAction action){
+		fireEvent(new ERPRequestProcessingEvent(""+action.getAD_Menu_ID()));
 		dispatchAsync.execute(action,
 				new ERPAsyncCallback<GetWindowActionResult>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						super.onFailure(caught);
-						// must do this when using manual reveal
-						fireEvent(new ERPRequestProcessingCompletedEvent());
-					}
 
 					@Override
 					public void processResult(GetWindowActionResult result) {
+						windowModel = result.getWindowModel();
+						curTab= windowModel.getTab(0);
 						addFields(result);
 						fireEvent(new ERPRequestProcessingCompletedEvent());	
 						loadData();						
-											
+						fireEvent(new AfterFormLoadEvent(FormPresenter.this, true));					
+					}
+					
+					@Override
+					public void onFailure(Throwable caught) {
+						fireEvent(new AfterFormLoadEvent(FormPresenter.this, false));
+						super.onFailure(caught);
 					}
 				});
 
@@ -144,8 +149,6 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 		//clear whatever was there before
 		setInSlot(LINES_SLOT, null);	
 				
-		this.windowModel = result.getWindowModel();
-
 		((InputFormMenuPresenter.MyView) menu.getView()).clearActions();
 		((MyView)getView()).setTitle(result.getWindowModel().getTab(0).getName());
 		
@@ -160,16 +163,19 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 		}
 
 		if (windowModel != null && windowModel.getTabs().size() > 1){
-			//addLinesView(windowModel.getTab(1));
 			createTabView(windowModel);
+		}else{
+			//remove lines Div
+			getView().clearLinesComponent();
 		}
 			
 
 	}
 
-	private void createTabView(WindowModel tab) {
+
+	private void createTabView(WindowModel curTab) {
 		
-		tabsPresenter.bindTabs(tab.getMinTabDetails());
+		tabsPresenter.bindTabs(curTab.getMinTabDetails());
 		setInSlot(LINES_SLOT, tabsPresenter);
 	}
 
@@ -288,7 +294,7 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 	protected void loadData() {
 
 		fireEvent(new ERPRequestProcessingEvent("Data"));
-		loadData(new GetDataAction(tab.getTabNo(), tab.getWindowID(), tab.getWindowID(), 0));
+		loadData(new GetDataAction(curTab.getTabNo(), curTab.getWindowID(), curTab.getWindowID(), 0));
 
 	}
 	
@@ -315,7 +321,6 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 				});
 
 	}
-
 	
 	/**
 	 * Sets colspan to the last added
@@ -325,24 +330,19 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 		getView().setColSpan(2);
 	}
 	
-	int i=0;
+	//int i=0;
 	@Override
 	protected void onReset() {
 		super.onReset();
-		
+		System.err.println("FRM On Reset called!!");
 	}
 	
 	@Override
 	protected void onReveal() {
 		super.onReveal();	
+		System.err.println("FRM On Reveal called!!");
 		setInSlot(MENU_SLOT, menu);
-		loadWindow(tab.getTabNo(), tab.getWindowID(), tab.getName());	
-	}
-
-	TabModel tab;
-	public void setTabInfo(TabModel tab) {
-		this.tab = tab;
-		System.err.println("TName="+tab.getName()+" - TNo"+tab.getTabNo()+" -WID "+tab.getWindowID());
+		loadWindow(requestedAction);	
 	}
 
 	@Override
@@ -350,7 +350,22 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 		if(event.getSource()!=menu)
 			return;
 		
-		loadData(new GetDataAction(tab.getTabNo(), 0, tab.getWindowID(), 0, event.getRows()));
+		loadData(new GetDataAction(curTab.getTabNo(), 0, curTab.getWindowID(), 0, event.getRows()));
+	}
+
+	/**
+	 * Requested Load Action
+	 * -- Set by Popup Presenters and InputFormPresenters
+	 * -- Entry points for parent components setting the window details to load
+	 * -- 
+	 * @param requestWindowAction
+	 */
+	public void setAction(GetWindowAction action) {
+		this.requestedAction = action;
+	}
+
+	public void setViewMode(int i) {
+		getView().setViewMode(i);
 	}
 
 }

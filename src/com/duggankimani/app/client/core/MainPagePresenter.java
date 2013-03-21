@@ -127,20 +127,8 @@ public class MainPagePresenter extends
 	
 	@Override
 	public void onLoadWindow(final LoadWindowEvent event) {
-		popupPresenter.setTab(event.getTab());
+		popupPresenter.setAction(event.getAction());
 		addToPopupSlot(popupPresenter, true);
-			
-		//getEventBus().fireEvent(new LoadPopupWindowEvent(event.getTabNo(), event.getName(), event.getWindowId(), 0));
-		
-//		ERPAsyncCallback<InputFormPopupPresenter> asyncCall = new ERPAsyncCallback<InputFormPopupPresenter>() {
-//			@Override
-//			public void processResult(InputFormPopupPresenter result) {
-//				addToPopupSlot(result, true);
-//				getEventBus().fireEvent(new LoadPopupWindowEvent(event.getTabNo(), event.getName(), event.getWindowId(), 0));
-//			}
-//		};
-		
-	//	popPresenterFactory.get(asyncCall);
 	}
 
 	@Override

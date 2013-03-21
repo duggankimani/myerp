@@ -1,6 +1,7 @@
 package com.duggankimani.app.client.core;
 
 import com.duggankimani.app.client.service.ERPAsyncCallback;
+import com.duggankimani.app.shared.action.GetWindowAction;
 import com.duggankimani.app.shared.model.TabModel;
 import com.gwtplatform.common.client.IndirectProvider;
 import com.gwtplatform.common.client.StandardProvider;
@@ -57,7 +58,8 @@ public class InputFormPopupPresenter extends
 		formPresenterFactory.get(new ERPAsyncCallback<FormPresenter>() {
 			@Override
 			public void processResult(FormPresenter result) {
-				result.setTabInfo(tab);
+				result.setAction(requestWindowAction);
+				result.setViewMode(1);
 				InputFormPopupPresenter.this.setInSlot(FORM_SLOT, result);
 			}
 		});
@@ -68,9 +70,9 @@ public class InputFormPopupPresenter extends
 		super.onReset();
 	}
 
-	TabModel tab;
-	public void setTab(TabModel tab) {
-		this.tab = tab;
+	GetWindowAction requestWindowAction;
+	public void setAction(GetWindowAction action) {
+		this.requestWindowAction = action;
 	}
 
 }

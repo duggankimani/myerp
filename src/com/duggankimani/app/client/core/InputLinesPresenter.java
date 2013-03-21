@@ -10,6 +10,7 @@ import com.duggankimani.app.client.events.LoadWindowEvent;
 import com.duggankimani.app.client.service.ERPAsyncCallback;
 import com.duggankimani.app.shared.action.GetDataAction;
 import com.duggankimani.app.shared.action.GetDataActionResult;
+import com.duggankimani.app.shared.action.GetWindowAction;
 import com.duggankimani.app.shared.model.DataModel;
 import com.duggankimani.app.shared.model.TabModel;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -95,9 +96,7 @@ public class InputLinesPresenter extends
 			public void onRowDoubleClick(RowDoubleClickEvent event) {
 			
 				DataModel model = getView().getGrid().getSelectionModel().getSelectedItem();
-				//Info.display("DClick Listener", "Selected Model-"+model);
-				getEventBus().fireEvent(new LoadWindowEvent(tab));
-				//getEventBus().fireEvent(new LoadPopupWindowEvent(tab.getTabNo(), tab.getName(), tab.getWindowID(), 0));
+				getEventBus().fireEvent(new LoadWindowEvent(new GetWindowAction(0, tab.getWindowID(), tab.getTabNo(), 0)));
 			}
 		});
 		
