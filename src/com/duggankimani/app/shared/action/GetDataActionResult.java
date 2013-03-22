@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.duggankimani.app.shared.model.DataModel;
 
-public class GetDataActionResult extends BaseERPActionResult {
+public class GetDataActionResult extends BaseActionResult {
 
 	ArrayList<DataModel> dataModels=null;
 	

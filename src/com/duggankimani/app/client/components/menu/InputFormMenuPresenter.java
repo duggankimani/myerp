@@ -78,7 +78,7 @@ public class InputFormMenuPresenter extends
 			@Override
 			public void onSelect(SelectEvent event) {
 				// TODO Auto-generated method stub
-				fireEvent(new NavigateEvent(1, InputFormMenuPresenter.this));
+				fireEvent(new NavigateEvent(1));
 			}
 		});
 		
@@ -87,19 +87,18 @@ public class InputFormMenuPresenter extends
 			@Override
 			public void onSelect(SelectEvent event) {
 				// TODO Auto-generated method stub
-				fireEvent(new NavigateEvent(-1, InputFormMenuPresenter.this));
+				fireEvent(new NavigateEvent(-1));
 			}
 		});
 	}
 
 	public void navigateNext() {
-		
-		fireEvent(new NavigateEvent(1, InputFormMenuPresenter.this));
+		fireEvent(new NavigateEvent(1));
 		
 	}
 
 	public void navigatePrevious() {
-		fireEvent(new NavigateEvent(-1, InputFormMenuPresenter.this));
+		fireEvent(new NavigateEvent(-1));
 	}
 
 	@Override

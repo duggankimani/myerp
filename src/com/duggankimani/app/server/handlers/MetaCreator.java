@@ -1,7 +1,6 @@
 package com.duggankimani.app.server.handlers;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.compiere.model.GridField;
 import org.compiere.model.GridFieldVO;
@@ -88,9 +87,7 @@ public class MetaCreator {
 		int rootTabLevel=0;
 		
 		GridTabVO rootTabVO = (GridTabVO) gridWindowVO.Tabs.get(rootTabNo);
-		
-		System.err.println("###- "+rootTabVO.Name +" | tabNo= "+rootTabVO.TabNo+" | Level= "+rootTabVO.TabLevel);
-		
+				
 		rootTabLevel = rootTabVO.TabLevel;
 		//load children of this tab			
 		TabModel roottab = new TabModel();
@@ -119,9 +116,7 @@ public class MetaCreator {
 				continue;
 				
 			}
-			
-			System.err.println("###- "+gridTabVO.Name +" | tabNo= "+gridTabVO.TabNo+" | Level= "+gridTabVO.TabLevel);
-			
+						
 			if(i==rootTabNo+1){ //next tabNo
 				
 				//load Full tab definition (This is the first child tab loaded as a grid when the window is first open )			
@@ -179,6 +174,9 @@ public class MetaCreator {
 			model.setColSpan(1);
 			model.setWindowId(gridTabVO.AD_Window_ID);
 			model.setTabNo(gridTabVO.TabNo);
+			model.setHasCallout(field.Callout!=null && !field.Callout.isEmpty());
+			//model.setHasDynamicValidation(field.);
+			
 			if(field.FieldLength>0 && field.FieldLength>60){
 				int colSpan = field.FieldLength/60;
 				
@@ -297,6 +295,9 @@ public class MetaCreator {
 			model.setDisplayType(DisplayType.getDisplayType(field.getDisplayType()));
 			model.setDescription(field.getDescription());
 			model.setColumnName(field.getColumnName());
+			model.setHasCallout(field.getCallout()!=null && !field.getCallout().isEmpty());
+			model.setTabNo(tab.getTabNo());
+			model.setWindowId(tab.getAD_Window_ID());
 			
 			if(field.isKey()){
 		

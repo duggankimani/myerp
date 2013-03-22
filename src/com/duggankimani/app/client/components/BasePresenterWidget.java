@@ -1,26 +1,29 @@
 package com.duggankimani.app.client.components;
 
+import com.duggankimani.app.client.events.CalloutEvent;
 import com.duggankimani.app.client.events.ClearFieldsEvent;
 import com.duggankimani.app.client.events.ClearFieldsEvent.ClearFieldsHandler;
 import com.duggankimani.app.client.events.SetValueEvent;
 import com.duggankimani.app.client.events.SetValueEvent.SetValueHandler;
+import com.duggankimani.app.client.events.ValueChangedEvent;
+import com.duggankimani.app.client.events.ValueChangedEvent.ValueChangedHandler;
 import com.duggankimani.app.shared.model.DataModel;
 import com.duggankimani.app.shared.model.FieldModel;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.UIObject;
 import com.gwtplatform.mvp.client.PresenterWidget;
 
-public abstract class BasePresenterWidget<V> extends PresenterWidget<BaseView>
-		implements SetValueHandler, ClearFieldsHandler {
+public abstract class BasePresenterWidget<V extends BaseView> extends PresenterWidget<V>
+		implements SetValueHandler, ClearFieldsHandler, ValueChangedHandler {
 
 	FieldModel fieldModel;
 
-	public BasePresenterWidget(EventBus eventBus, BaseView view) {
+	public BasePresenterWidget(EventBus eventBus, V view) {
 		super(eventBus, view);
 	}
 
 	public BasePresenterWidget(boolean autoBind, EventBus eventBus,
-			BaseView view) {
+			V view) {
 		super(autoBind, eventBus, view);
 	}
 
@@ -34,6 +37,7 @@ public abstract class BasePresenterWidget<V> extends PresenterWidget<BaseView>
 		super.onBind();
 		addRegisteredHandler(SetValueEvent.TYPE, this);
 		addRegisteredHandler(ClearFieldsEvent.TYPE, this);
+		addRegisteredHandler(ValueChangedEvent.TYPE, this);
 	}
 
 	/**
@@ -81,6 +85,11 @@ public abstract class BasePresenterWidget<V> extends PresenterWidget<BaseView>
 			// System.out.println("FieldModel is null!!!-----!!! -- Menu");
 			return;
 		}
+		
+		if (!(event.getWindowId().equals(fieldModel.getWindowId()) &&
+				event.getTabNo().equals(fieldModel.getTabNo()))){
+			return;
+		}
 
 		DataModel model = event.getData();
 		if (model == null)
@@ -103,8 +112,8 @@ public abstract class BasePresenterWidget<V> extends PresenterWidget<BaseView>
 
 	@Override
 	public void onClearFields(ClearFieldsEvent event) {
-		if (event.getTabNo() == fieldModel.getTabNo()
-				&& event.getWindowId() == fieldModel.getWindowId()) {
+		if (!(event.getWindowId().equals(fieldModel.getWindowId()) &&
+				event.getTabNo().equals(fieldModel.getTabNo()))){
 			if (this instanceof ButtonPresenter) {
 				// disable
 			} else {
@@ -116,5 +125,23 @@ public abstract class BasePresenterWidget<V> extends PresenterWidget<BaseView>
 	public void clearData() {
 		getView().clearData();
 	}
-
+	
+	void valueChanged(Object newValue){
+		fireEvent(new ValueChangedEvent(fieldModel.getWindowId(), fieldModel.getTabNo(), fieldModel.getColumnName(), newValue));
+		if(fieldModel.hasCallout()){
+			//fire callout
+			fireEvent(new CalloutEvent(fieldModel.getWindowId(), fieldModel.getTabNo(), fieldModel.getColumnName()));
+		}
+	}
+	
+	@Override
+	public void onValueChanged(ValueChangedEvent event) {
+		if(event.getSource()==this)
+			return;
+		
+		if(event.getWindowId()!=fieldModel.getWindowId() || event.getTabNo()!=fieldModel.getTabNo())
+			return;
+		
+		//handle Dynamic Validation
+	}
 }

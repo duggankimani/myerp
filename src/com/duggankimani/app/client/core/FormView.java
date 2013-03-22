@@ -144,4 +144,10 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			linesContainer.setStyleName("pop_row2");
 		}
 	}
+
+
+	@Override
+	public void clear() {
+		flexTable.clear();
+	}
 }

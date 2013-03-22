@@ -8,7 +8,13 @@ import com.duggankimani.app.server.handlers.GetMenuActionHandler;
 import com.duggankimani.app.shared.action.GetDataAction;
 import com.duggankimani.app.server.handlers.GetDataActionHandler;
 import com.duggankimani.app.shared.action.GetTabAction;
-import com.duggankimani.app.server.handlers.GetTabActionActionHandler;
+import com.duggankimani.app.server.handlers.GetTabActionHandler;
+import com.duggankimani.app.shared.action.CreateRecordAction;
+import com.duggankimani.app.server.handlers.CreateRecordActionHandler;
+import com.duggankimani.app.shared.action.UndoAction;
+import com.duggankimani.app.server.handlers.UndoActionHandler;
+import com.duggankimani.app.shared.action.ExecCallout;
+import com.duggankimani.app.server.handlers.ExecCalloutActionHandler;
 
 public class ServerModule extends HandlerModule {
 
@@ -22,6 +28,12 @@ public class ServerModule extends HandlerModule {
 		bindHandler(GetDataAction.class, GetDataActionHandler.class);
 
 
-		bindHandler(GetTabAction.class, GetTabActionActionHandler.class);
+		bindHandler(GetTabAction.class, GetTabActionHandler.class);
+
+		bindHandler(CreateRecordAction.class, CreateRecordActionHandler.class);
+
+		bindHandler(UndoAction.class, UndoActionHandler.class);
+
+		bindHandler(ExecCallout.class, ExecCalloutActionHandler.class);
 	}
 }

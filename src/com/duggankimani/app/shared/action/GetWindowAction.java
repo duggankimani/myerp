@@ -1,10 +1,11 @@
 package com.duggankimani.app.shared.action;
 
-public class GetWindowAction extends BaseERPAction<GetWindowActionResult> {
+public class GetWindowAction extends BaseAction<GetWindowActionResult> {
 	Integer AD_Menu_ID;
 	Integer WindowID;
 	Integer tabNo;
 	Integer RecordID;
+	Integer rowNo;
 
 	@SuppressWarnings("unused")
 	private GetWindowAction() {
@@ -13,13 +14,15 @@ public class GetWindowAction extends BaseERPAction<GetWindowActionResult> {
 
 	public GetWindowAction(Integer AD_Menu_ID) {
 		this.AD_Menu_ID = AD_Menu_ID;
+		this.rowNo=-1;
 	}
 
-	public GetWindowAction(Integer AD_Menu_ID, Integer WindowId, Integer tabNo, Integer RecordID) {
+	public GetWindowAction(Integer AD_Menu_ID, Integer WindowId, Integer tabNo, Integer RecordID, Integer rowNo) {
 		this.AD_Menu_ID = AD_Menu_ID;
 		this.WindowID=WindowId;
 		this.tabNo = tabNo;
 		this.RecordID=RecordID;
+		this.rowNo=rowNo;
 	}
 	
 	@Override
@@ -49,5 +52,13 @@ public class GetWindowAction extends BaseERPAction<GetWindowActionResult> {
 
 	public void setTabNo(Integer tabNo) {
 		this.tabNo = tabNo;
+	}
+
+	public Integer getRowNo() {
+		return rowNo;
+	}
+
+	public void setRowNo(Integer rowNo) {
+		this.rowNo = rowNo;
 	}
 }

@@ -15,8 +15,7 @@ public class CheckboxView extends ViewImpl implements BaseView, CheckboxPresente
 	public interface Binder extends UiBinder<Widget, CheckboxView> {
 	}
 
-	@UiField
-	CheckBox component;
+	@UiField CheckBox component;
 	
 	@UiField HorizontalPanel container;
 
@@ -66,4 +65,7 @@ public class CheckboxView extends ViewImpl implements BaseView, CheckboxPresente
 		component.clear();
 	}
 	
+	public CheckBox getComponent(){
+		return component;
+	}
 }

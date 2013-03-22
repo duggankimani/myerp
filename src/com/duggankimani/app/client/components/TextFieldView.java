@@ -68,6 +68,9 @@ public class TextFieldView extends ViewImpl implements
 	public void clearData() {
 		component.clear();
 	}
-	
+
+	public TextField getComponent(){
+		return component;
+	}
 
 }

@@ -105,5 +105,8 @@ public class NumberFieldView extends ViewImpl implements BaseView,
 		component.clear();
 	}
 	
+	public NumberField<Number> getComponent(){
+		return component;
+	}
 
 }

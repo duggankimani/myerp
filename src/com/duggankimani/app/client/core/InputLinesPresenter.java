@@ -101,7 +101,8 @@ public class InputLinesPresenter extends
 			public void onRowDoubleClick(RowDoubleClickEvent event) {
 			
 				DataModel model = getView().getGrid().getSelectionModel().getSelectedItem();
-				getEventBus().fireEvent(new LoadWindowEvent(new GetWindowAction(0, tab.getWindowID(), tab.getTabNo(), 0)));
+				LoadWindowEvent e = new LoadWindowEvent(new GetWindowAction(0, tab.getWindowID(), tab.getTabNo(), 0, model.getRowNo()));
+				getEventBus().fireEvent(e); 
 			}
 		});
 		
@@ -110,7 +111,6 @@ public class InputLinesPresenter extends
 	public void bind(TabModel tabModel) {
 		
 		this.tab = tabModel;
-		System.err.println("Bind Lines Tabmodel - "+tabModel.getName()+"- "+tab.getTabNo());
 		getView().bind(tab);		
 	}
 	
@@ -129,8 +129,6 @@ public class InputLinesPresenter extends
 		if(tab==null)
 			return;
 	
-		System.err.println("Clear Lines- "+tab.getName()+" := "+tab.getTabNo()+" > "+parentTabNo +" && " +
-				tab.getTabLevel()+" > "+ parentTabLevel +" && "+ tab.getWindowID() + " == " + parentWindowId);
 		if(tab.getTabNo()>parentTabNo && tab.getTabLevel()>parentTabLevel && tab.getWindowID()==parentWindowId){
 			//clear
 			getView().clearData();

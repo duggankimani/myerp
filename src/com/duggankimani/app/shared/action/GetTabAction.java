@@ -3,7 +3,7 @@ package com.duggankimani.app.shared.action;
 import com.duggankimani.app.shared.action.GetTabActionResult;
 import java.lang.Integer;
 
-public class GetTabAction extends BaseERPAction<GetTabActionResult> {
+public class GetTabAction extends BaseAction<GetTabActionResult> {
 
 	private Integer windowID;
 	private Integer tabNo;

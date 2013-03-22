@@ -2,7 +2,7 @@ package com.duggankimani.app.shared.action;
 
 import com.duggankimani.app.shared.model.TabModel;
 
-public class GetTabActionResult extends BaseERPActionResult {
+public class GetTabActionResult extends BaseActionResult {
 
 	private TabModel tabModel;
 

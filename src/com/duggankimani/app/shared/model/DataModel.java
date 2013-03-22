@@ -21,7 +21,12 @@ public class DataModel implements Serializable {
 	}
 
 	public void set(String key, Serializable value){
-		data.put(key, value);
+		if(value==null){
+			data.remove(key);
+		}
+		else{
+			data.put(key, value);
+		}
 	}
 	
 	public Serializable get(String key){
@@ -50,5 +55,18 @@ public class DataModel implements Serializable {
 	@Override
 	public String toString() {
 		return data.toString();
+	}
+	
+	/**
+	 * Check if actual columnValues exists 
+	 * other than the default state information
+	 * @return
+	 */
+	public boolean isEmpty(){
+		return data.size()>3;
+	}
+	
+	public FastMap<Serializable> getData(){
+		return data;
 	}
 }

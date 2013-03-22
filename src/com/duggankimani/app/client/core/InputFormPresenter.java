@@ -82,7 +82,7 @@ public class InputFormPresenter extends
 		String recordid=request.getParameter("r", "0");
 		
 
-		final GetWindowAction action = new GetWindowAction(new Integer(AD_Menu_ID), new Integer(AD_Window_ID), new Integer(tabNo), new Integer(recordid));
+		final GetWindowAction action = new GetWindowAction(new Integer(AD_Menu_ID), new Integer(AD_Window_ID), new Integer(tabNo), new Integer(recordid), -1);
 		formPresenter.setAction(action);
 		formPresenter.setViewMode(0);
 		InputFormPresenter.this.setInSlot(FORM_SLOT, formPresenter);

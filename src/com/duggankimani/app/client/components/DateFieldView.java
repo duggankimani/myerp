@@ -72,4 +72,8 @@ public class DateFieldView extends ViewImpl implements
 		component.clear();
 	}
 	
+	public DateField getComponent(){
+		return component;
+	}
+	
 }

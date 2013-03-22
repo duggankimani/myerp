@@ -1,5 +1,6 @@
 package com.duggankimani.app.client.core;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.duggankimani.app.client.components.ButtonPresenter;
@@ -10,20 +11,33 @@ import com.duggankimani.app.client.components.NumberFieldPresenter;
 import com.duggankimani.app.client.components.TextFieldPresenter;
 import com.duggankimani.app.client.components.menu.InputFormMenuPresenter;
 import com.duggankimani.app.client.events.AfterFormLoadEvent;
+import com.duggankimani.app.client.events.CalloutEvent;
+import com.duggankimani.app.client.events.CalloutEvent.CalloutHandler;
 import com.duggankimani.app.client.events.ClearFieldsEvent;
 import com.duggankimani.app.client.events.ClearLinesEvent;
 import com.duggankimani.app.client.events.CreateEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingCompletedEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingEvent;
 import com.duggankimani.app.client.events.NavigateEvent;
+import com.duggankimani.app.client.events.UndoEvent;
 import com.duggankimani.app.client.events.CreateEvent.CreateHandler;
 import com.duggankimani.app.client.events.NavigateEvent.NavigateHandler;
 import com.duggankimani.app.client.events.SetValueEvent;
+import com.duggankimani.app.client.events.SetValueEvent.SetValueHandler;
+import com.duggankimani.app.client.events.UndoEvent.UndoHandler;
+import com.duggankimani.app.client.events.ValueChangedEvent;
+import com.duggankimani.app.client.events.ValueChangedEvent.ValueChangedHandler;
 import com.duggankimani.app.client.service.ERPAsyncCallback;
+import com.duggankimani.app.shared.action.CreateRecordAction;
+import com.duggankimani.app.shared.action.CreateRecordActionResult;
+import com.duggankimani.app.shared.action.ExecCallout;
+import com.duggankimani.app.shared.action.ExecCalloutResult;
 import com.duggankimani.app.shared.action.GetDataAction;
 import com.duggankimani.app.shared.action.GetDataActionResult;
 import com.duggankimani.app.shared.action.GetWindowAction;
 import com.duggankimani.app.shared.action.GetWindowActionResult;
+import com.duggankimani.app.shared.action.UndoAction;
+import com.duggankimani.app.shared.action.UndoActionResult;
 import com.duggankimani.app.shared.model.DataModel;
 import com.duggankimani.app.shared.model.FieldModel;
 import com.duggankimani.app.shared.model.TabModel;
@@ -45,7 +59,8 @@ import com.google.gwt.event.shared.GwtEvent.Type;
  * @author duggan
  *
  */
-public class FormPresenter extends PresenterWidget<FormPresenter.MyView> implements NavigateHandler, CreateHandler{
+public class FormPresenter extends PresenterWidget<FormPresenter.MyView> implements NavigateHandler, 
+CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler{
 
 	public interface MyView extends View {
 		void navigateNextRow();
@@ -57,6 +72,8 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 		void clearLinesComponent();
 		
 		void setViewMode(int mode);
+
+		void clear();
 	}
 
 	@ContentSlot
@@ -97,6 +114,12 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 	//updates && new data held here
 	private DataModel newData;
 
+	enum MODE{
+		EDIT, VIEW, UPDATE;
+	}
+	
+	MODE Mode = MODE.VIEW; 
+	
 	@Inject
 	public FormPresenter(final EventBus eventBus, final MyView view,
 			Provider<TextFieldPresenter> textPageProvider,
@@ -132,15 +155,21 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 		
 		addRegisteredHandler(NavigateEvent.TYPE, this);
 		addRegisteredHandler(CreateEvent.TYPE, this);
+		addRegisteredHandler(SetValueEvent.TYPE, this);
+		addRegisteredHandler(UndoEvent.TYPE, this);
+		addRegisteredHandler(ValueChangedEvent.TYPE, this);
+		addRegisteredHandler(CalloutEvent.TYPE, this);
 	}
 		
 	void loadWindow(GetWindowAction action){
+		
 		fireEvent(new ERPRequestProcessingEvent(""+action.getAD_Menu_ID()));
 		dispatchAsync.execute(action,
 				new ERPAsyncCallback<GetWindowActionResult>() {
 
 					@Override
 					public void processResult(GetWindowActionResult result) {
+						getView().clear();
 						windowModel = result.getWindowModel();
 						curTab= windowModel.getTab(0);
 						addFields(result);
@@ -306,8 +335,12 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 	 */
 	protected void loadData() {
 
-		fireEvent(new ERPRequestProcessingEvent("Data"));
-		loadData(new GetDataAction(curTab.getTabNo(), curTab.getWindowID(), curTab.getWindowID(), 0));
+		GetDataAction action  = new GetDataAction(curTab.getTabNo(), curTab.getWindowID(), curTab.getWindowID(), 0);
+		if(requestedAction!=null){
+			action.setRowNo(requestedAction.getRowNo());
+		}
+		
+		loadData(action);
 
 	}
 	
@@ -316,8 +349,7 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 	 * Loads this components data
 	 */
 	protected void loadData(GetDataAction action) {
-
-		fireEvent(new ERPRequestProcessingEvent("Data"));
+		fireEvent(new ERPRequestProcessingEvent("loading....."));
 		dispatchAsync.execute(action,
 				new ERPAsyncCallback<GetDataActionResult>() {
 					@Override
@@ -326,7 +358,7 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 						if (result != null && !result.getDataModel().isEmpty()) {
 							DataModel dataModel = result.getDataModel().get(0);
 							if (dataModel != null){
-								fireEvent(new SetValueEvent(dataModel));
+								fireEvent(new SetValueEvent(dataModel,curTab.getWindowID(), curTab.getTabNo()));
 								FormPresenter.this.savedData=dataModel;
 							}
 						}
@@ -362,7 +394,7 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 		if(event.getSource()!=menu)
 			return;
 		
-		loadData(new GetDataAction(curTab.getTabNo(), 0, curTab.getWindowID(), 0, event.getRows()));
+		loadData(new GetDataAction(curTab.getTabNo(), 0, curTab.getWindowID(), 0, event.getRows(), -1));
 	}
 
 	/**
@@ -386,12 +418,97 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 			
 			fireEvent(new ClearFieldsEvent(curTab.getWindowID(), curTab.getTabNo()));
 			fireEvent(new ClearLinesEvent(curTab.getWindowID(), curTab.getTabNo(), curTab.getTabLevel()));
+			Mode = MODE.EDIT;
 			createNew();
 		}
 	}
 
 	private void createNew() {
-				
+		int currentRow = savedData==null? 0 : savedData.getRowNo();
+		fireEvent(new ERPRequestProcessingEvent("processing........"));
+		dispatchAsync.execute(new CreateRecordAction(curTab.getWindowID(), 0, curTab.getTabNo(), currentRow), 
+				new ERPAsyncCallback<CreateRecordActionResult>() {
+			@Override
+			public void processResult(CreateRecordActionResult result) {
+				fireEvent(new ERPRequestProcessingCompletedEvent());
+				fireEvent(new SetValueEvent(result.getData(),curTab.getWindowID(), curTab.getTabNo()));
+			}
+		});
+	}
+
+	@Override
+	public void onSetValue(SetValueEvent event) {
+		if(event.getSource()==this){
+			if(Mode==MODE.VIEW){
+				savedData = event.getData();
+			}else{
+				//edits and new info here
+				newData = event.getData();
+			}
+		}
+	}
+
+	@Override
+	public void onUndo(UndoEvent event) {
+		if(event.getSource()!=menu)
+			return;
+		
+		int currentRow = savedData==null? 0 : savedData.getRowNo();
+		
+		fireEvent(new ERPRequestProcessingEvent("processing....."));
+		dispatchAsync.execute(new UndoAction(curTab.getWindowID(), curTab.getTabNo(), currentRow), 
+				new ERPAsyncCallback<UndoActionResult>() {
+			@Override
+			public void processResult(UndoActionResult result) {
+				fireEvent(new ERPRequestProcessingCompletedEvent());
+				if(result.getData()!=null)
+					fireEvent(new SetValueEvent(result.getData(),curTab.getWindowID(), curTab.getTabNo()));
+				else{
+					fireEvent(new ClearFieldsEvent(curTab.getWindowID(), curTab.getTabNo()));
+				}
+			}
+		});
+	}
+
+	@Override
+	public void onValueChanged(ValueChangedEvent event) {
+		
+		if (!(event.getWindowId().equals(curTab.getWindowID()) &&
+				event.getTabNo().equals(curTab.getTabNo()))){
+			return;
+		}
+		
+		fireEvent(new ERPRequestProcessingEvent("setting value...."));
+		
+		Object value = event.getNewValue();
+		String columnName =event.getColumnName(); 
+	
+		if(newData==null){
+			newData = new DataModel();
+		}
+		
+		if(value!=null){
+			newData.set(columnName, (Serializable)value);
+		}
+		fireEvent(new ERPRequestProcessingCompletedEvent());
+	}
+
+	@Override
+	public void onCallout(CalloutEvent event) {
+		if (!(event.getWindowId().equals(curTab.getWindowID()) &&
+				event.getTabNo().equals(curTab.getTabNo()))){
+			return;
+		}
+		
+		fireEvent(new ERPRequestProcessingEvent("computing...."));
+		dispatchAsync.execute(new ExecCallout(curTab.getWindowID(), curTab.getTabNo(), event.getColumnName(), newData), 
+				new ERPAsyncCallback<ExecCalloutResult>() {
+			@Override
+			public void processResult(ExecCalloutResult result) {
+				fireEvent(new ERPRequestProcessingCompletedEvent());
+				fireEvent(new SetValueEvent(result.getData(),curTab.getWindowID(), curTab.getTabNo()));
+			}
+		});
 	}
 
 }

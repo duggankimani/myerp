@@ -9,15 +9,13 @@ public class NavigateEvent extends GwtEvent<NavigateEvent.NavigateHandler> {
 
 	public static Type<NavigateHandler> TYPE = new Type<NavigateHandler>();
 	private Integer rows;
-	private Object source;
-
+	
 	public interface NavigateHandler extends EventHandler {
 		void onNavigate(NavigateEvent event);
 	}
 
-	public NavigateEvent(Integer rows, Object source) {
+	public NavigateEvent(Integer rows) {
 		this.rows = rows;
-		this.source=source;
 	}
 
 	public Integer getRows() {
@@ -39,14 +37,6 @@ public class NavigateEvent extends GwtEvent<NavigateEvent.NavigateHandler> {
 	}
 
 	public static void fire(HasHandlers source, Integer direction) {
-		source.fireEvent(new NavigateEvent(direction, source));
-	}
-
-	public Object getSource() {
-		return source;
-	}
-
-	public void setSource(Object source) {
-		this.source = source;
+		source.fireEvent(new NavigateEvent(direction));
 	}
 }

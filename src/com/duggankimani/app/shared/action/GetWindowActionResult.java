@@ -2,7 +2,7 @@ package com.duggankimani.app.shared.action;
 
 import com.duggankimani.app.shared.model.WindowModel;
 
-public class GetWindowActionResult extends BaseERPActionResult {
+public class GetWindowActionResult extends BaseActionResult {
 
 	private WindowModel windowModel;
 	

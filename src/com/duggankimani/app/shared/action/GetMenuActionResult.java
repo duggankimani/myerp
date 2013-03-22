@@ -5,7 +5,7 @@ import java.util.Date;
 
 import com.duggankimani.app.shared.model.MenuFolder;
 
-public class GetMenuActionResult extends BaseERPActionResult {
+public class GetMenuActionResult extends BaseActionResult {
 
 	MenuFolder menus;
 	

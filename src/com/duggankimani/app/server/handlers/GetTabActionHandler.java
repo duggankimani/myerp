@@ -8,11 +8,11 @@ import com.google.inject.Inject;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.shared.ActionException;
 
-public class GetTabActionActionHandler extends MetaCreator implements
+public class GetTabActionHandler extends MetaCreator implements
 		ActionHandler<GetTabAction, GetTabActionResult> {
 
 	@Inject
-	public GetTabActionActionHandler() {
+	public GetTabActionHandler() {
 	}
 
 	@Override

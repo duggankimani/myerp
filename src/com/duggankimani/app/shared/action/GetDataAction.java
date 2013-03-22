@@ -2,12 +2,12 @@ package com.duggankimani.app.shared.action;
 
 import java.lang.Integer;
 
-public class GetDataAction extends BaseERPAction<GetDataActionResult> {
+public class GetDataAction extends BaseAction<GetDataActionResult> {
 	private Integer tabNo;
 	private Integer windowNo;
 	private Integer WindowID;
 	private Integer menuID;
-	
+	private Integer rowNo;
 	/**
 	 * Number of rows to navigate, left or right of the data set
 	 */
@@ -17,6 +17,7 @@ public class GetDataAction extends BaseERPAction<GetDataActionResult> {
 	private GetDataAction() {
 		// For serialisation only
 		this.multipleResults=false;
+		rowNo=-1;
 	}
 
 	public GetDataAction(Integer tabNo, Integer windowNo, Integer WindowID, Integer menuID) {
@@ -32,9 +33,10 @@ public class GetDataAction extends BaseERPAction<GetDataActionResult> {
 		this.multipleResults = isMultipleResults;
 	}
 	
-	public GetDataAction(Integer tabNo, Integer windowNo, Integer WindowID, Integer menuID, Integer rows) {
+	public GetDataAction(Integer tabNo, Integer windowNo, Integer WindowID, Integer menuID, Integer rows, Integer rowNo) {
 		this(tabNo, windowNo, WindowID, menuID);
 		this.rows = rows;
+		this.rowNo=rowNo;
 	}
 
 	public Integer getTabNo() {
@@ -78,5 +80,13 @@ public class GetDataAction extends BaseERPAction<GetDataActionResult> {
 				", rows= "+rows+
 				", ismultipleResults= "+isMultipleResults();
 		return str;
+	}
+
+	public Integer getRowNo() {
+		return rowNo;
+	}
+
+	public void setRowNo(Integer rowNo) {
+		this.rowNo = rowNo;
 	}
 }

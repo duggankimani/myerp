@@ -113,4 +113,7 @@ public class ComboView extends ViewImpl implements BaseView, ComboPresenter.MyVi
 		component.clear();
 	}
 	
+	public ComboBox<LookupValue> getComponent(){
+		return component;
+	}
 }

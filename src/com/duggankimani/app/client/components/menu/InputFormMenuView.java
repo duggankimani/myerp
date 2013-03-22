@@ -26,10 +26,10 @@ public class InputFormMenuView extends ViewImpl implements InputFormMenuPresente
 	@UiField TextButton btnSave;
 	@UiField TextButton btnUndo;
 	
-	
-	int mode=0; //normal view
 	boolean hasPrevious=false;
 	boolean hasNext=false;
+	
+	int mode=0;
 	
 	@Inject
 	public InputFormMenuView(final Binder binder) {
@@ -80,19 +80,19 @@ public class InputFormMenuView extends ViewImpl implements InputFormMenuPresente
 	
 	@Override
 	public void setNavigationState(Boolean hasPrev, Boolean hasNext) {
-		prev.setEnabled(hasPrev);
-		next.setEnabled(hasNext);
-		this.hasNext=hasNext;
-		this.hasPrevious=hasPrev;
-
+		
+		if(mode!=1){ //1= editing
+			prev.setEnabled(hasPrev);
+			next.setEnabled(hasNext);
+			this.hasNext=hasNext;
+			this.hasPrevious=hasPrev;
+		}
 	}
 
 	
 	@Override
 	public void setMode(int mode) {
-		
 		this.mode=mode;
-		
 		actionMenu.setEnabled(false);
 		btnActions.setEnabled(false);
 		prev.setEnabled(false);

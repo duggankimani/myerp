@@ -1,8 +1,12 @@
 package com.duggankimani.app.client.components;
 
 import com.duggankimani.app.shared.model.FieldModel;
+import com.duggankimani.app.shared.model.LookupValue;
 import com.google.inject.Inject;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.EventBus;
+import com.sencha.gxt.widget.core.client.form.ComboBox;
 
 public class ComboPresenter extends BasePresenterWidget<ComboPresenter.MyView> {
 
@@ -12,6 +16,8 @@ public class ComboPresenter extends BasePresenterWidget<ComboPresenter.MyView> {
 		void setValue(Integer value);
 
 		void setValue(String value);
+		
+		ComboBox<LookupValue> getComponent();
 	}
 
 	@Inject
@@ -26,17 +32,29 @@ public class ComboPresenter extends BasePresenterWidget<ComboPresenter.MyView> {
 
 	@Override
 	public void setFieldModel(FieldModel field) {
-		((MyView)getView()).init(field);
+		getView().init(field);
 		super.setFieldModel(field);
+		
+		bindEvents();
 	}
 	
+	private void bindEvents() {
+		getView().getComponent().addValueChangeHandler(new ValueChangeHandler<LookupValue>() {
+			
+			@Override
+			public void onValueChange(ValueChangeEvent<LookupValue> event) {
+				valueChanged(event.getValue());
+			}
+		});
+	}
+
 	@Override
 	public void setValue(Object value) {
 		if(value instanceof Integer)
-			((MyView)getView()).setValue((Integer)value);
+			getView().setValue((Integer)value);
 		
 		if(value instanceof String)
-			((MyView)getView()).setValue((String)value);
+			getView().setValue((String)value);
 	}
 
 }

@@ -19,13 +19,17 @@ public class FieldModel implements Serializable {
 	private int windowId;
 	private int tabNo;
 	private ArrayList<LookupValue> lookupValues;
-
+	private boolean hasCallout;
+	private boolean hasDynamicValidation;
+	
 	public FieldModel() {
 		//defaults
 		this.displayType = DisplayType.TEXT;
 		this.isKeyColumn=false;
 		this.width=100;
 		this.isSameLine=false;
+		this.hasCallout=false;
+		this.hasDynamicValidation=false;
 	}
 
 	public FieldModel(String name){
@@ -151,5 +155,21 @@ public class FieldModel implements Serializable {
 
 	public void setTabNo(int tabNo) {
 		this.tabNo = tabNo;
+	}
+
+	public boolean hasCallout() {
+		return hasCallout;
+	}
+
+	public void setHasCallout(boolean hasCallout) {
+		this.hasCallout = hasCallout;
+	}
+
+	public boolean hasDynamicValidation() {
+		return hasDynamicValidation;
+	}
+
+	public void setHasDynamicValidation(boolean hasDynamicValidation) {
+		this.hasDynamicValidation = hasDynamicValidation;
 	}
 }
