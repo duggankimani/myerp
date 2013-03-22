@@ -27,5 +27,4 @@ public class TextFieldPresenter extends
 		((MyView)getView()).setValue((String)value);
 		
 	}
-
 }

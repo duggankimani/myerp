@@ -16,6 +16,8 @@ public class FieldModel implements Serializable {
 	private Boolean isKeyColumn;
 	private int colSpan=1;
 	private boolean isDisplayed;
+	private int windowId;
+	private int tabNo;
 	private ArrayList<LookupValue> lookupValues;
 
 	public FieldModel() {
@@ -133,5 +135,21 @@ public class FieldModel implements Serializable {
 		field.setWidth(width);
 		
 		return field;
+	}
+
+	public int getWindowId() {
+		return windowId;
+	}
+
+	public void setWindowId(int windowId) {
+		this.windowId = windowId;
+	}
+
+	public int getTabNo() {
+		return tabNo;
+	}
+
+	public void setTabNo(int tabNo) {
+		this.tabNo = tabNo;
 	}
 }

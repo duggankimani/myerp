@@ -25,28 +25,28 @@ import com.google.gwt.user.client.ui.Widget;
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.TabPanel;
 
-public class InputLinesTabsPresenter extends
-		PresenterWidget<InputLinesTabsPresenter.MyView> {
+public class TabsPresenter extends PresenterWidget<TabsPresenter.MyView> {
 
 	public interface MyView extends View {
 		void bind(List<MinTabModel> tabs);
+
 		TabPanel getTabPanel();
 	}
 
 	@ContentSlot
 	public static final Object TAB_SLOT = new Object();
-	//public static final Type<RevealContentHandler<?>> TAB_SLOT = new Type<RevealContentHandler<?>>();
-	
-	@Inject InputLinesPresenter lines;
-	
+
 	FastMap<TabModel> tabs = new FastMap<TabModel>();
-	
-	@Inject DispatchAsync dispatcher;
-	
-	private IndirectProvider<InputLinesPresenter> linesFactory;
-	
+	List<MinTabModel> minTabDetails = null;
+
 	@Inject
-	public InputLinesTabsPresenter(final EventBus eventBus, final MyView view, Provider<InputLinesPresenter> linesProvider) {
+	DispatchAsync dispatcher;
+
+	private IndirectProvider<InputLinesPresenter> linesFactory;
+
+	@Inject
+	public TabsPresenter(final EventBus eventBus, final MyView view,
+			Provider<InputLinesPresenter> linesProvider) {
 		super(eventBus, view);
 		linesFactory = new StandardProvider<InputLinesPresenter>(linesProvider);
 	}
@@ -54,38 +54,45 @@ public class InputLinesTabsPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
-		
-		getView().getTabPanel().addSelectionHandler(new SelectionHandler<Widget>() {
-			
-			@Override
-			public void onSelection(SelectionEvent<Widget> event) {
-				int selectedIndx = getView().getTabPanel().getWidgetIndex(event.getSelectedItem());
-				getView().getTabPanel().setTabIndex(selectedIndx);
-				//Info.display("Selected Tab", (selectedIndx+1)+"");
-				setLines(selectedIndx+1);
-				
-			}
-		});
-	}	
 
-	protected void setLines(Integer selectedItem) {
-		
-		if(!tabs.containsKey(selectedItem+""))
-			loadMetaAndData(selectedItem);
-		
+		getView().getTabPanel().addSelectionHandler(
+				new SelectionHandler<Widget>() {
+
+					@Override
+					public void onSelection(SelectionEvent<Widget> event) {
+						int selectedIndx = getView().getTabPanel()
+								.getWidgetIndex(event.getSelectedItem());
+						getView().getTabPanel().setTabIndex(selectedIndx);
+						setLines(selectedIndx);
+					}
+				});
 	}
 
-	private void loadMetaAndData(final Integer selectedItem) {
+	protected void setLines(Integer selectedItem) {
+
+		int tabno = minTabDetails.get(selectedItem).getTabNo();
+		if (tabs.containsKey(tabno + "")) {
+			// already loaded
+			return;
+		}
+
+		loadMetaAndData(tabno);
+
+	}
+
+	private void loadMetaAndData(final Integer tabNo) {
 		getEventBus().fireEvent(new ERPRequestProcessingEvent("Tab meta"));
-		dispatcher.execute(new GetTabAction(0, selectedItem), new ERPAsyncCallback<GetTabActionResult>() {
-			@Override
-			public void processResult(GetTabActionResult result) {
-				tabs.put(selectedItem+"", result.getTabModel());
-				getEventBus().fireEvent(new ERPRequestProcessingCompletedEvent());
-				addLinesView(result.getTabModel());
-				
-			}
-		});
+		dispatcher.execute(new GetTabAction(0, tabNo),
+				new ERPAsyncCallback<GetTabActionResult>() {
+					@Override
+					public void processResult(GetTabActionResult result) {
+						tabs.put(tabNo + "", result.getTabModel());
+						getEventBus().fireEvent(
+								new ERPRequestProcessingCompletedEvent());
+						addLinesView(result.getTabModel());
+
+					}
+				});
 	}
 
 	private void addLinesView(final TabModel tab) {
@@ -93,7 +100,6 @@ public class InputLinesTabsPresenter extends
 
 			@Override
 			public void processResult(InputLinesPresenter result) {
-				System.err.println("addlines - "+tab);
 				result.bind(tab);
 				addToSlot(TAB_SLOT, result);
 				loadLineData(tab);
@@ -103,18 +109,20 @@ public class InputLinesTabsPresenter extends
 	}
 
 	protected void loadLineData(TabModel tab) {
-		getEventBus().fireEvent(new LoadLineDataEvent(tab.getTabNo(), 0, tab.getWindowID()));
+		getEventBus().fireEvent(
+				new LoadLineDataEvent(tab.getTabNo(), 0, tab.getWindowID()));
 	}
 
 	public void bindTabs(List<MinTabModel> mintabs) {
-		setInSlot(TAB_SLOT, null);		
+		this.minTabDetails = mintabs;
+		setInSlot(TAB_SLOT, null);
 		this.tabs.clear();
 		getView().bind(mintabs);
 	}
-	
+
 	@Override
 	protected void onReset() {
 		super.onReset();
 	}
-	
+
 }

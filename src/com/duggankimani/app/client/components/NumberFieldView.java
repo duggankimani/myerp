@@ -99,5 +99,11 @@ public class NumberFieldView extends ViewImpl implements BaseView,
 	public void setDescription(String description) {
 		component.setTitle(description);
 	}
+	
+	@Override
+	public void clearData() {
+		component.clear();
+	}
+	
 
 }

@@ -9,12 +9,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
 
-public class InputFormPopupView extends PopupViewImpl implements
-		InputFormPopupPresenter.MyView {
+public class PopupFormView extends PopupViewImpl implements
+		PopupFormPresenter.MyView {
 
 	private final Widget widget;
 
-	public interface Binder extends UiBinder<Widget, InputFormPopupView> {
+	public interface Binder extends UiBinder<Widget, PopupFormView> {
 	}
 
 	@UiField HTMLPanel container;
@@ -22,7 +22,7 @@ public class InputFormPopupView extends PopupViewImpl implements
 	@UiField Anchor aClose;
 	
 	@Inject
-	public InputFormPopupView(final EventBus eventBus, final Binder binder) {
+	public PopupFormView(final EventBus eventBus, final Binder binder) {
 		super(eventBus);
 		widget = binder.createAndBindUi(this);
 	}
@@ -34,7 +34,7 @@ public class InputFormPopupView extends PopupViewImpl implements
 	
 	@Override
 	public void setInSlot(Object slot, Widget content) {
-		if(slot == InputFormPopupPresenter.FORM_SLOT){
+		if(slot == PopupFormPresenter.FORM_SLOT){
 			container.clear();
 			
 			if(content!=null){

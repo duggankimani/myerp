@@ -1,14 +1,17 @@
 package com.duggankimani.app.client.components;
 
+import com.duggankimani.app.client.events.ClearFieldsEvent;
+import com.duggankimani.app.client.events.ClearFieldsEvent.ClearFieldsHandler;
 import com.duggankimani.app.client.events.SetValueEvent;
 import com.duggankimani.app.client.events.SetValueEvent.SetValueHandler;
 import com.duggankimani.app.shared.model.DataModel;
 import com.duggankimani.app.shared.model.FieldModel;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.ui.UIObject;
 import com.gwtplatform.mvp.client.PresenterWidget;
 
 public abstract class BasePresenterWidget<V> extends PresenterWidget<BaseView>
-		implements SetValueHandler {
+		implements SetValueHandler, ClearFieldsHandler {
 
 	FieldModel fieldModel;
 
@@ -24,12 +27,13 @@ public abstract class BasePresenterWidget<V> extends PresenterWidget<BaseView>
 	public void setName(String name) {
 		getView().setName(name);
 	}
-	
+
 	@Override
 	protected void onBind() {
 		// TODO Auto-generated method stub
 		super.onBind();
 		addRegisteredHandler(SetValueEvent.TYPE, this);
+		addRegisteredHandler(ClearFieldsEvent.TYPE, this);
 	}
 
 	/**
@@ -59,7 +63,7 @@ public abstract class BasePresenterWidget<V> extends PresenterWidget<BaseView>
 	}
 
 	public void setVisible(boolean isVisible) {
-		getView().getContainer().setVisible(isVisible);
+		UIObject.setVisible(getView().getContainer().getElement(), isVisible);
 	}
 
 	/**
@@ -96,5 +100,21 @@ public abstract class BasePresenterWidget<V> extends PresenterWidget<BaseView>
 	}
 
 	public abstract void setValue(Object value);
+
+	@Override
+	public void onClearFields(ClearFieldsEvent event) {
+		if (event.getTabNo() == fieldModel.getTabNo()
+				&& event.getWindowId() == fieldModel.getWindowId()) {
+			if (this instanceof ButtonPresenter) {
+				// disable
+			} else {
+				this.clearData();
+			}
+		}
+	}
+
+	public void clearData() {
+		getView().clearData();
+	}
 
 }

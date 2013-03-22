@@ -33,10 +33,10 @@ import com.duggankimani.app.client.core.ErrorPagePresenter;
 import com.duggankimani.app.client.core.ErrorPageView;
 import com.duggankimani.app.client.core.InputLinesPresenter;
 import com.duggankimani.app.client.core.InputLinesView;
-import com.duggankimani.app.client.core.InputLinesTabsPresenter;
-import com.duggankimani.app.client.core.InputLinesTabsView;
-import com.duggankimani.app.client.core.InputFormPopupPresenter;
-import com.duggankimani.app.client.core.InputFormPopupView;
+import com.duggankimani.app.client.core.TabsPresenter;
+import com.duggankimani.app.client.core.TabsView;
+import com.duggankimani.app.client.core.PopupFormPresenter;
+import com.duggankimani.app.client.core.PopupFormView;
 import com.duggankimani.app.client.core.FormPresenter;
 import com.duggankimani.app.client.core.FormView;
 
@@ -94,11 +94,11 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenterWidget(InputLinesPresenter.class,
 				InputLinesPresenter.MyView.class, InputLinesView.class);
 
-		bindPresenterWidget(InputLinesTabsPresenter.class,
-				InputLinesTabsPresenter.MyView.class, InputLinesTabsView.class);
+		bindPresenterWidget(TabsPresenter.class,
+				TabsPresenter.MyView.class, TabsView.class);
 
-		bindPresenterWidget(InputFormPopupPresenter.class,
-				InputFormPopupPresenter.MyView.class, InputFormPopupView.class);
+		bindPresenterWidget(PopupFormPresenter.class,
+				PopupFormPresenter.MyView.class, PopupFormView.class);
 
 		bindPresenterWidget(FormPresenter.class, FormPresenter.MyView.class,
 				FormView.class);

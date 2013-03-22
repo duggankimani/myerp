@@ -18,6 +18,11 @@ import com.duggankimani.app.client.events.AfterFormLoadEvent;
 import com.duggankimani.app.client.events.AfterFormLoadEvent.AfterFormLoadHandler;
 import com.duggankimani.app.shared.action.GetWindowAction;
 
+/**
+ * Addressable Input Form
+ * @author duggan
+ *
+ */
 public class InputFormPresenter extends
 		Presenter<InputFormPresenter.MyView, InputFormPresenter.MyProxy> implements AfterFormLoadHandler{
 

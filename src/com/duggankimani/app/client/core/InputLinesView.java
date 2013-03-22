@@ -134,7 +134,10 @@ public class InputLinesView extends ViewImpl implements
 	public Grid<DataModel> getGrid() {
 		return grid;
 	}
-	
-	
+
+	@Override
+	public void clearData() {
+		grid.getStore().clear();
+	}
 
 }

@@ -22,13 +22,13 @@
     <g:VerticalPanel>
 	<g:HorizontalPanel width="350px">
 	    <toolbar:ToolBar borders="true">
-	        <button:TextButton text="New"></button:TextButton>
+	        <button:TextButton text="New" ui:field="btnNew"></button:TextButton>
 	        <toolbar:SeparatorToolItem />
-	        <button:TextButton text="Edit"></button:TextButton>
+	        <button:TextButton text="Save" ui:field="btnSave"></button:TextButton>
 	        <toolbar:SeparatorToolItem />
-	        <button:TextButton text="Undo"></button:TextButton>
+	        <button:TextButton text="Undo" ui:field="btnUndo"></button:TextButton>
 	        <toolbar:SeparatorToolItem />
-	        <button:TextButton text="Copy"></button:TextButton>	        
+	        <button:TextButton text="Copy" ui:field="btnCopy"></button:TextButton>	        
 	        <toolbar:SeparatorToolItem />
 	        <button:TextButton text="Actions" ui:field="btnActions">
 	            <button:menu>

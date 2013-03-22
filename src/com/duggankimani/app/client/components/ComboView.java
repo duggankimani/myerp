@@ -107,4 +107,10 @@ public class ComboView extends ViewImpl implements BaseView, ComboPresenter.MyVi
 	public void setDescription(String description) {
 		component.setTitle(description);
 	}
+	
+	@Override
+	public void clearData() {
+		component.clear();
+	}
+	
 }

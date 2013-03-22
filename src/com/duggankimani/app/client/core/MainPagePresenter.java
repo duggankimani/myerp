@@ -61,13 +61,13 @@ public class MainPagePresenter extends
 	
 	@Inject DispatchAsync dispatchAsync;
 	
-	IndirectProvider<InputFormPopupPresenter> popPresenterFactory;
+	IndirectProvider<PopupFormPresenter> popPresenterFactory;
 	
 	@Inject
 	public MainPagePresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy, Provider<InputFormPopupPresenter> popupProvider) {
+			final MyProxy proxy, Provider<PopupFormPresenter> popupProvider) {
 		super(eventBus, view, proxy);
-		popPresenterFactory = new StandardProvider<InputFormPopupPresenter>(popupProvider);
+		popPresenterFactory = new StandardProvider<PopupFormPresenter>(popupProvider);
 
 	}
 
@@ -123,7 +123,7 @@ public class MainPagePresenter extends
 		getView().hideLoadingMessage();
 	}
 
-	@Inject InputFormPopupPresenter popupPresenter;
+	@Inject PopupFormPresenter popupPresenter;
 	
 	@Override
 	public void onLoadWindow(final LoadWindowEvent event) {

@@ -10,9 +10,13 @@ import com.duggankimani.app.client.components.NumberFieldPresenter;
 import com.duggankimani.app.client.components.TextFieldPresenter;
 import com.duggankimani.app.client.components.menu.InputFormMenuPresenter;
 import com.duggankimani.app.client.events.AfterFormLoadEvent;
+import com.duggankimani.app.client.events.ClearFieldsEvent;
+import com.duggankimani.app.client.events.ClearLinesEvent;
+import com.duggankimani.app.client.events.CreateEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingCompletedEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingEvent;
 import com.duggankimani.app.client.events.NavigateEvent;
+import com.duggankimani.app.client.events.CreateEvent.CreateHandler;
 import com.duggankimani.app.client.events.NavigateEvent.NavigateHandler;
 import com.duggankimani.app.client.events.SetValueEvent;
 import com.duggankimani.app.client.service.ERPAsyncCallback;
@@ -36,7 +40,12 @@ import com.google.inject.Provider;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 
-public class FormPresenter extends PresenterWidget<FormPresenter.MyView> implements NavigateHandler{
+/**
+ * Form Presenter Widget
+ * @author duggan
+ *
+ */
+public class FormPresenter extends PresenterWidget<FormPresenter.MyView> implements NavigateHandler, CreateHandler{
 
 	public interface MyView extends View {
 		void navigateNextRow();
@@ -75,15 +84,18 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 
 	private IndirectProvider<ButtonPresenter> buttonFactory;
 
-	@Inject
-	InputFormMenuPresenter menu;
+	@Inject	InputFormMenuPresenter menu;
 
 	private WindowModel windowModel;
 	
 	private TabModel curTab;
 
-	@Inject InputLinesTabsPresenter tabsPresenter;
+	@Inject TabsPresenter tabsPresenter;
 	
+	private DataModel savedData;//data loaded from the db
+	
+	//updates && new data held here
+	private DataModel newData;
 
 	@Inject
 	public FormPresenter(final EventBus eventBus, final MyView view,
@@ -119,6 +131,7 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 		super.onBind();
 		
 		addRegisteredHandler(NavigateEvent.TYPE, this);
+		addRegisteredHandler(CreateEvent.TYPE, this);
 	}
 		
 	void loadWindow(GetWindowAction action){
@@ -314,6 +327,7 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 							DataModel dataModel = result.getDataModel().get(0);
 							if (dataModel != null){
 								fireEvent(new SetValueEvent(dataModel));
+								FormPresenter.this.savedData=dataModel;
 							}
 						}
 						fireEvent(new ERPRequestProcessingCompletedEvent());
@@ -334,13 +348,11 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 	@Override
 	protected void onReset() {
 		super.onReset();
-		System.err.println("FRM On Reset called!!");
 	}
 	
 	@Override
 	protected void onReveal() {
 		super.onReveal();	
-		System.err.println("FRM On Reveal called!!");
 		setInSlot(MENU_SLOT, menu);
 		loadWindow(requestedAction);	
 	}
@@ -366,6 +378,20 @@ public class FormPresenter extends PresenterWidget<FormPresenter.MyView> impleme
 
 	public void setViewMode(int i) {
 		getView().setViewMode(i);
+	}
+
+	@Override
+	public void onCreate(CreateEvent event) {
+		if(event.getSource()==menu){
+			
+			fireEvent(new ClearFieldsEvent(curTab.getWindowID(), curTab.getTabNo()));
+			fireEvent(new ClearLinesEvent(curTab.getWindowID(), curTab.getTabNo(), curTab.getTabLevel()));
+			createNew();
+		}
+	}
+
+	private void createNew() {
+				
 	}
 
 }

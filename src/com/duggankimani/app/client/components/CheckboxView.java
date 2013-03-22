@@ -60,4 +60,10 @@ public class CheckboxView extends ViewImpl implements BaseView, CheckboxPresente
 	public void setDescription(String description) {
 		component.setTitle(description);
 	}
+	
+	@Override
+	public void clearData() {
+		component.clear();
+	}
+	
 }

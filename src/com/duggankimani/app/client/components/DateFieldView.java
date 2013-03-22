@@ -66,4 +66,10 @@ public class DateFieldView extends ViewImpl implements
 	public void setDescription(String description) {
 		component.setTitle(description);
 	}
+	
+	@Override
+	public void clearData() {
+		component.clear();
+	}
+	
 }

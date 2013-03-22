@@ -57,4 +57,10 @@ public class IDView extends ViewImpl implements BaseView, IDPresenter.MyView {
 	public void setDescription(String description) {
 		anchor.setTitle(description);
 	}
+	
+	@Override
+	public void clearData() {
+		anchor.setEnabled(false);
+	}
+	
 }

@@ -18,8 +18,8 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.ui.Anchor;
 
-public class InputFormPopupPresenter extends
-		PresenterWidget<InputFormPopupPresenter.MyView>{
+public class PopupFormPresenter extends
+		PresenterWidget<PopupFormPresenter.MyView>{
 
 	public interface MyView extends PopupView {
 		Anchor getCloseButton();
@@ -33,7 +33,7 @@ public class InputFormPopupPresenter extends
 	IndirectProvider<FormPresenter> formPresenterFactory;
 	
 	@Inject
-	public InputFormPopupPresenter(final EventBus eventBus, final MyView view, Provider<FormPresenter> frmProvider) {
+	public PopupFormPresenter(final EventBus eventBus, final MyView view, Provider<FormPresenter> frmProvider) {
 		super(eventBus, view);
 		
 		formPresenterFactory = new StandardProvider<FormPresenter>(frmProvider);
@@ -46,7 +46,7 @@ public class InputFormPopupPresenter extends
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				InputFormPopupPresenter.this.getView().hide();				
+				PopupFormPresenter.this.getView().hide();				
 			}
 		});
 	}
@@ -60,7 +60,7 @@ public class InputFormPopupPresenter extends
 			public void processResult(FormPresenter result) {
 				result.setAction(requestWindowAction);
 				result.setViewMode(1);
-				InputFormPopupPresenter.this.setInSlot(FORM_SLOT, result);
+				PopupFormPresenter.this.setInSlot(FORM_SLOT, result);
 			}
 		});
 	}

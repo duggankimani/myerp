@@ -27,5 +27,4 @@ public class DateFieldPresenter extends
 			((MyView)getView()).setValue((Date)value);	
 	}
 
-
 }

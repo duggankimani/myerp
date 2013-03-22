@@ -2,9 +2,11 @@ package com.duggankimani.app.client.core;
 
 import java.util.ArrayList;
 
+import com.duggankimani.app.client.events.ClearLinesEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingCompletedEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingEvent;
 import com.duggankimani.app.client.events.LoadLineDataEvent;
+import com.duggankimani.app.client.events.ClearLinesEvent.ClearLinesHandler;
 import com.duggankimani.app.client.events.LoadLineDataEvent.LoadLineDataHandler;
 import com.duggankimani.app.client.events.LoadWindowEvent;
 import com.duggankimani.app.client.service.ERPAsyncCallback;
@@ -23,7 +25,7 @@ import com.sencha.gxt.widget.core.client.event.RowDoubleClickEvent.RowDoubleClic
 import com.sencha.gxt.widget.core.client.grid.Grid;
 
 public class InputLinesPresenter extends
-		PresenterWidget<InputLinesPresenter.MyView> implements LoadLineDataHandler{
+		PresenterWidget<InputLinesPresenter.MyView> implements LoadLineDataHandler, ClearLinesHandler{
 
 	public interface MyView extends View {
 		public void bind(TabModel tabModel);
@@ -31,6 +33,8 @@ public class InputLinesPresenter extends
 		void bindData(ArrayList<DataModel> dataModel);
 		
 		Grid<DataModel> getGrid();
+
+		public void clearData();
 	}
 
 	@Inject DispatchAsync dispatcher;
@@ -45,7 +49,8 @@ public class InputLinesPresenter extends
 	protected void onBind() {
 		super.onBind();
 		addRegisteredHandler(LoadLineDataEvent.TYPE, this);
-	
+		addRegisteredHandler(ClearLinesEvent.TYPE, this);
+		
 	}
 
 	TabModel tab = null;
@@ -103,7 +108,9 @@ public class InputLinesPresenter extends
 		
 	}
 	public void bind(TabModel tabModel) {
+		
 		this.tab = tabModel;
+		System.err.println("Bind Lines Tabmodel - "+tabModel.getName()+"- "+tab.getTabNo());
 		getView().bind(tab);		
 	}
 	
@@ -111,6 +118,23 @@ public class InputLinesPresenter extends
 	protected void onHide() {
 		super.onHide();
 		this.unbind();
+	}
+
+
+	@Override
+	public void onClearLines(ClearLinesEvent event) {
+		int parentTabLevel = event.getParentTabLevel();
+		int parentTabNo = event.getParentTabNo();
+		int parentWindowId = event.getParentWindowId();
+		if(tab==null)
+			return;
+	
+		System.err.println("Clear Lines- "+tab.getName()+" := "+tab.getTabNo()+" > "+parentTabNo +" && " +
+				tab.getTabLevel()+" > "+ parentTabLevel +" && "+ tab.getWindowID() + " == " + parentWindowId);
+		if(tab.getTabNo()>parentTabNo && tab.getTabLevel()>parentTabLevel && tab.getWindowID()==parentWindowId){
+			//clear
+			getView().clearData();
+		}
 	}
 
 }

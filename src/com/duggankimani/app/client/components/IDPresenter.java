@@ -22,5 +22,4 @@ public class IDPresenter extends BasePresenterWidget<IDPresenter.MyView> {
 	public void setValue(Object value) {
 		
 	}
-
 }

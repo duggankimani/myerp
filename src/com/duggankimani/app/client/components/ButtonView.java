@@ -58,4 +58,11 @@ public class ButtonView extends ViewImpl implements BaseView,ButtonPresenter.MyV
 	public void setDescription(String description) {
 		component.setTitle(description);
 	}
+	
+	@Override
+	public void clearData() {
+		//disable link
+		component.setEnabled(false);
+	}
+	
 }

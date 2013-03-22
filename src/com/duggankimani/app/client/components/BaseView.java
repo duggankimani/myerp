@@ -19,4 +19,6 @@ public interface BaseView extends View {
 	public HorizontalPanel getContainer();
 
 	public void setDescription(String description);
+
+	public void clearData();
 }
