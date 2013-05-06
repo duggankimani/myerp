@@ -2,6 +2,10 @@ package com.duggankimani.app.client.gin;
 
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
+import com.duggankimani.app.client.menu.ApplicationMenuPresenter;
+import com.duggankimani.app.client.menu.ApplicationMenuView;
+import com.duggankimani.app.client.menu.InputFormMenuPresenter;
+import com.duggankimani.app.client.menu.InputFormMenuView;
 import com.duggankimani.app.client.place.ClientPlaceManager;
 import com.duggankimani.app.client.core.MainPagePresenter;
 import com.duggankimani.app.client.core.MainPageView;
@@ -15,8 +19,6 @@ import com.duggankimani.app.client.components.DateFieldPresenter;
 import com.duggankimani.app.client.components.DateFieldView;
 import com.duggankimani.app.client.workbench.FinanceWorkbenchPresenter;
 import com.duggankimani.app.client.workbench.FinanceWorkbenchView;
-import com.duggankimani.app.client.components.menu.ApplicationMenuPresenter;
-import com.duggankimani.app.client.components.menu.ApplicationMenuView;
 import com.duggankimani.app.client.components.NumberFieldPresenter;
 import com.duggankimani.app.client.components.NumberFieldView;
 import com.duggankimani.app.client.components.CheckboxPresenter;
@@ -25,8 +27,6 @@ import com.duggankimani.app.client.components.IDPresenter;
 import com.duggankimani.app.client.components.IDView;
 import com.duggankimani.app.client.components.ComboPresenter;
 import com.duggankimani.app.client.components.ComboView;
-import com.duggankimani.app.client.components.menu.InputFormMenuPresenter;
-import com.duggankimani.app.client.components.menu.InputFormMenuView;
 import com.duggankimani.app.client.components.ButtonPresenter;
 import com.duggankimani.app.client.components.ButtonView;
 import com.duggankimani.app.client.core.ErrorPagePresenter;
@@ -39,6 +39,8 @@ import com.duggankimani.app.client.core.PopupFormPresenter;
 import com.duggankimani.app.client.core.PopupFormView;
 import com.duggankimani.app.client.core.FormPresenter;
 import com.duggankimani.app.client.core.FormView;
+import com.duggankimani.app.client.components.SearchPresenter;
+import com.duggankimani.app.client.components.SearchView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -102,5 +104,8 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenterWidget(FormPresenter.class, FormPresenter.MyView.class,
 				FormView.class);
+
+		bindPresenterWidget(SearchPresenter.class,
+				SearchPresenter.MyView.class, SearchView.class);
 	}
 }

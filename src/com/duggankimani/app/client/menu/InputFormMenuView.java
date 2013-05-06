@@ -1,4 +1,4 @@
-package com.duggankimani.app.client.components.menu;
+package com.duggankimani.app.client.menu;
 
 import com.duggankimani.app.shared.model.FieldModel;
 import com.gwtplatform.mvp.client.ViewImpl;

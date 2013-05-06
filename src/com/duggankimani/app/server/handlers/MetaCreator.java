@@ -175,6 +175,7 @@ public class MetaCreator {
 			model.setWindowId(gridTabVO.AD_Window_ID);
 			model.setTabNo(gridTabVO.TabNo);
 			model.setHasCallout(field.Callout!=null && !field.Callout.isEmpty());
+			
 			//model.setHasDynamicValidation(field.);
 			
 			if(field.FieldLength>0 && field.FieldLength>60){

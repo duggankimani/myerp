@@ -8,8 +8,8 @@ import com.duggankimani.app.client.components.CheckboxPresenter;
 import com.duggankimani.app.client.components.ComboPresenter;
 import com.duggankimani.app.client.components.DateFieldPresenter;
 import com.duggankimani.app.client.components.NumberFieldPresenter;
+import com.duggankimani.app.client.components.SearchPresenter;
 import com.duggankimani.app.client.components.TextFieldPresenter;
-import com.duggankimani.app.client.components.menu.InputFormMenuPresenter;
 import com.duggankimani.app.client.events.AfterFormLoadEvent;
 import com.duggankimani.app.client.events.CalloutEvent;
 import com.duggankimani.app.client.events.CalloutEvent.CalloutHandler;
@@ -18,6 +18,8 @@ import com.duggankimani.app.client.events.ClearLinesEvent;
 import com.duggankimani.app.client.events.CreateEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingCompletedEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingEvent;
+import com.duggankimani.app.client.events.LoadLineDataEvent;
+import com.duggankimani.app.client.events.LoadTabsEvent;
 import com.duggankimani.app.client.events.NavigateEvent;
 import com.duggankimani.app.client.events.UndoEvent;
 import com.duggankimani.app.client.events.CreateEvent.CreateHandler;
@@ -27,6 +29,7 @@ import com.duggankimani.app.client.events.SetValueEvent.SetValueHandler;
 import com.duggankimani.app.client.events.UndoEvent.UndoHandler;
 import com.duggankimani.app.client.events.ValueChangedEvent;
 import com.duggankimani.app.client.events.ValueChangedEvent.ValueChangedHandler;
+import com.duggankimani.app.client.menu.InputFormMenuPresenter;
 import com.duggankimani.app.client.service.ERPAsyncCallback;
 import com.duggankimani.app.shared.action.CreateRecordAction;
 import com.duggankimani.app.shared.action.CreateRecordActionResult;
@@ -100,6 +103,8 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 	private IndirectProvider<ComboPresenter> comboFactory;
 
 	private IndirectProvider<ButtonPresenter> buttonFactory;
+	
+	private IndirectProvider<SearchPresenter> searchFactory;
 
 	@Inject	InputFormMenuPresenter menu;
 
@@ -127,7 +132,8 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 			Provider<NumberFieldPresenter> numberFieldProvider,
 			Provider<CheckboxPresenter> checkboxProvider,
 			Provider<ComboPresenter> comboProvider,
-			Provider<ButtonPresenter> buttonProvider) {
+			Provider<ButtonPresenter> buttonProvider,
+			Provider<SearchPresenter> searchProvider) {
 		super(eventBus, view);
 		
 		this.textBoxFactory = new StandardProvider<TextFieldPresenter>(
@@ -146,6 +152,8 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 
 		this.buttonFactory = new StandardProvider<ButtonPresenter>(
 				buttonProvider);
+		
+		this.searchFactory = new StandardProvider<SearchPresenter>(searchProvider);
 
 	}
 
@@ -247,16 +255,28 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 			break;
 		case LIST:
 		case LOCATOR:
-		case SEARCH:
 		case TABLE:
 		case TABLEDIR:
 		case LOCATION:
 			createComboField(field);
 			break;
+		case SEARCH:
+			createSearchField(field);
+			break;
 		default:
 			createTextField(field);
 		}
 
+	}
+
+	private void createSearchField(final FieldModel field) {
+		searchFactory.get(new ERPAsyncCallback<SearchPresenter>() {
+			@Override
+			public void processResult(SearchPresenter result) {
+				result.setFieldModel(field);
+				FormPresenter.this.addToSlot(COMPONENT_SLOT, result);				
+			}
+		});
 	}
 
 	private void createButtonField(final FieldModel field) {
@@ -349,6 +369,10 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 	 * Loads this components data
 	 */
 	protected void loadData(GetDataAction action) {
+		loadData(action, false);
+	}
+	
+	protected void loadData(GetDataAction action, final boolean reloadLinesToo) {
 		fireEvent(new ERPRequestProcessingEvent("loading....."));
 		dispatchAsync.execute(action,
 				new ERPAsyncCallback<GetDataActionResult>() {
@@ -360,6 +384,10 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 							if (dataModel != null){
 								fireEvent(new SetValueEvent(dataModel,curTab.getWindowID(), curTab.getTabNo()));
 								FormPresenter.this.savedData=dataModel;
+							
+								if(reloadLinesToo){
+									fireEvent(new LoadTabsEvent(curTab.getWindowID(), curTab.getTabNo(), curTab.getTabLevel()));
+								}
 							}
 						}
 						fireEvent(new ERPRequestProcessingCompletedEvent());
@@ -367,7 +395,7 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 				});
 
 	}
-	
+
 	/**
 	 * Sets colspan to the last added
 	 */
@@ -394,7 +422,7 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 		if(event.getSource()!=menu)
 			return;
 		
-		loadData(new GetDataAction(curTab.getTabNo(), 0, curTab.getWindowID(), 0, event.getRows(), -1));
+		loadData(new GetDataAction(curTab.getTabNo(), 0, curTab.getWindowID(), 0,false, event.getRows(), -1), true);
 	}
 
 	/**
@@ -441,6 +469,7 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 		if(event.getSource()==this){
 			if(Mode==MODE.VIEW){
 				savedData = event.getData();
+				
 			}else{
 				//edits and new info here
 				newData = event.getData();
@@ -452,7 +481,7 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 	public void onUndo(UndoEvent event) {
 		if(event.getSource()!=menu)
 			return;
-		
+		Mode = MODE.VIEW;
 		int currentRow = savedData==null? 0 : savedData.getRowNo();
 		
 		fireEvent(new ERPRequestProcessingEvent("processing....."));
@@ -461,8 +490,10 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 			@Override
 			public void processResult(UndoActionResult result) {
 				fireEvent(new ERPRequestProcessingCompletedEvent());
-				if(result.getData()!=null)
+				if(result.getData()!=null){
 					fireEvent(new SetValueEvent(result.getData(),curTab.getWindowID(), curTab.getTabNo()));
+					fireEvent(new LoadTabsEvent(curTab.getWindowID(), curTab.getTabNo(), curTab.getTabLevel()));
+				}
 				else{
 					fireEvent(new ClearFieldsEvent(curTab.getWindowID(), curTab.getTabNo()));
 				}
@@ -506,6 +537,8 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 			@Override
 			public void processResult(ExecCalloutResult result) {
 				fireEvent(new ERPRequestProcessingCompletedEvent());
+				System.out.println("New Values - "+result.getData().getData().keySet().toString());
+				System.out.println("New Values - "+result.getData().getData().values().toString());
 				fireEvent(new SetValueEvent(result.getData(),curTab.getWindowID(), curTab.getTabNo()));
 			}
 		});

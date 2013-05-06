@@ -1,6 +1,5 @@
 package com.duggankimani.app.client.core;
 
-import com.duggankimani.app.client.components.menu.ApplicationMenuPresenter;
 import com.duggankimani.app.client.events.ERPRequestProcessingCompletedEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingCompletedEvent.ERPRequestProcessingCompletedHandler;
@@ -9,6 +8,7 @@ import com.duggankimani.app.client.events.LoadWindowEvent;
 import com.duggankimani.app.client.events.LoadWindowEvent.LoadWindowHandler;
 import com.duggankimani.app.client.events.PopUpCloseEvent;
 import com.duggankimani.app.client.events.PopUpCloseEvent.PopUpCloseHandler;
+import com.duggankimani.app.client.menu.ApplicationMenuPresenter;
 import com.duggankimani.app.client.place.NameTokens;
 import com.gwtplatform.common.client.IndirectProvider;
 import com.gwtplatform.common.client.StandardProvider;

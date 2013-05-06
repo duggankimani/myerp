@@ -16,6 +16,7 @@ public class WindowStatus {
 	}
 
 	public void init() {
+		
 		gridWindow = new GridWindow(gridWindowV0);
 
 	}
@@ -31,8 +32,10 @@ public class WindowStatus {
 				windowStatus = new WindowStatus(vo);
 			
 
-		}else
+		}else{
+			System.err.println("##New Window status - "+vo.AD_Window_ID);
 			windowStatus = new WindowStatus(vo);
+		}
 
 
 		if (init)
@@ -42,6 +45,11 @@ public class WindowStatus {
 	}
 	
 	public static WindowStatus getWindowStatus(int AD_Window_ID){
+		
+		if(AD_Window_ID==0){
+			AD_Window_ID = windowStatus.gridWindowV0.AD_Window_ID; //reset to current gridwindowV0
+		}
+		System.err.println("WindowID ="+AD_Window_ID);
 		return getWindowStatus(windowStatus.gridWindowV0, windowStatus.gridWindow==null);
 	}
 }

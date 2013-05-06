@@ -13,8 +13,9 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.UIObject;
 import com.gwtplatform.mvp.client.PresenterWidget;
 
-public abstract class BasePresenterWidget<V extends BaseView> extends PresenterWidget<V>
-		implements SetValueHandler, ClearFieldsHandler, ValueChangedHandler {
+public abstract class BasePresenterWidget<V extends BaseView> extends
+		PresenterWidget<V> implements SetValueHandler, ClearFieldsHandler,
+		ValueChangedHandler {
 
 	FieldModel fieldModel;
 
@@ -22,8 +23,7 @@ public abstract class BasePresenterWidget<V extends BaseView> extends PresenterW
 		super(eventBus, view);
 	}
 
-	public BasePresenterWidget(boolean autoBind, EventBus eventBus,
-			V view) {
+	public BasePresenterWidget(boolean autoBind, EventBus eventBus, V view) {
 		super(autoBind, eventBus, view);
 	}
 
@@ -85,9 +85,9 @@ public abstract class BasePresenterWidget<V extends BaseView> extends PresenterW
 			// System.out.println("FieldModel is null!!!-----!!! -- Menu");
 			return;
 		}
-		
-		if (!(event.getWindowId().equals(fieldModel.getWindowId()) &&
-				event.getTabNo().equals(fieldModel.getTabNo()))){
+
+		if (!(event.getWindowId().equals(fieldModel.getWindowId()) && event
+				.getTabNo().equals(fieldModel.getTabNo()))) {
 			return;
 		}
 
@@ -96,6 +96,7 @@ public abstract class BasePresenterWidget<V extends BaseView> extends PresenterW
 			return;
 
 		Object value = model.get(fieldModel.getColumnName());
+		
 		if (value == null)
 			return;
 		try {
@@ -112,36 +113,43 @@ public abstract class BasePresenterWidget<V extends BaseView> extends PresenterW
 
 	@Override
 	public void onClearFields(ClearFieldsEvent event) {
-		if (!(event.getWindowId().equals(fieldModel.getWindowId()) &&
-				event.getTabNo().equals(fieldModel.getTabNo()))){
-			if (this instanceof ButtonPresenter) {
-				// disable
-			} else {
-				this.clearData();
-			}
+		if (!(event.getWindowId().equals(fieldModel.getWindowId()) && event
+				.getTabNo().equals(fieldModel.getTabNo()))) {
+			return;
 		}
+
+		if (this instanceof ButtonPresenter) {
+			// disable
+		} else {
+			this.clearData();
+		}
+
 	}
 
 	public void clearData() {
 		getView().clearData();
 	}
-	
-	void valueChanged(Object newValue){
-		fireEvent(new ValueChangedEvent(fieldModel.getWindowId(), fieldModel.getTabNo(), fieldModel.getColumnName(), newValue));
-		if(fieldModel.hasCallout()){
-			//fire callout
-			fireEvent(new CalloutEvent(fieldModel.getWindowId(), fieldModel.getTabNo(), fieldModel.getColumnName()));
+
+	void valueChanged(Object newValue) {
+		fireEvent(new ValueChangedEvent(fieldModel.getWindowId(),
+				fieldModel.getTabNo(), fieldModel.getColumnName(), newValue));
+		if (fieldModel.hasCallout()) {
+			// fire callout
+			fireEvent(new CalloutEvent(fieldModel.getWindowId(),
+					fieldModel.getTabNo(), fieldModel.getColumnName()));
 		}
 	}
-	
+
 	@Override
 	public void onValueChanged(ValueChangedEvent event) {
-		if(event.getSource()==this)
+		if (event.getSource() == this)
 			return;
-		
-		if(event.getWindowId()!=fieldModel.getWindowId() || event.getTabNo()!=fieldModel.getTabNo())
+
+		if (!(event.getWindowId().equals(fieldModel.getWindowId()) && event
+				.getTabNo().equals(fieldModel.getTabNo()))) {
 			return;
-		
-		//handle Dynamic Validation
+		}
+
+		// handle Dynamic Validation
 	}
 }

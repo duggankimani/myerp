@@ -50,10 +50,14 @@ public class NumberFieldView extends ViewImpl implements BaseView,
 			propertyEditor = new NumberPropertyEditor.IntegerPropertyEditor();
 			numberFormat = NumberFormat.getFormat("0");
 			break;
-
 		case AMOUNT:
-			propertyEditor = new NumberPropertyEditor.DoublePropertyEditor();
+		case COSTPRICE: 
+			propertyEditor = new NumberPropertyEditor.BigDecimalPropertyEditor();
 			numberFormat = NumberFormat.getFormat("0.00 Ksh");
+			break;
+		case NUMBER:
+			propertyEditor = new NumberPropertyEditor.BigDecimalPropertyEditor();
+			numberFormat = NumberFormat.getFormat("0.00");
 			break;
 		default:
 			break;

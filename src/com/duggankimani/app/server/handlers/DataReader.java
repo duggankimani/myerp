@@ -7,6 +7,8 @@ import java.util.Date;
 
 import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
+import org.compiere.model.GridWindow;
+import org.compiere.model.MLookup;
 import org.compiere.util.DisplayType;
 import org.compiere.util.KeyNamePair;
 import org.compiere.util.ValueNamePair;
@@ -39,7 +41,7 @@ public class DataReader {
 			
 			tab.query(false);
 		}
-
+		
 		if (tab.getRowCount() == 0) {
 			//log.info("DataModel - No data to present - 0 row count");
 			return new DataModel();
@@ -48,9 +50,11 @@ public class DataReader {
 		int row = tab.getCurrentRow();
 
 		if(action.getRowNo()!=null && action.getRowNo()!=-1){
+			//specific row requested
 			row = action.getRowNo();
 		}
 		else if (action.getRows() != null) {
+			//skip rows provided (-ve and +ve values)
 			row = row + action.getRows();
 		}
 
@@ -81,7 +85,21 @@ public class DataReader {
 			if (value == null)
 				continue;
 
-			if (field.isLookup()) {
+			if(displayType==DisplayType.Search){
+				if(field.getLookup()==null){
+					field.loadLookup();
+				}
+				
+				if(field.getLookup()!=null){
+					MLookup m_lookup = (MLookup)field.getLookup();
+					value = m_lookup.get(value);
+				}
+				
+				
+				dataModel.set(columnName, getLookupValue(value));
+				
+			}else if (field.isLookup()) {
+					
 				if (useValue && !field.isKey() && field.getLookup() != null) {
 					dataModel.set(columnName,
 							field.getLookup().getDisplay(value));
@@ -135,6 +153,10 @@ public class DataReader {
 	}
 
 	public static Serializable getLookupValue(Object lookup) {
+		
+		if(lookup==null){
+			return null;
+		}
 
 		LookupValue lookupValue = new LookupValue();
 
@@ -145,7 +167,8 @@ public class DataReader {
 		} else if (lookup instanceof KeyNamePair) {
 			KeyNamePair keyname = (KeyNamePair) lookup;
 			lookupValue = new LookupValue(keyname.getKey(), keyname.getName());
-		} else if (lookup instanceof Integer || lookup instanceof String) {
+		}	
+		else if (lookup instanceof Integer || lookup instanceof String) {
 			// return key
 			return (Serializable) lookup;
 		} else {
@@ -157,17 +180,29 @@ public class DataReader {
 		return lookupValue;
 	}
 
+	/**
+	 * Load list of data 
+	 * 
+	 * @param windowStatus
+	 * @param action
+	 * @return
+	 */
 	public static ArrayList<DataModel> getDataList(WindowStatus windowStatus,
 			GetDataAction action) {
-
+				
 		ArrayList<DataModel> data = new ArrayList<>();
 
-		windowStatus.gridWindow.initTab(action.getTabNo());
-		GridTab tab = windowStatus.gridWindow.getTab(action.getTabNo());
-
-		if (!tab.isOpen())
-			tab.query(true, 0, 0);
-
+		
+		GridWindow window = windowStatus.gridWindow;
+		window.initTab(action.getTabNo());
+		GridTab tab = window.getTab(action.getTabNo());
+		//System.err.println("###Tab - "+action.getTabNo()+" :: Win no - "+tab.getWindowNo());
+		
+		tab.query(false, 0, 0);	
+		if(!tab.isCurrent()){		
+			tab.dataRefreshAll();
+		}
+		
 		int row = 0;
 		while (row < tab.getRowCount()) {
 			tab.navigate(row);
@@ -175,6 +210,7 @@ public class DataReader {
 			++row;
 		}
 
+		//reset pointer to zero as opposed to leaving it at the end -- why?
 		tab.navigate(0);
 		
 		return data;

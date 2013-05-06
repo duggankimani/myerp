@@ -3,7 +3,9 @@ package com.duggankimani.app.client.service;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.duggankimani.app.shared.model.LookupValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.box.AlertMessageBox;
 
 public abstract class ERPAsyncCallback<T> implements AsyncCallback<T>{
@@ -18,6 +20,7 @@ public abstract class ERPAsyncCallback<T> implements AsyncCallback<T>{
 		
 		AlertMessageBox messageBox= new AlertMessageBox("Server Error", 
 				"Exception: <br/>"+caught.getClass().toString()+" <br/> "+caught.getMessage());
+		caught.printStackTrace();
 		messageBox.setMinWidth(400);
 		messageBox.show();
 		
@@ -34,7 +37,23 @@ public abstract class ERPAsyncCallback<T> implements AsyncCallback<T>{
 		return new Date();//transactionDate;
 	}
 	
-	BigDecimal number;
+	private BigDecimal number;
 	
+	private Number no;
 
+	private Double doublle;
+
+	public BigDecimal getNumber(BigDecimal m) {
+		return number;
+	}
+	
+	public Number getNo(Number n) {
+		return no;
+	}
+
+	public Double getDoublle(Double d) {
+		return doublle;
+	}
+	
+	LookupValue value;
 }

@@ -1,4 +1,4 @@
-package com.duggankimani.app.client.components.menu;
+package com.duggankimani.app.client.menu;
 
 import com.duggankimani.app.client.events.CreateEvent;
 import com.duggankimani.app.client.events.NavigateEvent;

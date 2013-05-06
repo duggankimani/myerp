@@ -33,9 +33,9 @@ public class GetDataAction extends BaseAction<GetDataActionResult> {
 		this.multipleResults = isMultipleResults;
 	}
 	
-	public GetDataAction(Integer tabNo, Integer windowNo, Integer WindowID, Integer menuID, Integer rows, Integer rowNo) {
+	public GetDataAction(Integer tabNo, Integer windowNo, Integer WindowID, Integer menuID, Boolean isMultipleResults, Integer skiprows, Integer rowNo) {
 		this(tabNo, windowNo, WindowID, menuID);
-		this.rows = rows;
+		this.rows = skiprows;
 		this.rowNo=rowNo;
 	}
 

@@ -80,3 +80,57 @@
 	height:500px;
 	width:100%;
 }
+
+/**
+SEARCH BOX BEGIN
+*/
+.search-box {
+    position: relative;
+    width: 150px;
+    margin: 0;
+}
+
+#search-form {
+    height: 20px;
+    border: 0;
+    /*-webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;*/
+    /*background-color: #fff;*/
+    overflow: hidden;
+}
+
+.search-text {
+    background: transparent;
+    /*margin-bottom: 10px;
+	padding-top: 2px;*/
+    width: 125px;
+}
+
+.search-box input[type="text"] {
+    width: 86%;
+    /*padding: 3px 5px 0 1em;*/
+    outline: none;
+}
+
+.search-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 20px;
+    width: 17px;
+    color: #fff;
+    text-align: center;
+    /*line-height: 42px;*/
+    border-width: 0;
+   /* background-color: #999;*/
+   background:url(images/icons/graystrip.png) repeat;
+    -webkit-border-radius: 0px 2px 2px 0px;
+    -moz-border-radius: 0px 2px 2px 0px;
+    border-radius: 0px 2px 2px 0px;
+    cursor: pointer;
+    padding: 2px 0 0 0;
+}
+/**
+SEARCH BOX END
+*/

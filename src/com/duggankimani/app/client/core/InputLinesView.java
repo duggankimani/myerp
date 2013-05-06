@@ -7,12 +7,15 @@ import com.duggankimani.app.client.provider.ERPPropertyAccessProvider;
 import com.duggankimani.app.shared.model.DataModel;
 import com.duggankimani.app.shared.model.DisplayType;
 import com.duggankimani.app.shared.model.FieldModel;
+import com.duggankimani.app.shared.model.LookupValue;
 import com.duggankimani.app.shared.model.TabModel;
 import com.gwtplatform.mvp.client.ViewImpl;
 
+import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -73,16 +76,34 @@ public class InputLinesView extends ViewImpl implements
 	
 		for (FieldModel model : fields) {
 			
-			ColumnConfig<DataModel, Serializable> column=null;
+			ColumnConfig<DataModel, Serializable> column=null;					
 			
 			if(model.getDisplayType()==DisplayType.DATE || model.getDisplayType()==DisplayType.DATETIME){
 				
 				column = getDateColumn(model);
 				
-			}else{				
+			}else if(model.getDisplayType()==DisplayType.SEARCH){
+				column = getSearchColumn(model);
+			}
+			else{				
 				column = new ColumnConfig<DataModel, Serializable>(
 					provider.getValueProvider(model.getColumnName()),
 					model.getWidth(), model.getName());
+			}
+			
+			
+			DisplayType displayType = model.getDisplayType();
+			if(displayType ==DisplayType.INTEGER || 
+					displayType ==DisplayType.NUMBER ||
+							displayType ==DisplayType.COSTPRICE ||
+									displayType ==DisplayType.QUANTITY ||
+									displayType ==DisplayType.TIME){
+				
+				column.setWidth(60);
+			}
+			
+			if(displayType==DisplayType.YESNO){
+				column.setWidth(40);
 			}
 			
 			list.add(column);
@@ -115,6 +136,28 @@ public class InputLinesView extends ViewImpl implements
 		store.clear();
 		store.addAll(dataModel);
 	}
+	
+	private ColumnConfig<DataModel, Serializable> getSearchColumn(
+			FieldModel model) {
+		ColumnConfig<DataModel, Serializable> column = new ColumnConfig<DataModel, Serializable>(
+				provider.getValueProvider(model.getColumnName()),
+				model.getWidth(), model.getName());
+		
+		column.setCell(new AbstractCell<Serializable>(){
+			@Override
+			public void render(com.google.gwt.cell.client.Cell.Context context,
+					Serializable value, SafeHtmlBuilder sb) {
+				if(value instanceof LookupValue){
+					sb.appendEscaped(((LookupValue) value).getValue());
+				}else if(value instanceof String){
+					//string
+					sb.appendEscaped(value.toString());
+				}
+			}
+		});
+		return column;
+	}
+
 	
 	@SuppressWarnings("unchecked")
 	private ColumnConfig<DataModel, Serializable> getDateColumn(FieldModel model) {

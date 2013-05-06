@@ -67,6 +67,7 @@ public class InputLinesPresenter extends
 			@Override
 			public void processResult(GetDataActionResult result) {
 				setData(result.getDataModel());
+				//System.err.println("Results loaded -- "+tab.getName()+" :: "+result.getDataModel().get(0).getData().toString());
 				getEventBus().fireEvent(new ERPRequestProcessingCompletedEvent());
 			}
 		});
@@ -78,12 +79,13 @@ public class InputLinesPresenter extends
 		if(tab==null)
 			return;
 		
-		int tabNo = event.getTabNo();
-		int windowId = event.getWindowID();
+		Integer tabNo = event.getTabNo();
+		Integer windowId = event.getWindowID();
 		event.getWindowNo();
 		
 		
-		if(tab.getTabNo()==tabNo && tab.getWindowID()==windowId){
+		if(tab.getTabNo().equals(tabNo) && tab.getWindowID().equals(windowId)){
+			//System.err.println("--Lines Presenter Loading me - "+tab.getTabNo()+" | "+tab.getWindowID());
 			loadData();
 		}
 		

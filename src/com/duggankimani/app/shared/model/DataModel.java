@@ -2,17 +2,18 @@ package com.duggankimani.app.shared.model;
 
 import java.io.Serializable;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
 import com.sencha.gxt.core.shared.FastMap;
 
-public class DataModel implements Serializable {
+public class DataModel implements Serializable, IsSerializable {
 
 	private static final long serialVersionUID = 8758277954851156781L;
 
-	private String _ROWNO="_ROWNO";
-	private String _HASNEXT="_HASNEXT";
-	private String _HASPREV="_HASPREV";
+	private static final String _ROWNO="_ROWNO";
+	private static final String _HASNEXT="_HASNEXT";
+	private static final String _HASPREV="_HASPREV";
 	
-	private FastMap<Serializable> data = new FastMap<Serializable>();
+	private FastMap data = new FastMap();
 	
 	public DataModel() {
 		set(_HASPREV, false);
@@ -29,7 +30,7 @@ public class DataModel implements Serializable {
 		}
 	}
 	
-	public Serializable get(String key){
+	public Object get(String key){
 		
 		return data.get(key);
 	}
@@ -68,5 +69,10 @@ public class DataModel implements Serializable {
 	
 	public FastMap<Serializable> getData(){
 		return data;
+	}
+	
+	private Double dummy;
+	public Double dummy(Double dummy){
+		return dummy;
 	}
 }

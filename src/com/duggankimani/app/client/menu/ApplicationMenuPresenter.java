@@ -1,4 +1,4 @@
-package com.duggankimani.app.client.components.menu;
+package com.duggankimani.app.client.menu;
 
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.Presenter;
@@ -40,7 +40,6 @@ public class ApplicationMenuPresenter extends
 				new ERPAsyncCallback<GetMenuActionResult>() {
 					@Override
 					public void processResult(GetMenuActionResult result) {
-
 						ApplicationMenuPresenter.this.getView().processFolder(
 								result.getMenus());
 					}
@@ -62,14 +61,13 @@ public class ApplicationMenuPresenter extends
 	protected void onReveal() {
 		// TODO Auto-generated method stub
 		super.onReveal();
-		
 		init();
 	}
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		// TODO Auto-generated method stub
 		super.prepareFromRequest(request);
-
+		
 	}
 
 	@Override

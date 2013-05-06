@@ -5,6 +5,8 @@ import java.util.List;
 import com.duggankimani.app.client.events.ERPRequestProcessingCompletedEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingEvent;
 import com.duggankimani.app.client.events.LoadLineDataEvent;
+import com.duggankimani.app.client.events.LoadTabsEvent;
+import com.duggankimani.app.client.events.LoadTabsEvent.LoadTabsHandler;
 import com.duggankimani.app.client.service.ERPAsyncCallback;
 import com.duggankimani.app.shared.action.GetTabAction;
 import com.duggankimani.app.shared.action.GetTabActionResult;
@@ -25,7 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.sencha.gxt.core.shared.FastMap;
 import com.sencha.gxt.widget.core.client.TabPanel;
 
-public class TabsPresenter extends PresenterWidget<TabsPresenter.MyView> {
+public class TabsPresenter extends PresenterWidget<TabsPresenter.MyView> implements LoadTabsHandler{
 
 	public interface MyView extends View {
 		void bind(List<MinTabModel> tabs);
@@ -55,6 +57,7 @@ public class TabsPresenter extends PresenterWidget<TabsPresenter.MyView> {
 	protected void onBind() {
 		super.onBind();
 
+		addRegisteredHandler(LoadTabsEvent.TYPE, this);
 		getView().getTabPanel().addSelectionHandler(
 				new SelectionHandler<Widget>() {
 
@@ -123,6 +126,31 @@ public class TabsPresenter extends PresenterWidget<TabsPresenter.MyView> {
 	@Override
 	protected void onReset() {
 		super.onReset();
+	}
+	
+	@Override
+	public void onLoadTabs(LoadTabsEvent event) {
+		Integer tabLevel = event.getParentTabLevel();
+		Integer tabNo = event.getParentTabNo();
+		Integer windowId= event.getWindowId();
+		
+		int tabIndex = getView().getTabPanel().getTabIndex();
+		System.err.println("Selected Index = "+tabIndex);
+		if(tabIndex<0 || minTabDetails==null){
+			return;
+		}
+		
+		int mtabNo = minTabDetails.get(tabIndex).getTabNo();
+		System.err.println("TabNo = "+mtabNo);
+		if(tabs.containsKey(mtabNo+"")){
+			TabModel tab = tabs.get(mtabNo+"");
+			System.err.println("TabNo = "+mtabNo+" IS CONTAINED");
+			if(tab.getWindowID().equals(windowId) && tab.getTabNo()>tabNo && tab.getTabLevel()==tabLevel+1){
+				System.err.println("TabNo = "+mtabNo+" Fire Event Called");
+				loadLineData(tab);
+			}
+			
+		}
 	}
 
 }
