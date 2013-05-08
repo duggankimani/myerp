@@ -43,7 +43,11 @@ public class ComboPresenter extends BasePresenterWidget<ComboPresenter.MyView> {
 			
 			@Override
 			public void onValueChange(ValueChangeEvent<LookupValue> event) {
-				valueChanged(event.getValue());
+				//valueChanged(event.getValue());
+				
+				LookupValue lookup = event.getValue();
+				
+				valueChanged(lookup==null? null : lookup.getKey()==null? lookup.getKey2(): lookup.getKey());
 			}
 		});
 	}

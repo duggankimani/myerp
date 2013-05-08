@@ -1,5 +1,7 @@
 package com.duggankimani.app.client.components;
 
+import java.util.List;
+
 import com.duggankimani.app.shared.model.FieldModel;
 import com.duggankimani.app.shared.model.LookupValue;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -135,4 +137,13 @@ public class SearchView extends ViewImpl implements SearchPresenter.MyView {
 	public ComboBox<LookupValue> getComponent(){
 		return component;
 	}
+
+	@Override
+	public void loadList(List<LookupValue> items) {
+		store.clear();
+		
+		store.addAll(items);
+		
+	}
+	
 }

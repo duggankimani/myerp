@@ -1,11 +1,17 @@
 package com.duggankimani.app.client.components;
 
+import java.util.List;
+
+import com.duggankimani.app.client.service.ERPAsyncCallback;
+import com.duggankimani.app.shared.action.SearchAction;
+import com.duggankimani.app.shared.action.SearchActionResult;
 import com.duggankimani.app.shared.model.FieldModel;
 import com.duggankimani.app.shared.model.LookupValue;
 import com.google.inject.Inject;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.EventBus;
+import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.sencha.gxt.widget.core.client.event.BeforeQueryEvent;
 import com.sencha.gxt.widget.core.client.event.BeforeQueryEvent.BeforeQueryHandler;
 import com.sencha.gxt.widget.core.client.form.ComboBox;
@@ -23,8 +29,13 @@ public class SearchPresenter extends BasePresenterWidget<SearchPresenter.MyView>
 		ComboBox<LookupValue> getComponent();
 
 		void setValue(LookupValue value);
-	}
 
+		void loadList(List<LookupValue> items);
+	}
+	
+	@Inject DispatchAsync dispatcher;
+	
+	
 	@Inject
 	public SearchPresenter(final EventBus eventBus, final MyView view) {
 		super(eventBus, view);
@@ -38,7 +49,11 @@ public class SearchPresenter extends BasePresenterWidget<SearchPresenter.MyView>
 
 			@Override
 			public void onBeforeQuery(BeforeQueryEvent<LookupValue> event) {
-				System.err.println("querying.....");
+				//event.setCancelled(true);
+				if(event.getQuery()==null || event.getQuery().trim().isEmpty())
+					return;
+					
+				search(event.getQuery());
 			}
 		});		
 		
@@ -46,7 +61,23 @@ public class SearchPresenter extends BasePresenterWidget<SearchPresenter.MyView>
 			
 			@Override
 			public void onValueChange(ValueChangeEvent<LookupValue> event) {
-				valueChanged(event.getValue());
+				LookupValue lookup = event.getValue();
+				
+				valueChanged(lookup==null? null : lookup.getKey()==null? lookup.getKey2(): lookup.getKey());
+			}
+		});
+	}
+
+	protected void search(String query) {
+		dispatcher.execute(new SearchAction(getFieldModel(), query),
+				new ERPAsyncCallback<SearchActionResult>() {
+			
+			@Override
+			public void processResult(SearchActionResult actionResult) {
+				List<LookupValue> results = actionResult.getLookup();
+				
+				System.err.println("loaded: - "+results.size());
+				getView().loadList(results);
 			}
 		});
 	}

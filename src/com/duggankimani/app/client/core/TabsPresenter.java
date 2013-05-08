@@ -135,18 +135,18 @@ public class TabsPresenter extends PresenterWidget<TabsPresenter.MyView> impleme
 		Integer windowId= event.getWindowId();
 		
 		int tabIndex = getView().getTabPanel().getTabIndex();
-		System.err.println("Selected Index = "+tabIndex);
+//		System.err.println("Selected Index = "+tabIndex);
 		if(tabIndex<0 || minTabDetails==null){
 			return;
 		}
 		
 		int mtabNo = minTabDetails.get(tabIndex).getTabNo();
-		System.err.println("TabNo = "+mtabNo);
+//		System.err.println("TabNo = "+mtabNo);
 		if(tabs.containsKey(mtabNo+"")){
 			TabModel tab = tabs.get(mtabNo+"");
-			System.err.println("TabNo = "+mtabNo+" IS CONTAINED");
+//			System.err.println("TabNo = "+mtabNo+" IS CONTAINED");
 			if(tab.getWindowID().equals(windowId) && tab.getTabNo()>tabNo && tab.getTabLevel()==tabLevel+1){
-				System.err.println("TabNo = "+mtabNo+" Fire Event Called");
+//				System.err.println("TabNo = "+mtabNo+" Fire Event Called");
 				loadLineData(tab);
 			}
 			

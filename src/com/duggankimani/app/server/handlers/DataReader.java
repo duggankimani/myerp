@@ -90,7 +90,7 @@ public class DataReader {
 					field.loadLookup();
 				}
 				
-				if(field.getLookup()!=null){
+				if(field.getLookup()!=null && value instanceof Integer){
 					MLookup m_lookup = (MLookup)field.getLookup();
 					value = m_lookup.get(value);
 				}

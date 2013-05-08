@@ -152,4 +152,8 @@ public abstract class BasePresenterWidget<V extends BaseView> extends
 
 		// handle Dynamic Validation
 	}
+
+	protected FieldModel getFieldModel() {
+		return fieldModel;
+	}
 }

@@ -174,6 +174,8 @@ public class MetaCreator {
 			model.setColSpan(1);
 			model.setWindowId(gridTabVO.AD_Window_ID);
 			model.setTabNo(gridTabVO.TabNo);
+//			field.FieldGroup;
+//			field.FieldGroupType;
 			model.setHasCallout(field.Callout!=null && !field.Callout.isEmpty());
 			
 			//model.setHasDynamicValidation(field.);

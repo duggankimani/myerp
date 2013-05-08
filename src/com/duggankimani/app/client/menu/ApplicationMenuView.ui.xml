@@ -30,15 +30,6 @@
   </ui:style>
   
       <g:HTMLPanel>
-          <!-- toolbar:ToolBar borders="true">
-              <button:TextButton text="Action Menu">
-                   <button:menu>
-	                <menu:Menu ui:field="rootMenu">
-              		</menu:Menu>
-	            </button:menu>
-              </button:TextButton>
-          </toolbar:ToolBar -->
-    	
     	<menu:MenuBar borders="true" addStyleNames="{style.menuBorder}">
           <menu:MenuBarItem text="Application Menu" addStyleNames="{style.menuWidth}">
             <menu:menu>
@@ -49,5 +40,12 @@
           </menu:MenuBarItem>
         </menu:MenuBar>
         
+    	<!-- div class="drawers-wrapper">
+			<div class="boxcap captop"></div>
+				<ul ui:field="listContainer" class="drawers">
+				</ul>				
+			<div class="boxcap"></div>
+		</div-->
+    	
      </g:HTMLPanel>
 </ui:UiBinder>

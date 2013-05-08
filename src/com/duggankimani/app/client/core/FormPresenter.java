@@ -537,8 +537,8 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 			@Override
 			public void processResult(ExecCalloutResult result) {
 				fireEvent(new ERPRequestProcessingCompletedEvent());
-				System.out.println("New Values - "+result.getData().getData().keySet().toString());
-				System.out.println("New Values - "+result.getData().getData().values().toString());
+//				System.out.println("New Values - "+result.getData().getData().keySet().toString());
+//				System.out.println("New Values - "+result.getData().getData().values().toString());
 				fireEvent(new SetValueEvent(result.getData(),curTab.getWindowID(), curTab.getTabNo()));
 			}
 		});

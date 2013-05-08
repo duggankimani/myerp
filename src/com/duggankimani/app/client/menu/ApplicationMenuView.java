@@ -6,6 +6,7 @@ import com.duggankimani.app.shared.model.MenuFolder;
 import com.duggankimani.app.shared.model.MenuType;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
@@ -26,6 +27,8 @@ public class ApplicationMenuView extends ViewImpl implements ApplicationMenuPres
 	@Inject
 	PlaceManager placeManager;
 
+	//@UiField Element listContainer;
+	
 	@Inject
 	public ApplicationMenuView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
@@ -69,6 +72,44 @@ public class ApplicationMenuView extends ViewImpl implements ApplicationMenuPres
 	public void processFolder(MenuFolder folder) {
 		rootMenu.clear();
 		processFolder(rootMenu, folder);
+		
+//		SafeHtmlBuilder builder = new SafeHtmlBuilder();
+//		generateHTML(folder, builder);
+//		
+//		listContainer.setInnerHTML(builder.toSafeHtml().asString());
+		
+		
+	}
+	
+	private void generateHTML(MenuFolder folder,SafeHtmlBuilder builder){
+		
+		for(MenuFolder child: folder.getChildren()){
+			if(child.IsLeaf()){
+				generateChild(child, builder);
+				continue;
+			}
+			
+			builder.appendHtmlConstant(
+					
+					"<li class=\"drawer\" style=\"position: static;\">"+
+						"<h2 class=\"drawer-handle\">"+child.getName()+"</h2>"+
+						"<ul class=\"alldownloads\" style=\"height: 463px; overflow: hidden; display:none;\">"
+					);
+			
+			generateHTML(child, builder);	
+		
+			builder.appendHtmlConstant(
+					"</ul>"+
+					"</li>" 
+					);
+		}
+	}
+
+	private void generateChild(MenuFolder folder, SafeHtmlBuilder builder) {
+		
+		builder.appendHtmlConstant("<li id=\"sn-automator\">"+
+							"<a href=\"/downloads/macosx/automator/\">"+folder.getId()+"</a>"+
+						"</li>");
 	}
 
 }

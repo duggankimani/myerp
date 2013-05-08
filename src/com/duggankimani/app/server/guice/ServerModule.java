@@ -3,6 +3,7 @@ package com.duggankimani.app.server.guice;
 import com.gwtplatform.dispatch.server.guice.HandlerModule;
 import com.duggankimani.app.shared.action.GetWindowAction;
 import com.duggankimani.app.server.handlers.GetWindowActionHandler;
+import com.duggankimani.app.server.handlers.SearchActionHandler;
 import com.duggankimani.app.shared.action.GetMenuAction;
 import com.duggankimani.app.server.handlers.GetMenuActionHandler;
 import com.duggankimani.app.shared.action.GetDataAction;
@@ -15,6 +16,7 @@ import com.duggankimani.app.shared.action.UndoAction;
 import com.duggankimani.app.server.handlers.UndoActionHandler;
 import com.duggankimani.app.shared.action.ExecCallout;
 import com.duggankimani.app.server.handlers.ExecCalloutActionHandler;
+import com.duggankimani.app.shared.action.SearchAction;
 
 public class ServerModule extends HandlerModule {
 
@@ -35,5 +37,7 @@ public class ServerModule extends HandlerModule {
 		bindHandler(UndoAction.class, UndoActionHandler.class);
 
 		bindHandler(ExecCallout.class, ExecCalloutActionHandler.class);
+
+		bindHandler(SearchAction.class, SearchActionHandler.class);
 	}
 }
