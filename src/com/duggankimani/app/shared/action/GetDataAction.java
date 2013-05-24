@@ -20,6 +20,11 @@ public class GetDataAction extends BaseAction<GetDataActionResult> {
 		rowNo=-1;
 	}
 
+	@Override
+	public BaseActionResult createDefaultActionResponse() {
+		return new GetDataActionResult();
+	}
+	
 	public GetDataAction(Integer tabNo, Integer windowNo, Integer WindowID, Integer menuID) {
 		this();
 		this.tabNo = tabNo;
@@ -88,5 +93,9 @@ public class GetDataAction extends BaseAction<GetDataActionResult> {
 
 	public void setRowNo(Integer rowNo) {
 		this.rowNo = rowNo;
+	}
+
+	public void setMenuId(Integer AD_Menu_ID) {
+		this.menuID = AD_Menu_ID;
 	}
 }

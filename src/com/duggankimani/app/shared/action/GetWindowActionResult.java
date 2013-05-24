@@ -6,8 +6,7 @@ public class GetWindowActionResult extends BaseActionResult {
 
 	private WindowModel windowModel;
 	
-	@SuppressWarnings("unused")
-	private GetWindowActionResult() {
+	public GetWindowActionResult() {
 		
 	}
 	

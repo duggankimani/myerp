@@ -10,10 +10,15 @@ body{
 
 .mainContainer{
 	width: 1280px; /*Width of main container*/
-	margin: 0 auto; /*Center container on page*/
-	
-	height:800px;	
+	margin: 0 auto; /*Center container on page*/	
 }
+
+
+.rootcontainer{
+	width:1280px;
+	margin: 0 auto;	
+}
+
 
 #header{
 	width:100%;
@@ -21,23 +26,25 @@ body{
 }
 
 .left p, .right p{
-	padding:10px;	
+	padding:2px;	
 }
 
-.left .right{
-	
+.left,.right{
+	min-width:120px;
 }
 
 .left{
 	display: table-cell;
-	width:200px;
+	
+	vertical-align:top;
 }
 
 .center{
 	display: table-cell;
-	width:800px;
-	padding-left:30px;
-	padding-right:30px;
+	min-width:960px;
+	width:960px;
+	padding-left:10px;
+	padding-right:10px;
 	
 }
 
@@ -48,6 +55,7 @@ body{
 .right{
 	display: table-cell;
 	width:200px;
+	vertical-align:top;
 }
 
 #footer {
@@ -209,4 +217,39 @@ Tabs CSS
 
 .gwt-Anchor{
 	cursor:pointer;
+}
+
+.header{
+	height:40px;
+	margin-top:0px;
+	margin-bottom:2px;
+	padding-top:5px;
+	padding-left:2px;
+	background-image:url(images/header_bg1.gif);
+	background-repeat:repeat;
+	text-align:center;
+}
+
+.header:before{
+	font-size:20px;
+	font-weight:bold;
+	font-family:'Lobster', Georgia, Times, serif;
+	/*font-family:*/
+	color:white;
+	content:"e-Business For Africa";
+	text-align:center;
+}
+
+.grid-lines{
+	/*height:168px;*/	
+	width:960px;
+}
+
+.grid-body{
+	
+}
+
+.processwindow{
+	min-height:300px;
+	min-width:260px;
 }

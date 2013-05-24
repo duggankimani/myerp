@@ -4,6 +4,11 @@ import java.io.Serializable;
 import java.lang.String;
 import java.util.ArrayList;
 
+/**
+ * 
+ * @author duggan
+ *
+ */
 public class FieldModel implements Serializable {
 
 	private static final long serialVersionUID = 5834912522352271773L;
@@ -21,6 +26,8 @@ public class FieldModel implements Serializable {
 	private ArrayList<LookupValue> lookupValues;
 	private boolean hasCallout;
 	private boolean hasDynamicValidation;
+	private boolean isMandatory;
+	private String defaultValue;
 	
 	public FieldModel() {
 		//defaults
@@ -171,5 +178,21 @@ public class FieldModel implements Serializable {
 
 	public void setHasDynamicValidation(boolean hasDynamicValidation) {
 		this.hasDynamicValidation = hasDynamicValidation;
+	}
+
+	public boolean isMandatory() {
+		return isMandatory;
+	}
+
+	public void setMandatory(boolean isMandatory) {
+		this.isMandatory = isMandatory;
+	}
+
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 }

@@ -9,6 +9,8 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import static com.duggankimani.app.client.core.MainPagePresenter.*;
+
 public class MainPageView extends ViewImpl implements MainPagePresenter.MyView {
 
 	private final Widget widget;
@@ -17,20 +19,18 @@ public class MainPageView extends ViewImpl implements MainPagePresenter.MyView {
 	}
 
 	
-	@UiField
-	HTMLPanel container;
+	@UiField HTMLPanel container;
 
 	//@UiField 
 	Anchor anchorHome =  new Anchor();
 	
-	@UiField
-	Anchor createNew;
+	@UiField HTMLPanel menuContainer;
 	
-	@UiField
-	HTMLPanel menuContainer;
+	@UiField SpanElement loadingComponent;
 	
-	@UiField
-	SpanElement loadingComponent;
+	@UiField HTMLPanel headerContainer;
+	
+	@UiField HTMLPanel actionsContainer;
 	
 	@Inject
 	public MainPageView(final Binder binder) {
@@ -45,35 +45,44 @@ public class MainPageView extends ViewImpl implements MainPagePresenter.MyView {
 	@Override
 	public void setInSlot(Object slot, Widget content) {
 		
-		if (slot == MainPagePresenter.SLOT_content) {
+		if (slot == SLOT_content) {
 			container.clear();
 			
 			if (content != null) {
 				container.add(content);
 			}
-		} else if(slot == MainPagePresenter.MENU_SLOT){
+		} else if(slot == MENU_SLOT){
 			menuContainer.clear();
 			
 			if(content!=null){
 				menuContainer.add(content);
 			}
-		}else
+		}else if(slot == HEADER_content){
+			headerContainer.clear();
+			
+			if(content!=null){
+				headerContainer.add(content);
+			}
+		}else if(slot == ACTIONS_content){
+			actionsContainer.clear();
+			
+			if(content!=null){
+				actionsContainer.add(content);
+			}
+		}		
+		else
 			super.setInSlot(slot, content);
 	}
 
 	public Anchor getAnchorHome() {
 		return anchorHome;
 	}
-
-	public Anchor getCreateNew() {
-		return createNew;
-	}
 	
 	public void showLoadingMessage(String message){
 		if(message==null)
 			message = "";
 		
-		loadingComponent.setInnerText("loading "+message+"....");
+		loadingComponent.setInnerText("loading ....");
 	}
 	
 	public void hideLoadingMessage(){

@@ -1,4 +1,4 @@
-package com.duggankimani.app.server.handlers;
+package com.duggankimani.app.server.handlerutils;
 
 import java.util.Set;
 

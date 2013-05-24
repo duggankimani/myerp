@@ -1,30 +1,37 @@
 package com.duggankimani.app.server.handlers;
 
-
-import com.gwtplatform.dispatch.server.actionhandler.ActionHandler;
+import com.duggankimani.app.shared.action.BaseActionResult;
 import com.duggankimani.app.shared.action.GetTabAction;
 import com.duggankimani.app.shared.action.GetTabActionResult;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.shared.ActionException;
 
-public class GetTabActionHandler extends MetaCreator implements
-		ActionHandler<GetTabAction, GetTabActionResult> {
+import static com.duggankimani.app.server.handlerutils.MetaCreator.*;
+
+/**
+ * 
+ * @author duggan
+ *
+ */
+public class GetTabActionHandler extends BaseActionHandler<GetTabAction, GetTabActionResult>{
 
 	@Inject
 	public GetTabActionHandler() {
 	}
 
 	@Override
-	public GetTabActionResult execute(GetTabAction action, ExecutionContext context)
+	public GetTabActionResult execute(GetTabAction action,
+			BaseActionResult actionResult, ExecutionContext execContext)
 			throws ActionException {
 		
-		GetTabActionResult result = new GetTabActionResult(getMinTabModel(action.getWindowID(), action.getTabNo()));
+		GetTabActionResult result =  (GetTabActionResult)actionResult;
+		
+		result.setTabModel(getMinTabModel(action.getWindowID(), action.getTabNo()));
 		
 		return result;
 	}
-
-
+	
 	@Override
 	public void undo(GetTabAction action, GetTabActionResult result,
 			ExecutionContext context) throws ActionException {
@@ -34,4 +41,5 @@ public class GetTabActionHandler extends MetaCreator implements
 	public Class<GetTabAction> getActionType() {
 		return GetTabAction.class;
 	}
+
 }

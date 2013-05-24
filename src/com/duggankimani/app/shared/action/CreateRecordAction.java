@@ -15,6 +15,12 @@ public class CreateRecordAction extends BaseAction<CreateRecordActionResult> {
 		// For serialization only
 	}
 
+	@Override
+	public BaseActionResult createDefaultActionResponse() {
+	
+		return new CreateRecordActionResult();
+	}
+	
 	public CreateRecordAction(Integer windowId, Integer menuId,Integer tabNo, Integer currentRow) {
 		this.windowId = windowId;
 		this.menuId = menuId;

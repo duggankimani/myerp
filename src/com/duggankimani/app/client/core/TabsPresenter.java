@@ -44,13 +44,13 @@ public class TabsPresenter extends PresenterWidget<TabsPresenter.MyView> impleme
 	@Inject
 	DispatchAsync dispatcher;
 
-	private IndirectProvider<InputLinesPresenter> linesFactory;
+	private IndirectProvider<LinesPresenter> linesFactory;
 
 	@Inject
 	public TabsPresenter(final EventBus eventBus, final MyView view,
-			Provider<InputLinesPresenter> linesProvider) {
+			Provider<LinesPresenter> linesProvider) {
 		super(eventBus, view);
-		linesFactory = new StandardProvider<InputLinesPresenter>(linesProvider);
+		linesFactory = new StandardProvider<LinesPresenter>(linesProvider);
 	}
 
 	@Override
@@ -73,19 +73,20 @@ public class TabsPresenter extends PresenterWidget<TabsPresenter.MyView> impleme
 
 	protected void setLines(Integer selectedItem) {
 
-		int tabno = minTabDetails.get(selectedItem).getTabNo();
+		MinTabModel selected =  minTabDetails.get(selectedItem);
+		int tabno = selected.getTabNo();
 		if (tabs.containsKey(tabno + "")) {
 			// already loaded
 			return;
 		}
 
-		loadMetaAndData(tabno);
+		loadMetaAndData(selected.getWindowId(), tabno);
 
 	}
 
-	private void loadMetaAndData(final Integer tabNo) {
+	private void loadMetaAndData(final Integer windowId, final Integer tabNo) {
 		getEventBus().fireEvent(new ERPRequestProcessingEvent("Tab meta"));
-		dispatcher.execute(new GetTabAction(0, tabNo),
+		dispatcher.execute(new GetTabAction(windowId, tabNo),
 				new ERPAsyncCallback<GetTabActionResult>() {
 					@Override
 					public void processResult(GetTabActionResult result) {
@@ -99,10 +100,10 @@ public class TabsPresenter extends PresenterWidget<TabsPresenter.MyView> impleme
 	}
 
 	private void addLinesView(final TabModel tab) {
-		linesFactory.get(new ERPAsyncCallback<InputLinesPresenter>() {
+		linesFactory.get(new ERPAsyncCallback<LinesPresenter>() {
 
 			@Override
-			public void processResult(InputLinesPresenter result) {
+			public void processResult(LinesPresenter result) {
 				result.bind(tab);
 				addToSlot(TAB_SLOT, result);
 				loadLineData(tab);

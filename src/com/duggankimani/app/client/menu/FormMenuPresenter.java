@@ -2,12 +2,13 @@ package com.duggankimani.app.client.menu;
 
 import com.duggankimani.app.client.events.CreateEvent;
 import com.duggankimani.app.client.events.NavigateEvent;
-import com.duggankimani.app.client.events.SetValueEvent;
 import com.duggankimani.app.client.events.CreateEvent.CreateHandler;
-import com.duggankimani.app.client.events.SetValueEvent.SetValueHandler;
+import com.duggankimani.app.client.events.NavigationUpdateEvent;
+import com.duggankimani.app.client.events.NavigationUpdateEvent.NavigationUpdateHandler;
+import com.duggankimani.app.client.events.TabStateChangedEvent;
+import com.duggankimani.app.client.events.TabStateChangedEvent.TabStateChangedHandler;
 import com.duggankimani.app.client.events.UndoEvent;
 import com.duggankimani.app.client.events.UndoEvent.UndoHandler;
-import com.duggankimani.app.shared.model.DataModel;
 import com.duggankimani.app.shared.model.FieldModel;
 import com.google.inject.Inject;
 import com.google.gwt.event.shared.EventBus;
@@ -17,8 +18,9 @@ import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
-public class InputFormMenuPresenter extends
-		PresenterWidget<InputFormMenuPresenter.MyView> implements SetValueHandler, CreateHandler, UndoHandler{
+public class FormMenuPresenter extends
+		PresenterWidget<FormMenuPresenter.MyView> 
+		implements CreateHandler, UndoHandler, NavigationUpdateHandler, TabStateChangedHandler{
 
 	public interface MyView extends View{
 		void addField(FieldModel field);
@@ -38,12 +40,18 @@ public class InputFormMenuPresenter extends
 		public TextButton getUndo();
 
 		void setMode(int i);
+
+		void setReadOnly(boolean readOnly);
 	}
 
+	int tabNo;
+	int windowNo;
+	int windowId;
+	
 	MyView view;
 	
 	@Inject
-	public InputFormMenuPresenter(final EventBus eventBus, final MyView view) {
+	public FormMenuPresenter(final EventBus eventBus, final MyView view) {
 		super(eventBus, view);
 		this.view = view;
 		view.setMode(0);
@@ -52,10 +60,9 @@ public class InputFormMenuPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
-		addRegisteredHandler(SetValueEvent.TYPE, this);
 		addRegisteredHandler(CreateEvent.TYPE, this);
 		addRegisteredHandler(UndoEvent.TYPE, this);
-		
+		addRegisteredHandler(NavigationUpdateEvent.TYPE, this);
 
 		view.getUndo().addSelectHandler(new SelectHandler() {
 			
@@ -101,11 +108,6 @@ public class InputFormMenuPresenter extends
 		fireEvent(new NavigateEvent(-1));
 	}
 
-	@Override
-	public void onSetValue(SetValueEvent event) {
-		DataModel dataModel = event.getData();
-		view.setNavigationState(dataModel.hasPrev(), dataModel.hasNext());
-	}
 
 	@Override
 	public void onCreate(CreateEvent event) {
@@ -113,12 +115,45 @@ public class InputFormMenuPresenter extends
 			view.setMode(1);
 		}
 	}
+	
+	public void setContextInfo(int windowId, int windowNo, int tabNo){
+//		System.err.println("FormMenu ContextInfo [WindowId : "+windowId+"]" +
+//				" [WindowNo :"+windowNo+"] [TabNo : "+tabNo+"]");
+		
+		this.windowId = windowId;
+		this.windowNo = windowNo;
+		this.tabNo = tabNo;
+	}
 
 	@Override
 	public void onUndo(UndoEvent event) {
 		if(event.getSource()==this){
 			view.setMode(0);
 		}
+	}
+
+	@Override
+	public void onNavigationUpdate(NavigationUpdateEvent event) {
+//		System.err.println("--Event Fired!! FormMenu [WindowId : "+windowId+"]" +
+//				" [WindowNo :"+windowNo+"] [TabNo : "+tabNo+"]\n");
+		if(windowId!=event.getWindowId() || windowNo!=event.getWindowNo() || tabNo!=event.getTabNo()){
+			return;
+		}
+		
+		getView().setNavigationState(!event.isfirstRow(), !event.isLastRow());		
+	}
+
+	@Override
+	public void onTabStateChanged(TabStateChangedEvent event) {
+		int tabNo = event.getTabNo();
+		int windowId = event.getWindowId();
+		int windowNo=event.getWindowNo();
+		boolean readOnly = event.isReadOnly();
+		
+		if(windowId!=event.getWindowId() || windowNo!=event.getWindowNo() || tabNo!=event.getTabNo()){
+			return;
+		}
+		getView().setReadOnly(readOnly);
 	}
 	
 }

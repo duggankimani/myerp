@@ -26,6 +26,11 @@ public class GetWindowAction extends BaseAction<GetWindowActionResult> {
 	}
 	
 	@Override
+	public BaseActionResult createDefaultActionResponse() {
+		return new GetWindowActionResult();
+	}
+	
+	@Override
 	public boolean isSecured() {
 		return false;
 	}

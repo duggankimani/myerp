@@ -13,5 +13,6 @@
 	<g:HorizontalPanel ui:field="container">	    
 	    <gxt:FieldLabel ui:field="label"></gxt:FieldLabel>
 		<gxt:ComboBox ui:field="component" store="{store}" allowBlank="true" triggerAction="ALL"></gxt:ComboBox>
+		<g:Image ui:field="imgMandatory"></g:Image>
 	</g:HorizontalPanel>
 </ui:UiBinder>

@@ -6,11 +6,13 @@ import com.duggankimani.app.shared.model.MenuFolder;
 import com.duggankimani.app.shared.model.MenuType;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.sencha.gxt.widget.core.client.menu.Item;
 import com.sencha.gxt.widget.core.client.menu.Menu;
 import com.sencha.gxt.widget.core.client.menu.MenuItem;
 
@@ -27,7 +29,7 @@ public class ApplicationMenuView extends ViewImpl implements ApplicationMenuPres
 	@Inject
 	PlaceManager placeManager;
 
-	//@UiField Element listContainer;
+	SelectionHandler<Item> processHandler;
 	
 	@Inject
 	public ApplicationMenuView(final Binder binder) {
@@ -39,6 +41,8 @@ public class ApplicationMenuView extends ViewImpl implements ApplicationMenuPres
 
 		return widget;
 	}
+	
+	
 
 	private void processFolder(Menu parentMenu, MenuFolder folder) {
 
@@ -63,12 +67,21 @@ public class ApplicationMenuView extends ViewImpl implements ApplicationMenuPres
 				else
 					menuItem.setIcon(ERPIMAGES.INSTANCE.get_ShovelIcon());
 
-				menuItem.addSelectionHandler(new MenuSelectEventHandler(placeManager));
+				if(child.getMenuType()==MenuType.WINDOW){
+					
+					menuItem.addSelectionHandler(new MenuSelectEventHandler(placeManager, child));					
+				}
+				
+				if(child.getMenuType()==MenuType.REPORT || child.getMenuType()==MenuType.PROCESS){
+					menuItem.addSelectionHandler(processHandler);
+				}
 			}
 		}
 
 	}
-
+	
+	
+	
 	public void processFolder(MenuFolder folder) {
 		rootMenu.clear();
 		processFolder(rootMenu, folder);
@@ -110,6 +123,11 @@ public class ApplicationMenuView extends ViewImpl implements ApplicationMenuPres
 		builder.appendHtmlConstant("<li id=\"sn-automator\">"+
 							"<a href=\"/downloads/macosx/automator/\">"+folder.getId()+"</a>"+
 						"</li>");
+	}
+
+	@Override
+	public void setProcessHandler(SelectionHandler<Item> processHandler) {
+		this.processHandler=processHandler;
 	}
 
 }

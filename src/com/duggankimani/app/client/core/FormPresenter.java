@@ -10,7 +10,6 @@ import com.duggankimani.app.client.components.DateFieldPresenter;
 import com.duggankimani.app.client.components.NumberFieldPresenter;
 import com.duggankimani.app.client.components.SearchPresenter;
 import com.duggankimani.app.client.components.TextFieldPresenter;
-import com.duggankimani.app.client.events.AfterFormLoadEvent;
 import com.duggankimani.app.client.events.CalloutEvent;
 import com.duggankimani.app.client.events.CalloutEvent.CalloutHandler;
 import com.duggankimani.app.client.events.ClearFieldsEvent;
@@ -18,9 +17,9 @@ import com.duggankimani.app.client.events.ClearLinesEvent;
 import com.duggankimani.app.client.events.CreateEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingCompletedEvent;
 import com.duggankimani.app.client.events.ERPRequestProcessingEvent;
-import com.duggankimani.app.client.events.LoadLineDataEvent;
 import com.duggankimani.app.client.events.LoadTabsEvent;
 import com.duggankimani.app.client.events.NavigateEvent;
+import com.duggankimani.app.client.events.RepositionPopupEvent;
 import com.duggankimani.app.client.events.UndoEvent;
 import com.duggankimani.app.client.events.CreateEvent.CreateHandler;
 import com.duggankimani.app.client.events.NavigateEvent.NavigateHandler;
@@ -29,7 +28,8 @@ import com.duggankimani.app.client.events.SetValueEvent.SetValueHandler;
 import com.duggankimani.app.client.events.UndoEvent.UndoHandler;
 import com.duggankimani.app.client.events.ValueChangedEvent;
 import com.duggankimani.app.client.events.ValueChangedEvent.ValueChangedHandler;
-import com.duggankimani.app.client.menu.InputFormMenuPresenter;
+import com.duggankimani.app.client.events.WindowChangedEvent;
+import com.duggankimani.app.client.menu.FormMenuPresenter;
 import com.duggankimani.app.client.service.ERPAsyncCallback;
 import com.duggankimani.app.shared.action.CreateRecordAction;
 import com.duggankimani.app.shared.action.CreateRecordActionResult;
@@ -56,6 +56,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Window;
 
 /**
  * Form Presenter Widget
@@ -106,7 +107,9 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 	
 	private IndirectProvider<SearchPresenter> searchFactory;
 
-	@Inject	InputFormMenuPresenter menu;
+	FieldManager fieldManager=null;
+	
+	@Inject	FormMenuPresenter menu;
 
 	private WindowModel windowModel;
 	
@@ -160,6 +163,10 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 	@Override
 	protected void onBind() {
 		super.onBind();
+
+		fieldManager = new FieldManager(this, COMPONENT_SLOT, getEventBus(),
+				this.textBoxFactory, this.dateFieldFactory, this.numberFieldFactory, 
+				this.checkboxFactory, this.comboFactory, this.buttonFactory, this.searchFactory);
 		
 		addRegisteredHandler(NavigateEvent.TYPE, this);
 		addRegisteredHandler(CreateEvent.TYPE, this);
@@ -168,10 +175,17 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 		addRegisteredHandler(ValueChangedEvent.TYPE, this);
 		addRegisteredHandler(CalloutEvent.TYPE, this);
 	}
-		
+	
+	/**
+	 * Load data and meta in one go
+	 * --Unknowns: Existence of child lines
+	 * --Availability of data
+	 * @param action
+	 */
 	void loadWindow(GetWindowAction action){
-		
+		fireEvent(new WindowChangedEvent());
 		fireEvent(new ERPRequestProcessingEvent(""+action.getAD_Menu_ID()));
+			
 		dispatchAsync.execute(action,
 				new ERPAsyncCallback<GetWindowActionResult>() {
 
@@ -180,27 +194,28 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 						getView().clear();
 						windowModel = result.getWindowModel();
 						curTab= windowModel.getTab(0);
-						addFields(result);
+						buildWindow(result);
 						fireEvent(new ERPRequestProcessingCompletedEvent());	
-						loadData();						
-						fireEvent(new AfterFormLoadEvent(FormPresenter.this, true));					
+						loadData();											
 					}
 					
-					@Override
-					public void onFailure(Throwable caught) {
-						fireEvent(new AfterFormLoadEvent(FormPresenter.this, false));
-						super.onFailure(caught);
-					}
 				});
 
 	}
 	
-	public void addFields(GetWindowActionResult result) {
+	public void buildWindow(GetWindowActionResult result) {
 		//clear whatever was there before
 		setInSlot(LINES_SLOT, null);	
-				
-		((InputFormMenuPresenter.MyView) menu.getView()).clearActions();
-		((MyView)getView()).setTitle(result.getWindowModel().getTab(0).getName());
+		
+		String name = result.getWindowModel().getName();
+		Window.setTitle(name);
+		
+		menu.getView().clearActions();
+		menu.setContextInfo(curTab.getWindowID(),
+				curTab.getWindowNo(),
+				curTab.getTabNo());
+		
+		getView().setTitle(result.getWindowModel().getTab(0).getName());
 		
 		ArrayList<FieldModel> fields = result.getWindowModel().getTab(0)
 				.getFields();
@@ -219,7 +234,7 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 			getView().clearLinesComponent();
 		}
 			
-
+		fireEvent(new RepositionPopupEvent());
 	}
 
 
@@ -235,7 +250,7 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 		switch (field.getDisplayType()) {
 		case DATE:
 		case DATETIME:
-			createDateField(field);
+			fieldManager.createDateField(field);
 			break;
 		case NUMBER:
 		case AMOUNT:
@@ -245,10 +260,10 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 		case COSTPRICE:
 		case ROWID:
 		case PATTRIBUTESET:
-			createNumberField(field);
+			fieldManager.createNumberField(field);
 			break;
 		case YESNO:
-			createCheckboxField(field);
+			fieldManager.createCheckboxField(field);
 			break;
 		case BUTTON:
 			createButtonField(field);
@@ -258,97 +273,26 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 		case TABLE:
 		case TABLEDIR:
 		case LOCATION:
-			createComboField(field);
+			fieldManager.createComboField(field);
 			break;
 		case SEARCH:
-			createSearchField(field);
+			fieldManager.createSearchField(field);
 			break;
 		default:
-			createTextField(field);
+			fieldManager.createTextField(field);
 		}
 
 	}
 
-	private void createSearchField(final FieldModel field) {
-		searchFactory.get(new ERPAsyncCallback<SearchPresenter>() {
-			@Override
-			public void processResult(SearchPresenter result) {
-				result.setFieldModel(field);
-				FormPresenter.this.addToSlot(COMPONENT_SLOT, result);				
-			}
-		});
-	}
-
 	private void createButtonField(final FieldModel field) {
 
-		((InputFormMenuPresenter.MyView) menu.getView()).addField(field);
+		menu.getView().addField(field);
+		menu.setContextInfo(curTab.getWindowID(), curTab.getWindowNo(), curTab.getTabNo());
 
-		buttonFactory.get(new ERPAsyncCallback<ButtonPresenter>() {
-			@Override
-			public void processResult(ButtonPresenter result) {
-				result.setFieldModel(field);
-				FormPresenter.this.addToSlot(COMPONENT_SLOT, result);
-			}
-		});
+		fieldManager.createButtonField(field, true);
 
 	}
 
-	private void createComboField(final FieldModel field) {
-
-		comboFactory.get(new ERPAsyncCallback<ComboPresenter>() {
-			@Override
-			public void processResult(ComboPresenter result) {
-				result.setFieldModel(field);
-				FormPresenter.this.addToSlot(COMPONENT_SLOT, result);
-			}
-		});
-
-	}
-
-	private void createCheckboxField(final FieldModel field) {
-		checkboxFactory.get(new ERPAsyncCallback<CheckboxPresenter>() {
-			@Override
-			public void processResult(CheckboxPresenter result) {
-				result.setFieldModel(field);
-				FormPresenter.this.addToSlot(COMPONENT_SLOT, result);
-			}
-		});
-	}
-
-	private void createNumberField(final FieldModel field) {
-
-		numberFieldFactory.get(new ERPAsyncCallback<NumberFieldPresenter>() {
-			@Override
-			public void processResult(NumberFieldPresenter result) {
-				result.setFieldModel(field);
-				FormPresenter.this.addToSlot(COMPONENT_SLOT, result);
-			}
-		});
-
-	}
-
-	public void createTextField(final FieldModel field) {
-
-		textBoxFactory.get(new ERPAsyncCallback<TextFieldPresenter>() {
-			public void processResult(TextFieldPresenter result) {
-				result.setFieldModel(field);
-				FormPresenter.this.addToSlot(COMPONENT_SLOT, result);
-				//setColSpan(result.getView().getColSpan());
-			}
-		});
-
-	}
-
-	public void createDateField(final FieldModel field) {
-		dateFieldFactory.get(new ERPAsyncCallback<DateFieldPresenter>() {
-			@Override
-			public void processResult(DateFieldPresenter result) {
-				result.setFieldModel(field);
-				FormPresenter.this.addToSlot(COMPONENT_SLOT, result);
-			}
-		});
-
-	}
 
 	/**
 	 * Loads this components data
@@ -544,4 +488,10 @@ CreateHandler, SetValueHandler, UndoHandler, ValueChangedHandler, CalloutHandler
 		});
 	}
 
+	@Override
+	protected void onHide() {
+		System.err.println("###Hidding - "+windowModel.getName());
+		
+		super.onHide();
+	}
 }

@@ -1,10 +1,8 @@
 package com.duggankimani.app.client.events;
 
 import com.duggankimani.app.shared.action.GetWindowAction;
-import com.duggankimani.app.shared.model.TabModel;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.EventHandler;
-import java.lang.Integer;
 import com.google.gwt.event.shared.HasHandlers;
 
 public class LoadWindowEvent extends

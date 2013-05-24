@@ -19,6 +19,11 @@ public class UndoAction extends BaseAction<UndoActionResult> {
 		this.tabNo = tabNo;
 		this.previousRowNo = previousRowNo;
 	}
+	
+	@Override
+	public BaseActionResult createDefaultActionResponse() {
+		return new UndoActionResult();
+	}
 
 	public Integer getWindowId() {
 		return windowId;

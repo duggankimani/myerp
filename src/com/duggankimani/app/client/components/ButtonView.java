@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -63,6 +64,21 @@ public class ButtonView extends ViewImpl implements BaseView,ButtonPresenter.MyV
 	public void clearData() {
 		//disable link
 		component.setEnabled(false);
+	}
+
+	@Override
+	public void setEditable(boolean isEditable) {
+		component.setEnabled(isEditable);
+	}
+
+	@Override
+	public void setMandatory(boolean isMandatory) {
+		
+	}
+
+	@Override
+	public void setVisible(boolean isVisible) {
+		UIObject.setVisible(container.getElement(), isVisible);
 	}
 	
 }

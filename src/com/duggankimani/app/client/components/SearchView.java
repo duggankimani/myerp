@@ -2,6 +2,7 @@ package com.duggankimani.app.client.components;
 
 import java.util.List;
 
+import com.duggankimani.app.client.images.ICONS;
 import com.duggankimani.app.shared.model.FieldModel;
 import com.duggankimani.app.shared.model.LookupValue;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -9,6 +10,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.sencha.gxt.data.shared.LabelProvider;
@@ -45,6 +48,8 @@ public class SearchView extends ViewImpl implements SearchPresenter.MyView {
 	
 	@UiField HorizontalPanel container;
 	
+	@UiField Image imgMandatory;
+	
 	@Inject
 	public SearchView(final Binder binder) {
 		
@@ -56,6 +61,9 @@ public class SearchView extends ViewImpl implements SearchPresenter.MyView {
 		component.setEmptyText(getEmptyText(""));
 		
 		widget = binder.createAndBindUi(this);
+		
+		imgMandatory.setResource(ICONS.INSTANCE.mandatory());
+		imgMandatory.setTitle("Mandatory Field");
 	}
 
 	/**
@@ -145,5 +153,22 @@ public class SearchView extends ViewImpl implements SearchPresenter.MyView {
 		store.addAll(items);
 		
 	}
+
+	@Override
+	public void setEditable(boolean isEditable) {
+		//component.setEditable(false);
+		component.setReadOnly(!isEditable);
+	}
 	
+	@Override
+	public void setMandatory(boolean isMandatory) {
+		imgMandatory.setVisible(isMandatory);
+	}
+	
+
+	@Override
+	public void setVisible(boolean isVisible) {
+		UIObject.setVisible(container.getElement(), isVisible);
+	}
+
 }

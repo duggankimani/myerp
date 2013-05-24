@@ -2,12 +2,15 @@ package com.duggankimani.app.client.components;
 
 import com.duggankimani.app.client.events.CalloutEvent;
 import com.duggankimani.app.client.events.ClearFieldsEvent;
+import com.duggankimani.app.client.events.TabStateChangedEvent;
 import com.duggankimani.app.client.events.ClearFieldsEvent.ClearFieldsHandler;
 import com.duggankimani.app.client.events.SetValueEvent;
 import com.duggankimani.app.client.events.SetValueEvent.SetValueHandler;
+import com.duggankimani.app.client.events.TabStateChangedEvent.TabStateChangedHandler;
 import com.duggankimani.app.client.events.ValueChangedEvent;
 import com.duggankimani.app.client.events.ValueChangedEvent.ValueChangedHandler;
 import com.duggankimani.app.shared.model.DataModel;
+import com.duggankimani.app.shared.model.DisplayType;
 import com.duggankimani.app.shared.model.FieldModel;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.UIObject;
@@ -15,7 +18,7 @@ import com.gwtplatform.mvp.client.PresenterWidget;
 
 public abstract class BasePresenterWidget<V extends BaseView> extends
 		PresenterWidget<V> implements SetValueHandler, ClearFieldsHandler,
-		ValueChangedHandler {
+		ValueChangedHandler, TabStateChangedHandler {
 
 	FieldModel fieldModel;
 
@@ -38,6 +41,7 @@ public abstract class BasePresenterWidget<V extends BaseView> extends
 		addRegisteredHandler(SetValueEvent.TYPE, this);
 		addRegisteredHandler(ClearFieldsEvent.TYPE, this);
 		addRegisteredHandler(ValueChangedEvent.TYPE, this);
+		addRegisteredHandler(TabStateChangedEvent.TYPE, this);
 	}
 
 	/**
@@ -54,7 +58,12 @@ public abstract class BasePresenterWidget<V extends BaseView> extends
 		getView().setColSpan(field.getColSpan());
 
 		setVisible(field.isDisplayed());
+		
+		getView().setMandatory(field.isMandatory());
 
+		if(field.getDisplayType()==DisplayType.BUTTON){
+			getView().setVisible(false);
+		}
 	}
 
 	/**
@@ -75,8 +84,9 @@ public abstract class BasePresenterWidget<V extends BaseView> extends
 	 * 
 	 * @param isEditable
 	 */
+	@SuppressWarnings("unchecked")
 	public void setEditable(boolean isEditable) {
-
+		((BaseView)getView()).setEditable(isEditable);
 	}
 
 	@Override
@@ -155,5 +165,23 @@ public abstract class BasePresenterWidget<V extends BaseView> extends
 
 	protected FieldModel getFieldModel() {
 		return fieldModel;
+	}
+	
+	@Override
+	public void onTabStateChanged(TabStateChangedEvent event) {
+		int tabNo = event.getTabNo();
+		int windowId = event.getWindowId();
+		
+		int windowNo=event.getWindowNo();
+		
+		boolean readOnly = event.isReadOnly();
+		fieldModel.getTabNo();
+		fieldModel.getWindowId();
+		if(tabNo!=fieldModel.getTabNo()
+				|| windowId!=fieldModel.getWindowId())
+			return;
+		
+		setEditable(!readOnly);
+		//fieldModel.getw
 	}
 }

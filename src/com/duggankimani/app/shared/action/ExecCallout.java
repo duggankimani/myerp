@@ -17,6 +17,10 @@ public class ExecCallout extends BaseAction<ExecCalloutResult> {
 		// For serialization only
 	}
 
+	@Override
+	public BaseActionResult createDefaultActionResponse() {
+		return new ExecCalloutResult();
+	}
 	public ExecCallout(Integer windowId, Integer tabNo, String fieldName,
 			DataModel data) {
 		this.windowId = windowId;

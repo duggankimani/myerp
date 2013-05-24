@@ -10,11 +10,11 @@ import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.menu.Menu;
 import com.sencha.gxt.widget.core.client.menu.MenuItem;
 
-public class InputFormMenuView extends ViewImpl implements InputFormMenuPresenter.MyView {
+public class FormMenuView extends ViewImpl implements FormMenuPresenter.MyView {
 
 	private final Widget widget;
 
-	public interface Binder extends UiBinder<Widget, InputFormMenuView> {
+	public interface Binder extends UiBinder<Widget, FormMenuView> {
 	}
 
 	@UiField Menu actionMenu;
@@ -28,11 +28,12 @@ public class InputFormMenuView extends ViewImpl implements InputFormMenuPresente
 	
 	boolean hasPrevious=false;
 	boolean hasNext=false;
+	boolean readOnly=false;
 	
 	int mode=0;
 	
 	@Inject
-	public InputFormMenuView(final Binder binder) {
+	public FormMenuView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 		
 	}
@@ -108,13 +109,24 @@ public class InputFormMenuView extends ViewImpl implements InputFormMenuPresente
 			btnActions.setEnabled(true);
 			prev.setEnabled(hasPrevious);
 			next.setEnabled(hasNext);
-			btnNew.setEnabled(true);
-			btnCopy.setEnabled(true);
+			btnNew.setEnabled(true && !readOnly);
+			btnCopy.setEnabled(true && !readOnly);
 		}else if(mode==1){
 			//creating or editing document
 			//disable all except undo
-			btnSave.setEnabled(true);
-			btnUndo.setEnabled(true);
+			btnSave.setEnabled(true && !readOnly);
+			btnUndo.setEnabled(true && !readOnly);
 		}		
+	}
+
+	@Override
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly=readOnly;
+		if(readOnly){
+			btnSave.setEnabled(false);
+			btnUndo.setEnabled(false);
+			btnNew.setEnabled(false);
+			btnCopy.setEnabled(false);
+		}
 	}
 }

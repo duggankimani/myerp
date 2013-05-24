@@ -10,7 +10,7 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
 
 public class PopupFormView extends PopupViewImpl implements
-		PopupFormPresenter.MyView {
+		PopupFormPresenter.IPopupView {
 
 	private final Widget widget;
 

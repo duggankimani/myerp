@@ -21,4 +21,10 @@ public interface BaseView extends View {
 	public void setDescription(String description);
 
 	public void clearData();
+
+	public void setEditable(boolean isEditable);
+	
+	public void setMandatory(boolean isMandatory);
+	
+	public void setVisible(boolean isVisible);
 }

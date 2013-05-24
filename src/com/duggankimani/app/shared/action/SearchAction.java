@@ -24,6 +24,11 @@ public class SearchAction extends BaseAction<SearchActionResult> {
 		this(field);
 		this.query = query;
 	}
+	
+	@Override
+	public BaseActionResult createDefaultActionResponse() {
+		return new SearchActionResult();
+	}
 
 	public String getQuery() {
 		return query;

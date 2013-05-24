@@ -12,6 +12,7 @@ public class TabModel implements Serializable {
 	private String name;
 	private Integer tabNo;
 	private Integer WindowID;
+	private Integer windowNo;
 	private String keyColumnName;
 	private Integer tabLevel;
 
@@ -72,5 +73,17 @@ public class TabModel implements Serializable {
 
 	public void setTabLevel(Integer tabLevel) {
 		this.tabLevel = tabLevel;
+	}
+
+	public Integer getWindowNo() {
+		return windowNo;
+	}
+
+	public void setWindowNo(Integer windowNo) {
+		this.windowNo = windowNo;
+	}
+
+	public void setFields(ArrayList<FieldModel> fields) {
+		this.fields = fields;
 	}
 }

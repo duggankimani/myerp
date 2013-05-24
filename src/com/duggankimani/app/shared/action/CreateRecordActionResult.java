@@ -6,8 +6,7 @@ public class CreateRecordActionResult extends BaseActionResult {
 
 	private DataModel data;
 
-	@SuppressWarnings("unused")
-	private CreateRecordActionResult() {
+	public CreateRecordActionResult() {
 		// For serialization only
 	}
 
@@ -17,5 +16,9 @@ public class CreateRecordActionResult extends BaseActionResult {
 
 	public DataModel getData() {
 		return data;
+	}
+
+	public void setData(DataModel data) {
+		this.data = data;
 	}
 }

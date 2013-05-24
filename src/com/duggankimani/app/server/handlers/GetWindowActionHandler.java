@@ -1,6 +1,6 @@
 package com.duggankimani.app.server.handlers;
 
-import com.gwtplatform.dispatch.server.actionhandler.ActionHandler;
+import com.duggankimani.app.shared.action.BaseActionResult;
 import com.duggankimani.app.shared.action.GetWindowAction;
 import com.duggankimani.app.shared.action.GetWindowActionResult;
 import com.duggankimani.app.shared.model.WindowModel;
@@ -8,13 +8,14 @@ import com.google.inject.Inject;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import static com.duggankimani.app.server.handlerutils.MetaCreator.*;
+
 /**
  * 
  * @author duggan
  *
  */
-public class GetWindowActionHandler extends MetaCreator implements
-		ActionHandler<GetWindowAction, GetWindowActionResult> {
+public class GetWindowActionHandler extends BaseActionHandler<GetWindowAction, GetWindowActionResult>{
 
 	@Inject
 	public GetWindowActionHandler() {
@@ -22,13 +23,16 @@ public class GetWindowActionHandler extends MetaCreator implements
 
 	@Override
 	public GetWindowActionResult execute(GetWindowAction action,
-			ExecutionContext context) throws ActionException {
+			BaseActionResult actionResult, ExecutionContext execContext)
+			throws ActionException {
+
+		GetWindowActionResult result = (GetWindowActionResult)actionResult;
 		
 		WindowModel model = getWindowModel(action.getAD_Menu_ID(),action.getWindowID(), action.getTabNo());
 
-		GetWindowActionResult actionresult = new GetWindowActionResult(model);
-
-		return actionresult;
+		result.setWindowModel(model);
+		
+		return result;
 	}
 
 	@Override
@@ -40,6 +44,5 @@ public class GetWindowActionHandler extends MetaCreator implements
 	public Class<GetWindowAction> getActionType() {
 		return GetWindowAction.class;
 	}
-
 
 }

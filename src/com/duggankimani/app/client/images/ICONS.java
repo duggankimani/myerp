@@ -16,4 +16,7 @@ public interface ICONS extends ClientBundle{
 	
 	@Source("search.png")
 	public ImageResource search();
+	
+	@Source("required.gif")
+	public ImageResource mandatory();
 }

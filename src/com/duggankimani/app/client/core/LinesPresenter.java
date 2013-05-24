@@ -24,8 +24,8 @@ import com.sencha.gxt.widget.core.client.event.RowDoubleClickEvent;
 import com.sencha.gxt.widget.core.client.event.RowDoubleClickEvent.RowDoubleClickHandler;
 import com.sencha.gxt.widget.core.client.grid.Grid;
 
-public class InputLinesPresenter extends
-		PresenterWidget<InputLinesPresenter.MyView> implements LoadLineDataHandler, ClearLinesHandler{
+public class LinesPresenter extends
+		PresenterWidget<LinesPresenter.MyView> implements LoadLineDataHandler, ClearLinesHandler{
 
 	public interface MyView extends View {
 		public void bind(TabModel tabModel);
@@ -40,7 +40,7 @@ public class InputLinesPresenter extends
 	@Inject DispatchAsync dispatcher;
 	
 	@Inject
-	public InputLinesPresenter(final EventBus eventBus, final MyView view) {
+	public LinesPresenter(final EventBus eventBus, final MyView view) {
 		super(eventBus, view);
 	}
 

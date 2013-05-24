@@ -1,0 +1,151 @@
+/*body {
+	font: 100% "Trebuchet MS", verdana, arial, sans-serif;
+	margin: 10px;
+	padding: 0;
+}*/
+
+div.container {
+	margin: auto auto 10px;
+	width: 90%;
+}
+
+textarea {
+	width: 80%;
+}
+
+fieldset {
+	border: 1px solid #CCCCCC;
+	margin: 0;
+	padding: 1em;
+}
+
+legend {
+	color: #CCCCCC;
+	font-size: 120%;
+}
+
+input,textarea {
+	border: 1px solid #999999;
+	font-family: Arial, verdana;
+	font-size: 125%;
+	padding: 7px;
+}
+
+label {
+	display: block;
+	margin-top: 10px;
+}
+
+img {
+	margin: 5px;
+}
+
+h2 {
+	margin: 0;
+}
+
+.drawers-wrapper {
+	position: relative;
+	width: 188px;
+}
+
+.drawer {
+	background:
+		url("http://images.apple.com/downloads/images/sideboxlight_bg20070611.gif")
+		repeat-y scroll 0 50% transparent;
+	color: #76797C;
+	font-size: 11px;
+	line-height: 1.3em;
+}
+
+.boxcap {
+	background:
+		url("http://images.apple.com/downloads/images/sidenav_capbottom.png")
+		no-repeat scroll 0 50% transparent;
+	height: 5px;
+	left: 0;
+	margin-top: -5px;
+	position: absolute;
+	width: 100%;
+	z-index: 100;
+}
+
+.captop {
+	background-image:
+		url("http://images.apple.com/downloads/images/box_188captop.png");
+	bottom: auto;
+	margin-top: 0;
+	top: 0;
+}
+
+.drawers {
+	color: #76797C;
+	font-size: 11px;
+	line-height: 18px;
+	margin-bottom: 15px;
+}
+
+.drawers a {
+	color: #666666;
+	font-family: "Lucida Grande", Geneva, Arial, Verdana, sans-serif;
+	font-size-adjust: none;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+.drawer li {
+	border-bottom: 1px solid #E5E5E5;
+	line-height: 16px;
+	padding: 6px 0;
+}
+
+ul {
+	list-style: none outside none;
+	padding: 0;
+}
+
+ul.drawers {
+	margin: 0;
+}
+
+.drawer-handle {
+	background:
+		url("http://images.apple.com/downloads/images/slider_handlebg188.png")
+		no-repeat scroll 0 50% #939393;
+	color: #333333;
+	cursor: default;
+	font-size: 12px;
+	font-weight: normal;
+	height: 25px;
+	line-height: 25px;
+	margin-bottom: 0;
+	text-indent: 15px;
+	width: 100%;
+}
+
+.drawer-handle.open {
+	background-color: #72839D;
+	background-position: -188px 0;
+	color: #FFFFFF;
+}
+
+.drawer ul {
+	padding: 0 12px;
+}
+
+.drawer-content ul {
+	padding-top: 7px;
+}
+
+.drawer-content li a {
+	display: block;
+	overflow: hidden;
+}
+
+.alldownloads li {
+	border: 0 none;
+	line-height: 18px;
+	padding: 0;
+}

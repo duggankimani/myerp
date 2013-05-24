@@ -1,10 +1,9 @@
 package com.duggankimani.app.server.handlers;
 
 import org.compiere.model.GridTab;
-import org.compiere.model.GridWindow;
 
-import com.gwtplatform.dispatch.server.actionhandler.ActionHandler;
 import com.duggankimani.app.server.WindowStatus;
+import com.duggankimani.app.shared.action.BaseActionResult;
 import com.duggankimani.app.shared.action.CreateRecordAction;
 import com.duggankimani.app.shared.action.CreateRecordActionResult;
 import com.duggankimani.app.shared.model.DataModel;
@@ -12,23 +11,29 @@ import com.google.inject.Inject;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.shared.ActionException;
 
-import static com.duggankimani.app.server.handlers.DataReader.*;
+import static com.duggankimani.app.server.handlerutils.DataReader.*;
 
-public class CreateRecordActionHandler extends MetaCreator implements
-		ActionHandler<CreateRecordAction, CreateRecordActionResult> {
+/**
+ * 
+ * @author duggan
+ *
+ */
+public class CreateRecordActionHandler extends BaseActionHandler<CreateRecordAction, CreateRecordActionResult>{
 
 	@Inject
 	public CreateRecordActionHandler() {
 	}
 
+
 	@Override
-	public CreateRecordActionResult execute(CreateRecordAction action, ExecutionContext context)
+	public CreateRecordActionResult execute(CreateRecordAction action,
+			BaseActionResult actionResult, ExecutionContext execContext)
 			throws ActionException {
+
+		CreateRecordActionResult result = (CreateRecordActionResult)actionResult;
 		
 		WindowStatus ws = WindowStatus.getWindowStatus(action.getWindowId());
-		
-		GridWindow window = ws.gridWindow;
-		GridTab curTab = window.getTab(action.getTabNo());
+		GridTab curTab = ws.getTab(action.getTabNo());
 		
 		if(action.getCurrentRow()!=null)
 			curTab.navigate(action.getCurrentRow());
@@ -37,7 +42,9 @@ public class CreateRecordActionHandler extends MetaCreator implements
 		
 		DataModel data = getRowData(curTab, false);
 		
-		return new CreateRecordActionResult(data);
+		result.setData(data);
+		
+		return result;
 	}
 
 	@Override
@@ -50,4 +57,5 @@ public class CreateRecordActionHandler extends MetaCreator implements
 	public Class<CreateRecordAction> getActionType() {
 		return CreateRecordAction.class;
 	}
+
 }

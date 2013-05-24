@@ -9,25 +9,25 @@ import java.util.Random;
 
 import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
-import org.compiere.model.GridWindow;
 import org.compiere.model.MTable;
 import org.compiere.util.CLogger;
 import org.compiere.util.DB;
 import org.compiere.util.DisplayType;
 import org.compiere.util.Env;
 
+import com.duggankimani.app.server.WindowStatus;
 import com.duggankimani.app.shared.model.LookupValue;
 
 public class GenericSearch {
 
 	static CLogger log = CLogger.getCLogger(GenericSearch.class);
 	
-	public static List<LookupValue> search(GridWindow window, int tabNo, String columnName, String query){
-		boolean isSOTrx = window.isSOTrx();
+	public static List<LookupValue> search(WindowStatus ws, int tabNo, String columnName, String query){
+		boolean isSOTrx = ws.isSOTrx();
 		
 		List<LookupValue> results = new ArrayList<LookupValue>();
 		
-		GridTab curTab = window.getTab(tabNo);
+		GridTab curTab = ws.getTab(tabNo);
 		GridField field = curTab.getField(columnName);
 		
 		if(field==null){
@@ -35,7 +35,11 @@ public class GenericSearch {
 		}
 		
 		System.err.println("Column "+columnName+" - AD_Ref_Value_ID= "+field.getAD_Reference_Value_ID()+"" +
-				"\n - ColumnSQL = "+field.getColumnName());
+				"\n - ColumnSQL = "+field.getColumnSQL(true)+""+" - DynamicValidation - ");
+		
+		/**
+		 * TODO: Column SQL/ Any Filtering information available on the field
+		 */
 		
 		//Target Table from which data will be searched
 		Integer AD_Table_ID = getTableID(curTab.getAD_Table_ID(), columnName);

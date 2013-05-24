@@ -6,8 +6,7 @@ public class GetTabActionResult extends BaseActionResult {
 
 	private TabModel tabModel;
 
-	@SuppressWarnings("unused")
-	private GetTabActionResult() {
+	public GetTabActionResult() {
 	}
 
 	public GetTabActionResult(TabModel tabModel) {
@@ -16,5 +15,9 @@ public class GetTabActionResult extends BaseActionResult {
 
 	public TabModel getTabModel() {
 		return tabModel;
+	}
+
+	public void setTabModel(TabModel tabModel) {
+		this.tabModel = tabModel;
 	}
 }

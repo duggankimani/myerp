@@ -22,22 +22,20 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.sencha.gxt.core.client.IdentityValueProvider;
+import com.sencha.gxt.core.client.dom.XElement;
 import com.sencha.gxt.data.shared.ListStore;
-import com.sencha.gxt.widget.core.client.event.RowDoubleClickEvent;
-import com.sencha.gxt.widget.core.client.event.RowDoubleClickEvent.RowDoubleClickHandler;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.grid.GridView;
 import com.sencha.gxt.widget.core.client.grid.RowNumberer;
-import com.sencha.gxt.widget.core.client.info.Info;
 
-public class InputLinesView extends ViewImpl implements
-		InputLinesPresenter.MyView {
+public class LinesView extends ViewImpl implements
+		LinesPresenter.MyView {
 
 	private Widget widget;
 
-	public interface Binder extends UiBinder<Widget, InputLinesView> {
+	public interface Binder extends UiBinder<Widget, LinesView> {
 	}
 
 	ArrayList<ColumnConfig<DataModel, ?>> list = new ArrayList<ColumnConfig<DataModel, ?>>();
@@ -59,7 +57,7 @@ public class InputLinesView extends ViewImpl implements
 
 	RowNumberer<DataModel> rowNumberer = null;
 	@Inject
-	public InputLinesView(final Binder binder) {
+	public LinesView(final Binder binder) {
 		this.binder = binder;		
 	}
 
@@ -126,8 +124,12 @@ public class InputLinesView extends ViewImpl implements
 	@UiFactory
 	Grid<DataModel> createGrid() {
 		grid = new Grid<DataModel>(store, cm, gridView);
-		grid.getView().setStripeRows(true);		
-
+		grid.getView().setStripeRows(true);	
+		//grid.setSize("", "170px");
+		//grid.setStylePrimaryName("grid-lines");
+		grid.setStyleName("grid-lines",true);
+		
+		//elem.setClassName("grid-body", true);
 		return grid;
 	}
 

@@ -14,8 +14,6 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.duggankimani.app.client.core.MainPagePresenter;
-import com.duggankimani.app.client.events.AfterFormLoadEvent;
-import com.duggankimani.app.client.events.AfterFormLoadEvent.AfterFormLoadHandler;
 import com.duggankimani.app.shared.action.GetWindowAction;
 
 /**
@@ -24,7 +22,7 @@ import com.duggankimani.app.shared.action.GetWindowAction;
  *
  */
 public class InputFormPresenter extends
-		Presenter<InputFormPresenter.MyView, InputFormPresenter.MyProxy> implements AfterFormLoadHandler{
+		Presenter<InputFormPresenter.MyView, InputFormPresenter.MyProxy>{
 
 	public interface MyView extends View {
 	}
@@ -93,18 +91,6 @@ public class InputFormPresenter extends
 		super.onReset();
 		setInSlot(FORM_SLOT, formPresenter);
 
-	}
-
-	@Override
-	public void onAfterFormLoad(AfterFormLoadEvent event) {
-		if(event.getSource()==formPresenter){
-			if(event.isSuccess()){
-				//getProxy().manualReveal(this);
-			}
-			else{
-				//getProxy().manualRevealFailed();
-			}
-		}
 	}
 
 }

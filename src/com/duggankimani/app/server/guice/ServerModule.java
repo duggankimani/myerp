@@ -17,6 +17,10 @@ import com.duggankimani.app.server.handlers.UndoActionHandler;
 import com.duggankimani.app.shared.action.ExecCallout;
 import com.duggankimani.app.server.handlers.ExecCalloutActionHandler;
 import com.duggankimani.app.shared.action.SearchAction;
+import com.duggankimani.app.shared.action.RequestSet;
+import com.duggankimani.app.server.handlers.RequestSetActionHandler;
+import com.duggankimani.app.shared.action.GetProcessAction;
+import com.duggankimani.app.server.handlers.GetProcessActionHandler;
 
 public class ServerModule extends HandlerModule {
 
@@ -39,5 +43,9 @@ public class ServerModule extends HandlerModule {
 		bindHandler(ExecCallout.class, ExecCalloutActionHandler.class);
 
 		bindHandler(SearchAction.class, SearchActionHandler.class);
+
+		bindHandler(RequestSet.class, RequestSetActionHandler.class);
+
+		bindHandler(GetProcessAction.class, GetProcessActionHandler.class);
 	}
 }

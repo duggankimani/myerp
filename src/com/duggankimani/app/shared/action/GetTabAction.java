@@ -17,6 +17,12 @@ public class GetTabAction extends BaseAction<GetTabActionResult> {
 		this.windowID = windowID;
 		this.tabNo = tabNo;
 	}
+	
+	@Override
+	public BaseActionResult createDefaultActionResponse() {
+		
+		return new GetTabActionResult();
+	}
 
 	public Integer getWindowID() {
 		return windowID;

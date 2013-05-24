@@ -10,6 +10,11 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+/**
+ * 
+ * @author duggan
+ *
+ */
 public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	private final Widget widget;
@@ -113,11 +118,11 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	@Override
 	public void clearLinesComponent() {
-		if(mode==0){
-			linesContainer.setStyleName("hidden");
-			headerContainer.setStyleName("fillrow");
-			headerContainer.removeStyleName("row1");
-		}
+		
+		linesContainer.setStyleName("hidden");
+		headerContainer.setStyleName("fillrow");
+		headerContainer.removeStyleName("row1");
+
 	}
 
 	public void setViewMode(int mode){

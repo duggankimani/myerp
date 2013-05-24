@@ -6,6 +6,7 @@ public class NameTokens {
 	public static final String financeworkbench = "financeworkbench";
 	public static final String notfound = "notfound";
 	public static final String lines = "lines";
+	public static final String finance = "finance";
 
 	public static String getInputForm() {
 		return inputfrm;
@@ -21,5 +22,9 @@ public class NameTokens {
 
 	public static String getLines() {
 		return lines;
+	}
+
+	public static String getFinance() {
+		return finance;
 	}
 }

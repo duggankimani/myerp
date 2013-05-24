@@ -6,12 +6,6 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-    <ui:style>
-        .dimensions{
-			padding:3px;
-			width:100%;
-		}
-    </ui:style>
 	<g:HTMLPanel ui:field="container" styleName="container">
 	</g:HTMLPanel>
 </ui:UiBinder>

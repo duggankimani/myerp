@@ -4,6 +4,7 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.sencha.gxt.widget.core.client.form.CheckBox;
@@ -68,4 +69,21 @@ public class CheckboxView extends ViewImpl implements BaseView, CheckboxPresente
 	public CheckBox getComponent(){
 		return component;
 	}
+
+	@Override
+	public void setEditable(boolean isEditable) {
+		component.setReadOnly(!isEditable);
+	}
+	
+	@Override
+	public void setMandatory(boolean isMandatory) {
+		
+	}
+	
+
+	@Override
+	public void setVisible(boolean isVisible) {
+		UIObject.setVisible(container.getElement(), isVisible);
+	}
+
 }

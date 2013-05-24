@@ -8,6 +8,7 @@ import com.duggankimani.app.client.events.LoadWindowEvent;
 import com.duggankimani.app.client.events.LoadWindowEvent.LoadWindowHandler;
 import com.duggankimani.app.client.events.PopUpCloseEvent;
 import com.duggankimani.app.client.events.PopUpCloseEvent.PopUpCloseHandler;
+import com.duggankimani.app.client.header.HeaderPresenter;
 import com.duggankimani.app.client.menu.ApplicationMenuPresenter;
 import com.duggankimani.app.client.place.NameTokens;
 import com.gwtplatform.common.client.IndirectProvider;
@@ -37,7 +38,6 @@ public class MainPagePresenter extends
 
 	public interface MyView extends View {
 		public Anchor getAnchorHome();
-		public Anchor getCreateNew();
 		public void showLoadingMessage(String message);
 		public void hideLoadingMessage();
 	}
@@ -53,11 +53,20 @@ public class MainPagePresenter extends
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> SLOT_content = new Type<RevealContentHandler<?>>();
 
-	@Inject
-	PlaceManager placeManager;
+	@ContentSlot
+	public static final Type<RevealContentHandler<?>> HEADER_content = new Type<RevealContentHandler<?>>();
 	
-	@Inject
-	ApplicationMenuPresenter menu;
+
+	@ContentSlot
+	public static final Type<RevealContentHandler<?>> ACTIONS_content = new Type<RevealContentHandler<?>>();
+	
+	@Inject HeaderPresenter header;	
+	
+	@Inject	PlaceManager placeManager;
+	
+	@Inject	ApplicationMenuPresenter menu;
+	
+	@Inject ActionsPresenter actions;
 	
 	@Inject DispatchAsync dispatchAsync;
 	
@@ -96,20 +105,14 @@ public class MainPagePresenter extends
 			}
 		});
 		
-		getView().getCreateNew().addClickHandler(new ClickHandler() {
-			
-			@Override
-			public void onClick(ClickEvent event) {
-//				PlaceRequest request = new PlaceRequest(NameTokens.createinvoice);
-//				placeManager.revealPlace(request);				
-			}
-		});
 	}
 	
 	@Override
 	protected void onReset() {
 		super.onReset();
 		this.setInSlot(MENU_SLOT, menu);
+		this.setInSlot(HEADER_content, header);
+		this.setInSlot(ACTIONS_content, actions);
 	}
 
 	@Override

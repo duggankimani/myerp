@@ -5,6 +5,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -62,5 +63,22 @@ public class IDView extends ViewImpl implements BaseView, IDPresenter.MyView {
 	public void clearData() {
 		anchor.setEnabled(false);
 	}
+
+
+	@Override
+	public void setEditable(boolean isEditable) {
+		// TODO Auto-generated method stub
+		anchor.setEnabled(isEditable);
+	}
 	
+	@Override
+	public void setMandatory(boolean isMandatory) {
+	}
+	
+
+	@Override
+	public void setVisible(boolean isVisible) {
+		UIObject.setVisible(container.getElement(), isVisible);
+	}
+
 }

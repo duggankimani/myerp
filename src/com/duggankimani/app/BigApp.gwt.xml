@@ -10,7 +10,8 @@
 	<!-- any one of the following lines.                            -->
 	<inherits name='com.google.gwt.user.theme.standard.Standard'/>
 	<!-- inherits name='com.google.gwt.user.theme.chrome.Chrome'/-->
-	<!-- inherits name='com.google.gwt.user.theme.dark.Dark'/-->
+	<!-- inherits name='com.sencha.gxt.theme.gray.Gray'/-->
+	<!-- inherits name='com.google.gwt.user.theme.dark.Dark'/ -->
 
 
 	<!-- GXT extensions -->
@@ -28,7 +29,10 @@
 	<source path='client'/>
 	<source path='shared'/>
 
+	<inherits name='com.google.gwt.precompress.Precompress' />
+	  
 	<define-configuration-property name='gin.ginjector' is-multi-valued='false' />
 	<set-configuration-property name='gin.ginjector' value='com.duggankimani.app.client.gin.ClientGinjector' />
+	<set-configuration-property name="UiBinder.useLazyWidgetBuilders" value="true" />
 
 </module>

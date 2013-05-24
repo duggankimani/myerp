@@ -7,6 +7,7 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.duggankimani.app.client.place.DefaultPlace;
 import com.duggankimani.app.client.place.NameTokens;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.gwtplatform.mvp.client.proxy.RevealRootLayoutContentEvent;
 import com.google.inject.Inject;
 import com.google.gwt.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
@@ -33,6 +34,7 @@ public class FinanceWorkbenchPresenter
 	@Override
 	protected void revealInParent() {
 		RevealContentEvent.fire(this, MainPagePresenter.SLOT_content, this);
+		//RevealRootLayoutContentEvent.fire(this, this);
 	}
 
 	@Override

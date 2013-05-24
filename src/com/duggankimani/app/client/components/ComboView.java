@@ -1,5 +1,6 @@
 package com.duggankimani.app.client.components;
 
+import com.duggankimani.app.client.images.ICONS;
 import com.duggankimani.app.shared.model.FieldModel;
 import com.duggankimani.app.shared.model.LookupValue;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -8,6 +9,8 @@ import com.google.gwt.editor.client.Editor.Ignore;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.sencha.gxt.data.shared.LabelProvider;
@@ -46,6 +49,7 @@ public class ComboView extends ViewImpl implements BaseView, ComboPresenter.MyVi
 	
 	@UiField HorizontalPanel container;
 
+	@UiField Image imgMandatory;
 	
 	@Inject
 	public ComboView(final Binder binder) {
@@ -53,6 +57,8 @@ public class ComboView extends ViewImpl implements BaseView, ComboPresenter.MyVi
 		store = new ListStore<LookupValue>(GWT.<LookupProperties>create(LookupProperties.class).key2());
 		component = new ComboBox<LookupValue>(store, labelProvider);
 		widget = binder.createAndBindUi(this);
+		imgMandatory.setResource(ICONS.INSTANCE.mandatory());
+		imgMandatory.setTitle("Mandatory Field");
 	}
 
 	public void init(FieldModel field){
@@ -116,4 +122,20 @@ public class ComboView extends ViewImpl implements BaseView, ComboPresenter.MyVi
 	public ComboBox<LookupValue> getComponent(){
 		return component;
 	}
+
+	@Override
+	public void setEditable(boolean isEditable) {
+		component.setReadOnly(!isEditable);
+	}
+	
+	@Override
+	public void setMandatory(boolean isMandatory) {
+		imgMandatory.setVisible(isMandatory);
+	}
+	
+	@Override
+	public void setVisible(boolean isVisible) {
+		UIObject.setVisible(container.getElement(), isVisible);
+	}
+
 }

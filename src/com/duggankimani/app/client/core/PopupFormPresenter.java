@@ -1,8 +1,9 @@
 package com.duggankimani.app.client.core;
 
+import com.duggankimani.app.client.events.RepositionPopupEvent;
+import com.duggankimani.app.client.events.RepositionPopupEvent.RepositionPopupHandler;
 import com.duggankimani.app.client.service.ERPAsyncCallback;
 import com.duggankimani.app.shared.action.GetWindowAction;
-import com.duggankimani.app.shared.model.TabModel;
 import com.gwtplatform.common.client.IndirectProvider;
 import com.gwtplatform.common.client.StandardProvider;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -19,9 +20,9 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.ui.Anchor;
 
 public class PopupFormPresenter extends
-		PresenterWidget<PopupFormPresenter.MyView>{
+		PresenterWidget<PopupFormPresenter.IPopupView> implements RepositionPopupHandler{
 
-	public interface MyView extends PopupView {
+	public interface IPopupView extends PopupView {
 		Anchor getCloseButton();
 	}
 
@@ -33,7 +34,7 @@ public class PopupFormPresenter extends
 	IndirectProvider<FormPresenter> formPresenterFactory;
 	
 	@Inject
-	public PopupFormPresenter(final EventBus eventBus, final MyView view, Provider<FormPresenter> frmProvider) {
+	public PopupFormPresenter(final EventBus eventBus, final IPopupView view, Provider<FormPresenter> frmProvider) {
 		super(eventBus, view);
 		
 		formPresenterFactory = new StandardProvider<FormPresenter>(frmProvider);
@@ -42,6 +43,9 @@ public class PopupFormPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
+		
+		addRegisteredHandler(RepositionPopupEvent.TYPE, this);
+		
 		getView().getCloseButton().addClickHandler(new ClickHandler() {
 			
 			@Override
@@ -74,5 +78,9 @@ public class PopupFormPresenter extends
 	public void setAction(GetWindowAction action) {
 		this.requestWindowAction = action;
 	}
-
+	
+	@Override
+	public void onRepositionPopup(RepositionPopupEvent event) {
+		getView().center();
+	}
 }

@@ -10,5 +10,6 @@
 	<g:HorizontalPanel ui:field="container">
 	    <gxt:FieldLabel ui:field="label"></gxt:FieldLabel>
 		<gxt:DateField ui:field="component"></gxt:DateField>
+		<g:Image ui:field="imgMandatory"></g:Image>
 	</g:HorizontalPanel>
 </ui:UiBinder>

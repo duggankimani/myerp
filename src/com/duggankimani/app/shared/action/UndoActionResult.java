@@ -6,9 +6,8 @@ public class UndoActionResult extends BaseActionResult {
 
 	private DataModel data;
 
-	@SuppressWarnings("unused")
-	private UndoActionResult() {
-		// For serialization only
+	public UndoActionResult() {
+		
 	}
 
 	public UndoActionResult(DataModel data) {
@@ -17,5 +16,9 @@ public class UndoActionResult extends BaseActionResult {
 
 	public DataModel getData() {
 		return data;
+	}
+
+	public void setData(DataModel data) {
+		this.data = data;
 	}
 }

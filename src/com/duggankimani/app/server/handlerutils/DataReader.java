@@ -1,4 +1,4 @@
-package com.duggankimani.app.server.handlers;
+package com.duggankimani.app.server.handlerutils;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -7,7 +7,6 @@ import java.util.Date;
 
 import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
-import org.compiere.model.GridWindow;
 import org.compiere.model.MLookup;
 import org.compiere.util.DisplayType;
 import org.compiere.util.KeyNamePair;
@@ -18,6 +17,11 @@ import com.duggankimani.app.shared.action.GetDataAction;
 import com.duggankimani.app.shared.model.DataModel;
 import com.duggankimani.app.shared.model.LookupValue;
 
+/**
+ * 
+ * @author duggan
+ *
+ */
 public class DataReader {
 
 	/**
@@ -29,8 +33,9 @@ public class DataReader {
 	 */
 	public static DataModel getData(WindowStatus windowStatus, GetDataAction action) {
 
-		GridTab tab = windowStatus.gridWindow.getTab(action.getTabNo());
+		GridTab tab = windowStatus.getTab(action.getTabNo());
 
+		//find correct logic for this
 		boolean isLoaded = tab.getRowCount()>0;
 		
 		if (!isLoaded) {
@@ -66,8 +71,6 @@ public class DataReader {
 	}
 
 	public static DataModel getRowData(GridTab tab, boolean useValue) {
-
-		int rows = tab.getRowCount();
 		int currentRow=tab.getCurrentRow();
 		
 		GridField[] fields = tab.getFields();
@@ -75,7 +78,7 @@ public class DataReader {
 		ArrayList<String> strs = tab.getParentColumnNames();
 
 		DataModel dataModel = new DataModel();
-		dataModel.setState(currentRow!=0, currentRow!=rows-1, currentRow);
+		dataModel.setRowNo(currentRow);
 		
 		for (GridField field : fields) {
 			Object value = tab.getValue(field);
@@ -192,10 +195,7 @@ public class DataReader {
 				
 		ArrayList<DataModel> data = new ArrayList<>();
 
-		
-		GridWindow window = windowStatus.gridWindow;
-		window.initTab(action.getTabNo());
-		GridTab tab = window.getTab(action.getTabNo());
+		GridTab tab = windowStatus.getTab(action.getTabNo());
 		//System.err.println("###Tab - "+action.getTabNo()+" :: Win no - "+tab.getWindowNo());
 		
 		tab.query(false, 0, 0);	

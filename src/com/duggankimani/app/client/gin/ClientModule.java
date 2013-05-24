@@ -2,10 +2,12 @@ package com.duggankimani.app.client.gin;
 
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
+import com.duggankimani.app.client.header.HeaderPresenter;
+import com.duggankimani.app.client.header.HeaderView;
 import com.duggankimani.app.client.menu.ApplicationMenuPresenter;
 import com.duggankimani.app.client.menu.ApplicationMenuView;
-import com.duggankimani.app.client.menu.InputFormMenuPresenter;
-import com.duggankimani.app.client.menu.InputFormMenuView;
+import com.duggankimani.app.client.menu.FormMenuPresenter;
+import com.duggankimani.app.client.menu.FormMenuView;
 import com.duggankimani.app.client.place.ClientPlaceManager;
 import com.duggankimani.app.client.core.MainPagePresenter;
 import com.duggankimani.app.client.core.MainPageView;
@@ -31,8 +33,8 @@ import com.duggankimani.app.client.components.ButtonPresenter;
 import com.duggankimani.app.client.components.ButtonView;
 import com.duggankimani.app.client.core.ErrorPagePresenter;
 import com.duggankimani.app.client.core.ErrorPageView;
-import com.duggankimani.app.client.core.InputLinesPresenter;
-import com.duggankimani.app.client.core.InputLinesView;
+import com.duggankimani.app.client.core.LinesPresenter;
+import com.duggankimani.app.client.core.LinesView;
 import com.duggankimani.app.client.core.TabsPresenter;
 import com.duggankimani.app.client.core.TabsView;
 import com.duggankimani.app.client.core.PopupFormPresenter;
@@ -41,6 +43,10 @@ import com.duggankimani.app.client.core.FormPresenter;
 import com.duggankimani.app.client.core.FormView;
 import com.duggankimani.app.client.components.SearchPresenter;
 import com.duggankimani.app.client.components.SearchView;
+import com.duggankimani.app.client.core.ActionsPresenter;
+import com.duggankimani.app.client.core.ActionsView;
+import com.duggankimani.app.client.core.process.ProcessDialogPresenter;
+import com.duggankimani.app.client.core.process.ProcessDialogView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -68,8 +74,8 @@ public class ClientModule extends AbstractPresenterModule {
 				FinanceWorkbenchView.class,
 				FinanceWorkbenchPresenter.MyProxy.class);
 
-		bindPresenter(ApplicationMenuPresenter.class, ApplicationMenuPresenter.MyView.class,
-				ApplicationMenuView.class, ApplicationMenuPresenter.MyProxy.class);
+		bindPresenterWidget(ApplicationMenuPresenter.class, ApplicationMenuPresenter.MyView.class,
+				ApplicationMenuView.class);
 
 		bindPresenterWidget(NumberFieldPresenter.class,
 				NumberFieldPresenter.MyView.class, NumberFieldView.class);
@@ -83,8 +89,8 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenterWidget(ComboPresenter.class, ComboPresenter.MyView.class,
 				ComboView.class);
 
-		bindPresenterWidget(InputFormMenuPresenter.class,
-				InputFormMenuPresenter.MyView.class, InputFormMenuView.class);
+		bindPresenterWidget(FormMenuPresenter.class,
+				FormMenuPresenter.MyView.class, FormMenuView.class);
 
 		bindPresenterWidget(ButtonPresenter.class,
 				ButtonPresenter.MyView.class, ButtonView.class);
@@ -93,19 +99,29 @@ public class ClientModule extends AbstractPresenterModule {
 				ErrorPagePresenter.MyView.class, ErrorPageView.class,
 				ErrorPagePresenter.MyProxy.class);
 
-		bindPresenterWidget(InputLinesPresenter.class,
-				InputLinesPresenter.MyView.class, InputLinesView.class);
+		bindPresenterWidget(LinesPresenter.class,
+				LinesPresenter.MyView.class, LinesView.class);
 
 		bindPresenterWidget(TabsPresenter.class,
 				TabsPresenter.MyView.class, TabsView.class);
 
 		bindPresenterWidget(PopupFormPresenter.class,
-				PopupFormPresenter.MyView.class, PopupFormView.class);
+				PopupFormPresenter.IPopupView.class, PopupFormView.class);
 
 		bindPresenterWidget(FormPresenter.class, FormPresenter.MyView.class,
 				FormView.class);
 
 		bindPresenterWidget(SearchPresenter.class,
 				SearchPresenter.MyView.class, SearchView.class);
+		
+		bindPresenterWidget(HeaderPresenter.class,
+				HeaderPresenter.MyView.class , HeaderView.class);
+
+		bindPresenterWidget(ActionsPresenter.class,
+				ActionsPresenter.IActionsView.class, ActionsView.class);
+
+		bindPresenterWidget(ProcessDialogPresenter.class,
+				ProcessDialogPresenter.IProcessDialog.class, ProcessDialogView.class);
+
 	}
 }
